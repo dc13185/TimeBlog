@@ -73,16 +73,31 @@
     <dependency>
       <groupId>org.mybatis.spring.boot</groupId>
       <artifactId>mybatis-spring-boot-starter</artifactId>
-      <version>2.0.1</version>
+      <version>1.3.1</version>
     </dependency>
+
+ <!--   <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>-->
 
     <!-- mysql驱动 -->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.6</version>
+      <!--      <version>5.1.6</version>-->
     </dependency>
 
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid-spring-boot-starter</artifactId>
+    </dependency>
+
+  <!--  <dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-test-autoconfigure</artifactId>
+      <version>1.2.1</version>
+    </dependency>-->
 
 
   </dependencies>
@@ -90,6 +105,7 @@
 
 
   <build>
+
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -110,10 +126,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.0.0</version>
-        <!--<configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-          <warName>${artifactId}</warName>
-        </configuration>-->
       </plugin>
     </plugins>
     <finalName>${artifactId}</finalName>

@@ -6,6 +6,7 @@
 
     <groupId>com.timeblog</groupId>
     <artifactId>timeblog</artifactId>
+    <packaging>pom</packaging>
     <version>1.0</version>
 
     <modules>
@@ -15,6 +16,7 @@
     <properties>
         <time.version>1.0</time.version>
         <lombok.version>1.16.20</lombok.version>
+        <druid.version>1.1.13</druid.version>
     </properties>
 
     <dependencyManagement>
@@ -45,11 +47,72 @@
             </dependency>
 
 
+            <!--阿里数据库连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+
         </dependencies>
-
-
-
     </dependencyManagement>
 
+
+
+    <!-- Maven控制Spring Profile -->
+    <profiles>
+        <profile>
+            <!--默认开启开发环境-->
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <profileActive>dev</profileActive>
+            </properties>
+            <build>
+                <!-- 产生的构件的文件名，默认值是${artifactId}-${version}-->
+                <finalName>${project.artifactId}-${project.version}</finalName>
+            </build>
+        </profile>
+
+
+        <!--生产环境-->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profileActive>prod</profileActive>
+            </properties>
+            <build>
+                <!-- 产生的构件的文件名-->
+                <finalName>${project.artifactId}</finalName>
+            </build>
+        </profile>
+
+    </profiles>
+
+
+
+    <build>
+        <!-- profile对资源的操作 -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>application*.yml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- 是否替换@xx@表示的maven properties属性值 -->
+                <filtering>true</filtering>
+                <includes>
+                    <include>application.yml</include>
+                    <include>application-${profileActive}.yml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 
 </project>

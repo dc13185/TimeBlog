@@ -13,3 +13,16 @@ server:
     # Tomcat启动初始化的线程数，默认值25
     min-spare-threads: 30
 
+spring:
+  profiles:
+    active: '@profileActive@'
+
+# MyBatis
+mybatis:
+  # 搜索指定包别名
+  typeAliasesPackage: com.ruoyi,com.whcm
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 加载全局的配置文件
+  # configLocation: classpath:mapper/mybatis-config.xml
+
