@@ -45,19 +45,49 @@
     </dependency>-->
 
 
-
+    <!--排除SpringBoot内部Tomcat-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <exclusions>
+      <!--<exclusions>
         <exclusion>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter-tomcat</artifactId>
         </exclusion>
-      </exclusions>
+      </exclusions>-->
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!--framework模块-->
+   <dependency>
+      <groupId>com.timeblog</groupId>
+      <artifactId>time-framework</artifactId>
+    </dependency>
+
+    <!--SpringBoot集成MySql-->
+    <dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-starter</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+
+    <!-- mysql驱动 -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.6</version>
+    </dependency>
+
+
+
   </dependencies>
+
+
 
   <build>
     <plugins>
@@ -75,14 +105,15 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.0.0</version>
-        <configuration>
+        <!--<configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
           <warName>${artifactId}</warName>
-        </configuration>
+        </configuration>-->
       </plugin>
     </plugins>
     <finalName>${artifactId}</finalName>

@@ -13,6 +13,7 @@
     </modules>
 
     <properties>
+        <time.version>1.0</time.version>
         <lombok.version>1.16.20</lombok.version>
     </properties>
 
@@ -35,8 +36,16 @@
                 <version>${lombok.version}</version>
                 <scope>provided</scope>
             </dependency>
-        </dependencies>
 
+            <!-- framework-->
+            <dependency>
+                <groupId>com.timeblog</groupId>
+                <artifactId>time-framework</artifactId>
+                <version>${time.version}</version>
+            </dependency>
+
+
+        </dependencies>
 
 
 
