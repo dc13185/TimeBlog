@@ -13,9 +13,23 @@ server:
     # Tomcat启动初始化的线程数，默认值25
     min-spare-threads: 30
 
+
 spring:
   profiles:
+    #yml环境配置
     active: '@profileActive@'
+
+
+
+# 日志配置
+logging:
+  level:
+    com.timeblog: INFO
+    org.springframework: WARN
+    org.spring.springboot.dao: debug
+
+
+
 
 # MyBatis
 mybatis:
