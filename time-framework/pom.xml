@@ -38,6 +38,13 @@
     </dependency>
 
 
+    <!-- 集成springSecurity-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+
   </dependencies>
 
 <!--

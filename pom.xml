@@ -11,6 +11,8 @@
 
     <modules>
         <module>time-framework</module>
+        <module>time-core</module>
+        <module>time-core</module>
     </modules>
 
     <properties>
@@ -39,6 +41,16 @@
                 <scope>provided</scope>
             </dependency>
 
+
+            <!--阿里数据库连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+
+
             <!-- framework-->
             <dependency>
                 <groupId>com.timeblog</groupId>
@@ -47,11 +59,11 @@
             </dependency>
 
 
-            <!--阿里数据库连接池 -->
+            <!-- framework-->
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-starter</artifactId>
-                <version>${druid.version}</version>
+                <groupId>com.timeblog</groupId>
+                <artifactId>time-core</artifactId>
+                <version>${time.version}</version>
             </dependency>
 
 
