@@ -1,7 +1,7 @@
 # 开发环境配置
 server:
   # 服务端口
-  port: 8082
+  port: 8085
   servlet:
     # 项目contextPath
     context-path: /
@@ -15,9 +15,23 @@ server:
 
 
 spring:
+  #security配置
+  security:
+    user:
+      name: user
+      password: 123456
+
+  #thymeleaf配置
+  thymeleaf:
+    cache: false #关闭缓存
+    prefix: classpath:/templates/ #调整页面路径
+    encoding: UTF-8
+
+  #yml环境配置
   profiles:
-    #yml环境配置
     active: '@profileActive@'
+
+
 
 
 
