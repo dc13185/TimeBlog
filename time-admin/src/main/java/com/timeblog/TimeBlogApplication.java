@@ -3,7 +3,6 @@ package com.timeblog;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -13,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  * (exclude = DataSourceAutoConfiguration.class)
  **/
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.timeblog.security")
 @ComponentScan(value = {"com.timeblog.*.*"})
 @MapperScan("com.timeblog.*.mapper")
 public class TimeBlogApplication {
