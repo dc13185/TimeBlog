@@ -2,6 +2,8 @@ package com.timeblog.business.domain;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author: dong.chao
  * @create: 2019-06-19 19:10
@@ -9,7 +11,7 @@ import lombok.Data;
  **/
 
 @Data
-public class SysUser {
+public class SysUser implements Serializable {
 
     private String sysUserId;
 

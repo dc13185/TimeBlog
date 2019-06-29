@@ -1,9 +1,10 @@
 package com.timeblog.admin.controller;
 
 import com.timeblog.admin.mapper.DemoMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * @author: dong.chao
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/demo1")
 public class DemoController {
 
-    @Autowired
+    @Resource
     private DemoMapper demoMapper;
 
     @RequestMapping("/test")
