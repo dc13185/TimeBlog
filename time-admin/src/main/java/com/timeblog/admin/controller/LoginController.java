@@ -3,6 +3,7 @@ package com.timeblog.admin.controller;
 import com.timeblog.admin.mapper.SysUserMapper;
 import com.timeblog.business.base.BaseController;
 import com.timeblog.business.domain.SysUser;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,11 +40,7 @@ public class LoginController extends BaseController {
     @RequestMapping("/login")
     @ResponseBody
     public String login(SysUser paramSysUser){
-       SysUser sysUser = sysUserMapper.queryUser(paramSysUser);
-       if (sysUser == null){
-           error("用户名或密码错误");
-       }
-
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         return "";
     }

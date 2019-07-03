@@ -44,6 +44,11 @@
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 
+   <dependency>
+      <groupId>com.timeblog</groupId>
+      <artifactId>time-core</artifactId>
+   </dependency>
+
 
   </dependencies>
 

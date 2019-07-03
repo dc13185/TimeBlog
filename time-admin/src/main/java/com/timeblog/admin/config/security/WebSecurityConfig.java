@@ -1,18 +1,13 @@
-package com.timeblog.framework.security;
+package com.timeblog.admin.config.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author: dong.chao
@@ -24,8 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
+    private  Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
 
+    @Autowired
+    private MyAuthenticationProvider myAuthenticationProvider;
 
    /** 通过authorizeRequests()定义哪些URL需要被保护、
        哪些不需要被保护。
@@ -47,6 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin()
                 // 定义登录的页面"/login"，允许访问
             .loginPage("/login/toLoginView")
+                //校验url
+            .loginProcessingUrl("/login/form")
             .permitAll()
         .and()
             .logout()
@@ -56,34 +55,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-        .inMemoryAuthentication()
-        .withUser("user").password("password").roles("USER");
+        auth.authenticationProvider(myAuthenticationProvider);
     }
 
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
-        auth.eraseCredentials(false);
-    }
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() { //密码加密
-        return new BCryptPasswordEncoder(4);
-    }
 
 
-  /*  @Bean
-    public SavedRequestAwareAuthenticationSuccessHandler loginSuccessHandler() { //登入处理
-        return new SavedRequestAwareAuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                User userDetails = (User) authentication.getPrincipal();
-                logger.info("USER : " + userDetails.getUsername() + " LOGIN SUCCESS !  ");
-                super.onAuthenticationSuccess(request, response, authentication);
-            }
-        };
-    }*/
+
 
 }

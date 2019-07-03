@@ -12,8 +12,8 @@ import org.springframework.context.annotation.ComponentScan;
  * (exclude = DataSourceAutoConfiguration.class)
  **/
 
-@SpringBootApplication(scanBasePackages = "com.timeblog.security")
-@ComponentScan(value = {"com.timeblog.*.*"})
+@SpringBootApplication
+@ComponentScan(value = {"com.timeblog.*.**"})
 @MapperScan("com.timeblog.*.mapper")
 public class TimeBlogApplication {
     public static void main(String[] args) {

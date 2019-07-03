@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timeblog.admin.mapper.SysUserMapper">
+
+    <resultMap type="com.timeblog.admin.domain.UserInfo" id="TimeSystemUserMap">
+        <result property="sysUserId" column="sys_user_id" jdbcType="INTEGER"/>
+        <result property="loginName" column="login_name" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="loginIp" column="login_ip" jdbcType="VARCHAR"/>
+        <result property="loginDate" column="login_date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="sysUserSql">
+        <![CDATA[
+           sys_user_id, login_name, user_name, email, password, login_ip, login_date
+	    ]]>
+	</sql>
+
+
+    <!--查询单个-->
+    <select id="queryUserByLoginName" resultMap="TimeSystemUserMap">
+        select
+        <include refid="sysUserSql" />
+        from timeblog.time_system_user
+        where login_name = #{loginName}
+    </select>
+
+
+</mapper>

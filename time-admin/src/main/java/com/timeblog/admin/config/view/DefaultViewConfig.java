@@ -1,4 +1,4 @@
-package com.timeblog.admin.config;
+package com.timeblog.admin.config.view;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
