@@ -34,6 +34,7 @@ public class MyUserDetailsService implements UserDetailsService {
     * @Author: dong.chao
     * @Date: 2019/7/3
     */
+    @Override
     public UserDetails loadUserByUsername(String loginName) throws UsernameNotFoundException {
         logger.info("用户{}开始登录",loginName);
         UserInfo userInfo =  sysUserMapper.queryUserByLoginName(loginName);

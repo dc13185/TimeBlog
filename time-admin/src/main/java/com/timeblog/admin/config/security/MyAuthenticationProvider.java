@@ -9,7 +9,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -25,11 +24,12 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private MyUserDetailsService myUserDetailService;
 
-
+    @Override
     public boolean supports(Class<?> aClass) {
         return true;
     }
 
+    @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         // 这个获取表单输入中返回的用户名;
         String userName = authentication.getName();
@@ -39,7 +39,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         // 这里调用我们的自己写的获取用户的方法；
         UserInfo userInfo = (UserInfo) myUserDetailService.loadUserByUsername(userName);
         if (userInfo == null) {
-            throw new UsernameNotFoundException(String.format("用户%s不存在",userName));
+            throw new BadCredentialsException("密码不正确");
         }
         // //这里我们还要判断密码是否正确，实际应用中，我们的密码一般都会加密，以Md5加密为例
         // Md5PasswordEncoder md5PasswordEncoder=new Md5PasswordEncoder();

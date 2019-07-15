@@ -3,11 +3,14 @@ package com.timeblog.admin.config.security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 /**
  * @author: dong.chao
@@ -23,6 +26,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MyAuthenticationProvider myAuthenticationProvider;
+
+    @Autowired
+    private AuthenticationSuccessHandler myAuthenticationSuccessHandler;
+
+    @Autowired
+    private AuthenticationFailureHandler myAuthenticationFailHander;
 
    /** 通过authorizeRequests()定义哪些URL需要被保护、
        哪些不需要被保护。
@@ -44,8 +53,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin()
                 // 定义登录的页面"/login"，允许访问
             .loginPage("/login/toLoginView")
-                //校验url
-            .loginProcessingUrl("/login/form")
+                //登录请求拦截的url,也就是form表单提交时指定的action
+            .loginProcessingUrl("/login/from")
+            .successHandler(myAuthenticationSuccessHandler)
+            .failureHandler(myAuthenticationFailHander)
             .permitAll()
         .and()
             .logout()
@@ -54,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(myAuthenticationProvider);
     }
 

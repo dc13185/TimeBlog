@@ -37,11 +37,18 @@ public class LoginController extends BaseController {
 
 
 
-    @RequestMapping("/login")
+    @RequestMapping("/toLogin")
     @ResponseBody
     public String login(SysUser paramSysUser){
         Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        return "";
+    }
+
+
+    @RequestMapping("/from")
+    @ResponseBody
+    public String loginFrom(SysUser paramSysUser){
         return "";
     }
 }
