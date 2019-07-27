@@ -18,31 +18,19 @@ spring:
   main:
     # bean当遇到同样名字的时候，是否允许覆盖注册
     allow-bean-definition-overriding: true
-
-  #security配置
-  security:
-    user:
-      name: user
-      password: 123456
-
   #thymeleaf配置
   thymeleaf:
     cache: false #关闭缓存
     prefix: classpath:/templates/ #调整页面路径
     encoding: UTF-8
-
   #yml环境配置
   profiles:
     active: '@profileActive@'
-
   # 服务模块
   devtools:
     restart:
       # 热部署开关
       enabled: true
-
-
-
 
 
 # 日志配置
@@ -51,8 +39,6 @@ logging:
     com.timeblog: INFO
     org.springframework: WARN
     org.spring.springboot.dao: debug
-
-
 
 
 # MyBatis
@@ -64,3 +50,6 @@ mybatis:
   # 加载全局的配置文件
   # configLocation: classpath:mapper/mybatis-config.xml
 
+
+security:
+  indexUrl: /index/toIndexView

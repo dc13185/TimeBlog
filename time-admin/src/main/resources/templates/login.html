@@ -113,6 +113,9 @@
                         $('#captcha').sliderCaptcha('reset');
                     }else if(data.code == '200'){
 
+                        var uri =  [[@{/index/toIndexView}]]  ;
+                        location.href = uri;
+
                     }
                 }
             });

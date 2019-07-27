@@ -4,6 +4,7 @@ import com.timeblog.admin.mapper.SysUserMapper;
 import com.timeblog.business.base.BaseController;
 import com.timeblog.business.base.Result;
 import com.timeblog.business.domain.SysUser;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -35,9 +36,12 @@ public class LoginController extends BaseController {
     * @Date: 2019/6/25
     */
     @RequestMapping("/toLoginView")
-    public String toLoginView(ModelMap model){
-        model.addAttribute("result",111);
-        return  "login";
+    public String toLoginView(Authentication authentication){
+        if (authentication == null ){
+            return  "login";
+        }else{
+            return  "forward:index/toIndexView";
+        }
     }
 
 
