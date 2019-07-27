@@ -28,8 +28,6 @@ public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
-        super.onAuthenticationSuccess(request, response, authentication);
-
         Map<String,String> map=new HashMap<>(4);
         map.put("code", "200");
         map.put("msg", "登录成功");

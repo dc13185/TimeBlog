@@ -2,13 +2,17 @@ package com.timeblog.admin.controller;
 
 import com.timeblog.admin.mapper.SysUserMapper;
 import com.timeblog.business.base.BaseController;
+import com.timeblog.business.base.Result;
 import com.timeblog.business.domain.SysUser;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -31,7 +35,8 @@ public class LoginController extends BaseController {
     * @Date: 2019/6/25
     */
     @RequestMapping("/toLoginView")
-    public String toLoginView(){
+    public String toLoginView(ModelMap model){
+        model.addAttribute("result",111);
         return  "login";
     }
 
@@ -46,9 +51,16 @@ public class LoginController extends BaseController {
     }
 
 
-    @RequestMapping("/from")
-    @ResponseBody
-    public String loginFrom(SysUser paramSysUser){
-        return "";
+
+
+    @RequestMapping("/loginFail")
+    public String loginFail(HttpServletRequest request){
+       Result result = new Result();
+       result.put("code",500);
+       request.setAttribute("result",result);
+       return  "login";
     }
+
+
+
 }

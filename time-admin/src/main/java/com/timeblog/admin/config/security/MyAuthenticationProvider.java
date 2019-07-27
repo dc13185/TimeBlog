@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -30,7 +31,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) {
         // 这个获取表单输入中返回的用户名;
         String userName = authentication.getName();
         // 这个是表单中输入的密码；
@@ -39,7 +40,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         // 这里调用我们的自己写的获取用户的方法；
         UserInfo userInfo = (UserInfo) myUserDetailService.loadUserByUsername(userName);
         if (userInfo == null) {
-            throw new BadCredentialsException("密码不正确");
+            throw new UsernameNotFoundException("用户名不存在");
         }
         // //这里我们还要判断密码是否正确，实际应用中，我们的密码一般都会加密，以Md5加密为例
         // Md5PasswordEncoder md5PasswordEncoder=new Md5PasswordEncoder();
@@ -55,7 +56,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         //
         //
         if (!userInfo.getPassword().equals(password)) {
-            throw new BadCredentialsException("密码不正确");
+            throw new BadCredentialsException("用户名或密码不正确");
         }
         Collection<? extends GrantedAuthority> authorities = userInfo.getAuthorities();
         // 构建返回的用户登录成功的token

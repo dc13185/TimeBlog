@@ -33,6 +33,8 @@ public class Result extends HashMap<String,Object> {
     }
 
 
+
+
     public static void main(String[] args) {
         Result result =  Result.success();
         System.out.println(result);

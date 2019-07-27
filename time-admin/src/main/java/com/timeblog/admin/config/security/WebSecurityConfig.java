@@ -3,7 +3,6 @@ package com.timeblog.admin.config.security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,7 +14,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 /**
  * @author: dong.chao
  * @create: 2019-06-27 10:21
- * @description: security配置
+ * @description: springSecurity 配置类
  **/
 
 @Configuration
@@ -41,6 +40,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+       /*  .successHandler(myAuthenticationSuccessHandler)
+                .failureHandler(myAuthenticationFailHander)*/
         http
             .authorizeRequests()
                  // 请求路径"/"，"/home"允许访问
@@ -57,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .loginProcessingUrl("/login/from")
             .successHandler(myAuthenticationSuccessHandler)
             .failureHandler(myAuthenticationFailHander)
+                //登录失败跳转页面   .failureForwardUrl("/login/loginFail")
             .permitAll()
         .and()
             .logout()
