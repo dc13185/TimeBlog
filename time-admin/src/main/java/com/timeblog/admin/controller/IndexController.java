@@ -1,5 +1,6 @@
 package com.timeblog.admin.controller;
 
+import com.timeblog.business.base.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -11,12 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/index")
-public class IndexController {
+public class IndexController  extends BaseController {
 
     @RequestMapping("/toIndexView")
     public String toIndexView(){
         return  "index";
     }
+
+
 
 
 }

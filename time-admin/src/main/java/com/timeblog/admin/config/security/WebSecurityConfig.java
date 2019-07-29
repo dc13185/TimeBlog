@@ -60,6 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .failureHandler(myAuthenticationFailHander)
                 //登录失败跳转页面   .failureForwardUrl("/login/loginFail")
             .permitAll()
+                //设置frame在同一个域名下可以访问
+        .and().headers().frameOptions().sameOrigin()
         .and()
             .logout()
             .permitAll();

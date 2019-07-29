@@ -55,30 +55,37 @@ public class UserInfo  implements UserDetails {
      * */
     private boolean enabled  = true;
 
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.commaSeparatedStringToAuthorityList(role);
     }
 
+    @Override
     public String getUsername() {
         return this.loginName;
     }
 
+    @Override
     public boolean isAccountNonExpired() {
         return accountNonExpired;
     }
 
+    @Override
     public boolean isAccountNonLocked() {
         return accountNonLocked;
     }
 
+    @Override
     public boolean isCredentialsNonExpired() {
         return credentialsNonExpired;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
 
+    @Override
     public String getPassword() {
         return this.password;
     }

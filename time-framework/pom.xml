@@ -10,6 +10,9 @@
     <version>1.0</version>
   </parent>
 
+
+
+
   <artifactId>time-framework</artifactId>
   <modelVersion>4.0.0</modelVersion>
   <description>核心模块，用于配置SpringBoot依赖</description>
@@ -42,6 +45,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <!--thymeleaf集成springsecurity-->
+    <dependency>
+      <groupId>org.thymeleaf.extras</groupId>
+      <artifactId>thymeleaf-extras-springsecurity5</artifactId>
     </dependency>
 
    <dependency>
