@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  **/
 @Controller
 @RequestMapping("/dataView")
-public class DataViewController   extends BaseController {
+public class DataViewController extends BaseController {
 
     /** 
     * @Description: 初始化首页数据
