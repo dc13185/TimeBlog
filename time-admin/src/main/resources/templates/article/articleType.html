@@ -2,52 +2,48 @@
 
 <head th:include="include :: header"></head>
 <body class="gray-bg">
-<div class="ibox float-e-margins">
-    <div class="ibox-title">
-        <h5>测试一下</h5>
-    </div>
-    <div class="ibox-content">
-        <!-- 表格 -->
-        <div class="row row-lg">
-            <div class="col-sm-12">
-                <!-- Example Events -->
-                <div class="example-wrap">
-                    <div class="example">
-                        <div class="btn-group hidden-xs" id="exampleTableEventsToolbar"
-                             role="group">
-                            <button type="button" class="btn btn-outline btn-default" id="addButton">
-                                <i class="glyphicon glyphicon-plus"  aria-hidden="true"></i>
-                            </button>
-                            <button type="button" class="btn btn-outline btn-default" id="deleteButton">
-                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
-                            </button>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>文章类型</h5>
+        </div>
+        <div class="ibox-content">
+            <!-- 表格 -->
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <!-- Example Events -->
+                    <div class="example-wrap">
+
+                        <div class="example">
+                            <div class="btn-group hidden-xs" id="exampleTableEventsToolbar"
+                                 role="group">
+                                <button type="button" class="btn  btn-success" id="addButton">
+                                    <i class="glyphicon glyphicon-plus"  aria-hidden="true"></i>
+                                </button>
+
+                                <button type="button" class="btn  btn-warning" id="deleteButton">
+                                    <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <table id="exampleTableEvents" data-height="400"   >
+                            </table>
                         </div>
-                        <table id="exampleTableEvents" data-height="400"   >
-                        </table>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- 表格结束 -->
     </div>
-    <!-- 表格结束 -->
-
-
-
-
 </div>
 
 
-
+<head th:include="include :: footer"></head>
 <script type="text/javascript">
-    var widths=136;
-    var heights=150;
     $(function(){
         //初始化Table
         var oTable = new TableInit();
         oTable.Init();
-    })
-
-
+    });
 
     var TableInit = function () {
 
@@ -55,9 +51,9 @@
         //初始化Table
         oTableInit.Init = function () {
             $('#exampleTableEvents').bootstrapTable({
-                url:'/storeAction/findStoreListByPage',         //请求后台的URL（*）
+                url:'/storeAction/findStoreListByPage',//请求后台的URL（*）
                 method: 'post',                      //请求方式（*）
-                toolbar: '#exampleTableEventsToolbar',                //工具按钮用哪个容器
+                toolbar: '#exampleTableEventsToolbar',  //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -72,25 +68,26 @@
                 pageList: [10, 15, 20, 50],        //可供选择的每页的行数（*）
                 search: true,                       //是否显示表格搜索
                 strictSearch: true,
-                showColumns: true,                  //是否显示所有的列
-                showRefresh: true,                  //是否显示刷新按钮
+                showColumns: false,                  //是否显示所有的列,即选择列查看
+                showRefresh: false,                  //是否显示刷新按钮
                 minimumCountColumns: 2,             //最少允许的列数
                 clickToSelect: true,                //是否启用点击选中行
                 //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
                 uniqueId: "id",                     //每一行的唯一标识，一般为主键列
-                showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+                showToggle:false,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //是否显示详细视图
                 detailView: false,                   //是否显示父子表
                 iconSize: 'outline',
                 contentType: "application/x-www-form-urlencoded", //解决POST提交问题
-                showExport: true,                     //是否显示导出
+                showExport: false,                     //是否显示导出
                 buttonsAlign:"right",  //按钮位置
                 exportDataType: "selected",              //basic', 'all', 'selected'.
                 exportTypes:['excel','txt','json', 'xml'],  //导出文件类型   //'json', 'xml', 'csv', 'txt', 'sql', 'excel'
                 Icons:'glyphicon-export',
                 responseHandler:function(res) {
                     return {
-                        "total": res.page.total,//总页数
+                        "total": res.
+                            .total,//总页数
                         "rows": res.page.rows   //数据
                     };
                 },
@@ -100,8 +97,7 @@
                     columns: 'glyphicon-list'
                 },
                 columns: [
-                    {checkbox: true }
-                    ],
+                ],
             });
         };
 
@@ -119,10 +115,6 @@
         return oTableInit;
 
     }
-
-
-
-
 
 </script>
 </body>

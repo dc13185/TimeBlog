@@ -1,9 +1,6 @@
 package com.timeblog.admin.mapper;
 
 import com.timeblog.admin.domain.UserInfo;
-import com.timeblog.business.domain.SysUser;
-import org.apache.ibatis.annotations.Param;
-import java.util.List;
 
 /**
  * (TimeSystemUser)表数据库访问层
