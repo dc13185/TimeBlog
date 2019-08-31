@@ -51,8 +51,8 @@
         //初始化Table
         oTableInit.Init = function () {
             $('#exampleTableEvents').bootstrapTable({
-                url:'/storeAction/findStoreListByPage',//请求后台的URL（*）
-                method: 'post',                      //请求方式（*）
+                url:ctx+'articleType/showArticleType',//请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
                 toolbar: '#exampleTableEventsToolbar',  //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -85,9 +85,9 @@
                 exportTypes:['excel','txt','json', 'xml'],  //导出文件类型   //'json', 'xml', 'csv', 'txt', 'sql', 'excel'
                 Icons:'glyphicon-export',
                 responseHandler:function(res) {
+                    debugger;
                     return {
-                        "total": res.
-                            .total,//总页数
+                        "total": res.page.total,//总页数
                         "rows": res.page.rows   //数据
                     };
                 },

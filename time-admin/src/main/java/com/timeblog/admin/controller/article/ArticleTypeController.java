@@ -1,13 +1,14 @@
 package com.timeblog.admin.controller.article;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.timeblog.business.base.BaseController;
 import com.timeblog.business.base.Result;
 import com.timeblog.business.domain.ArticleType;
+import com.timeblog.framework.mapper.ArticleTypeMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import timeblog.framework.mapper.ArticleTypeMapper;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -21,8 +22,10 @@ import java.util.List;
 @RequestMapping("/articleType")
 public class ArticleTypeController extends BaseController {
 
+
     @Resource
     private ArticleTypeMapper articleTypeMapper;
+
 
     @RequestMapping("/toArticleType")
     public String toArticleType(){
@@ -30,11 +33,11 @@ public class ArticleTypeController extends BaseController {
     }
 
 
-    @RequestMapping("/showAticleType")
+    @RequestMapping("/showArticleType")
     @ResponseBody
-    public Result showArticleType(){
-        PageHelper.startPage(1,10);
+    public Result showArticleType(Page<ArticleType> page){
+        page = PageHelper.startPage(1,10);
         List<ArticleType> articleTypeList =  articleTypeMapper.queryAll(new ArticleType());
-        return null;
+        return Result.success(articleTypeList);
     }
 }

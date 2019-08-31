@@ -1,4 +1,3 @@
-Application Version: ${time.version}
 Spring Boot Version: ${spring-boot.version}
 ////////////////////////////////////////////////////////////////////
 //                          _ooOoo_                               //

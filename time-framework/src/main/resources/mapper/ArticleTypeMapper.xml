@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="timeblog.framework.mapper.ArticleTypeMapper">
+<mapper namespace="com.timeblog.framework.mapper.ArticleTypeMapper">
 
     <resultMap type="com.timeblog.business.domain.ArticleType" id="TimeArticleTypeMap">
         <result property="typeId" column="type_id" jdbcType="INTEGER"/>
@@ -38,8 +38,8 @@
             <if test="icon != null and icon != ''">
                 and icon = #{icon}
             </if>
-            <if test="isavailable != null">
-                and isAvailable = #{isavailable}
+            <if test="isAvailable != null">
+                and isAvailable = #{isAvailable}
             </if>
             <if test="description != null and description != ''">
                 and description = #{description}
