@@ -45,14 +45,17 @@
         oTable.Init();
     });
 
-    var TableInit = function () {
-
-        var oTableInit = new Object();
+    let TableInit = function () {
+        debugger;
+        let header = $("meta[name='_csrf_header']").attr("content");
+        let token =$("meta[name='_csrf']").attr("content");
+        let oTableInit = new Object();
         //初始化Table
         oTableInit.Init = function () {
             $('#exampleTableEvents').bootstrapTable({
+
                 url:ctx+'articleType/showArticleType',//请求后台的URL（*）
-                method: 'get',                      //请求方式（*）
+                method: 'post',                      //请求方式（*）
                 toolbar: '#exampleTableEventsToolbar',  //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -78,17 +81,22 @@
                 cardView: false,                    //是否显示详细视图
                 detailView: false,                   //是否显示父子表
                 iconSize: 'outline',
-                contentType: "application/x-www-form-urlencoded", //解决POST提交问题
+                contentType: "application/json;charset=utf-8", //解决POST提交问题
                 showExport: false,                     //是否显示导出
                 buttonsAlign:"right",  //按钮位置
                 exportDataType: "selected",              //basic', 'all', 'selected'.
                 exportTypes:['excel','txt','json', 'xml'],  //导出文件类型   //'json', 'xml', 'csv', 'txt', 'sql', 'excel'
                 Icons:'glyphicon-export',
+                ajaxOptions:{
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token)
+                    }
+                },
                 responseHandler:function(res) {
                     debugger;
                     return {
-                        "total": res.page.total,//总页数
-                        "rows": res.page.rows   //数据
+                        "total": res.total,//总页数
+                        "rows": res.rows   //数据
                     };
                 },
                 icons: {
@@ -97,20 +105,43 @@
                     columns: 'glyphicon-list'
                 },
                 columns: [
+                    {checkbox: true },
+                    {
+                        title: '序号',
+                        field: '',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            var pageSize = $('#exampleTableEvents').bootstrapTable('getOptions').pageSize;     //通过table的#id 得到每页多少条
+                            var pageNumber = $('#exampleTableEvents').bootstrapTable('getOptions').pageNumber; //通过table的#id 得到当前第几页
+                            return pageSize * (pageNumber - 1) + index + 1;    // 返回每条的序号： 每页条数 *（当前页 - 1 ）+ 序号
+                        }
+                    },
+                    {title:'文章类型',field: 'typeName',sortable:true },
+                    {title:'图标',field: 'icon',sortable:true },
+                    {title:'描述',field: 'description',sortable:true },
+                    {title:'操作',field:"Button",align:"center",formatter:function (value, row, index) {
+                            return [
+                                '<i class="fa fa-edit editButton" style="cursor: pointer;" ></i>'
+                            ].join("")
+
+                        }
+                    }
+
                 ],
             });
         };
 
         //得到查询的参数
         oTableInit.queryParams = function (params) {
-            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            debugger;
+            let temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                 pageSize: params.limit,   //页面大小
-                pageNumber:params.pageNumber, //页码
-                sortName: params.sort,	//排序列名
-                sortOrder:params.order,	//排序方式
-                searchText:params.search//搜索框参数
+                pageNumber:params.offset, //页码
+                 /*   sortName: params.sort,	//排序列名
+                    sortOrder:params.order,	//排序方式*/
+                retrieve:params.search//搜索框参数
             };
-            return temp;
+            return JSON.stringify(temp);
         };
         return oTableInit;
 

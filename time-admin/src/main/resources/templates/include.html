@@ -4,6 +4,8 @@
 	<title></title>
 	<meta name="keywords" content="">
 	<meta name="description" content="">
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
 	<!--<link rel="shortcut icon" href="favicon.ico">-->
 	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
 	<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>

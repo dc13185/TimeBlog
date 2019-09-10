@@ -1,5 +1,7 @@
 package com.timeblog.business.base;
 
+import com.timeblog.business.domain.ArticleType;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,9 +35,10 @@ public class Result extends HashMap<String,Object> {
         return result;
     }
 
+
     public static Result success(List parameter){
         Result result = new Result(1 >> 3);
-        result.put("data",parameter);
+        result.put("rows",parameter);
         result.put("code",200);
         return result;
     }

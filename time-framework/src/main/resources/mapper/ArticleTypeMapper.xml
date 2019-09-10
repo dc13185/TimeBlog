@@ -22,27 +22,11 @@
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TimeArticleTypeMap">
-        select
-        type_id, type_name, sort, icon, isAvailable, description
+        select  type_id, type_name, sort, icon, isAvailable, description
         from timeblog.time_article_type
         <where>
-            <if test="typeId != null">
-                and type_id = #{typeId}
-            </if>
-            <if test="typeName != null and typeName != ''">
-                and type_name = #{typeName}
-            </if>
-            <if test="sort != null">
-                and sort = #{sort}
-            </if>
-            <if test="icon != null and icon != ''">
-                and icon = #{icon}
-            </if>
-            <if test="isAvailable != null">
-                and isAvailable = #{isAvailable}
-            </if>
-            <if test="description != null and description != ''">
-                and description = #{description}
+            <if test="retrieve != null">
+                and type_name = #{retrieve}
             </if>
         </where>
     </select>

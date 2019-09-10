@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 public class BaseDomain {
 
-    private Date createTime;
+    protected Date createTime;
 
-    private Date updateTime;
+    protected Date updateTime;
 }

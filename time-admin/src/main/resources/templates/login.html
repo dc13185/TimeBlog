@@ -71,7 +71,39 @@
     /*<![CDATA[*/
     $(function(){
         $("#loginBtn").click(function () {
-            $(".container-fluid").show(200);
+            // $(".container-fluid").show(200);
+
+            var url =  [[@{/login/from}]]  ;
+            var loginName = $("#loginName").val();
+            var password = $("#password").val();
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var token =$("meta[name='_csrf']").attr("content");
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: url,
+                data: {
+                    "username":loginName,
+                    "password":password
+                },
+                cache: false,
+                async: false,
+                beforeSend : function(xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function (data) {
+                    if(data.code == '201'){
+                        //用户名密码错误
+                        alert(data.msg);
+                        $('#captcha').sliderCaptcha('reset');
+                    }else if(data.code == '200'){
+
+                        var uri =  [[@{/index/toIndexView}]]  ;
+                        location.href = uri;
+
+                    }
+                }
+            });
         })
     })
 

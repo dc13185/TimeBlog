@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
                  // 请求路径"/"，"/home"允许访问
-            .antMatchers("/js/**","/css/**","/images/*","/fonts/**","/**/*.png","/**/*.jpg")
+            .antMatchers("/js/**","/css/**","/images/*","/fonts/**","/**/*.png","/**/*.jpg","/articleType/*")
             .permitAll()
                 //而其他的请求都需要认证
             .anyRequest()
