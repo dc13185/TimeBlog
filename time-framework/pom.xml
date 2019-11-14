@@ -12,6 +12,7 @@
 
 
   <artifactId>time-framework</artifactId>
+  <name>time-framework</name>
   <modelVersion>4.0.0</modelVersion>
   <description>核心模块，用于配置SpringBoot依赖</description>
 
@@ -19,8 +20,6 @@
     <springboot-mysql.version>1.3.1</springboot-mysql.version>
   </properties>
 
-
-  <name>time-framework</name>
 
   <dependencies>
     <!--SpringBoot核心依赖配置-->

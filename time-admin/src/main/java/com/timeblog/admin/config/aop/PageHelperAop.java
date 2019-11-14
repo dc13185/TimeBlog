@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class PageHelperAop {
 
-    @Pointcut("execution(public * com.timeblog.admin.controller.article.ArticleTypeController.showArticleTypeWithPage(..))")
+    @Pointcut("execution(public * com.timeblog.admin.controller.*.*Controller.*WithPage(..))")
     public void serviceFindFunction(){}
 
 

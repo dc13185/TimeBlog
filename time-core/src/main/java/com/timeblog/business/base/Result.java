@@ -29,7 +29,7 @@ public class Result extends HashMap<String,Object> {
 
     /** 操作失败 */
     public static Result error(String msg){
-        Result result = new Result(1 >> 3);
+        Result result = new Result(1 << 3);
         result.put("msg",msg);
         result.put("code",500);
         return result;
@@ -37,7 +37,7 @@ public class Result extends HashMap<String,Object> {
 
 
     public static Result success(List parameter){
-        Result result = new Result(1 >> 3);
+        Result result = new Result(1 << 3);
         result.put("rows",parameter);
         result.put("code",200);
         return result;

@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.timeblog</groupId>
@@ -12,7 +13,8 @@
     <modules>
         <module>time-framework</module>
         <module>time-core</module>
-        <module>time-core</module>
+        <module>time-admin</module>
+        <module>time-spider</module>
     </modules>
 
     <properties>
@@ -25,6 +27,7 @@
         <servlet.version>3.1.0</servlet.version>
         <pagehelper.version>1.2.12</pagehelper.version>
         <springboot-mysql.version>1.3.1</springboot-mysql.version>
+        <commons-logging.version>1.2</commons-logging.version>
     </properties>
 
     <dependencyManagement>
@@ -85,6 +88,11 @@
                 <version>${time.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>${commons-logging.version}</version>
+            </dependency>
 
             <!-- core -->
             <dependency>
@@ -92,6 +100,16 @@
                 <artifactId>time-core</artifactId>
                 <version>${time.version}</version>
             </dependency>
+
+            <!-- spider -->
+            <dependency>
+                <groupId>com.timeblog</groupId>
+                <artifactId>time-spider</artifactId>
+                <version>${time.version}</version>
+            </dependency>
+
+
+
         </dependencies>
     </dependencyManagement>
 

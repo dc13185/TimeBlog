@@ -13,14 +13,12 @@
                 <div class="col-sm-12">
                     <!-- Example Events -->
                     <div class="example-wrap">
-
                         <div class="example">
                             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar"
                                  role="group">
                                 <button type="button" class="btn  btn-success" id="addButton">
                                     <i class="glyphicon glyphicon-plus"  aria-hidden="true"></i>
                                 </button>
-
                                 <button type="button" class="btn  btn-warning" id="deleteButton">
                                     <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
                                 </button>
@@ -37,6 +35,33 @@
 </div>
 
 
+<!--文章新增-->
+<div class="modal inmodal" id="articleModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                </button>
+                <h4 class="modal-title">新增类型</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <input type="hidden" id="storeType_id" name="storeType_id" >
+                    <div class="form-group">
+                        <label>类型名称</label>
+                        <input type="text" id="storeType_name" name="storeType_name" placeholder="请输入类型名" class="form-control">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary saveSubmit">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <head th:include="include :: footer"></head>
 <script type="text/javascript">
     $(function(){
@@ -46,14 +71,12 @@
     });
 
     let TableInit = function () {
-        debugger;
         let header = $("meta[name='_csrf_header']").attr("content");
         let token =$("meta[name='_csrf']").attr("content");
         let oTableInit = new Object();
         //初始化Table
         oTableInit.Init = function () {
             $('#exampleTableEvents').bootstrapTable({
-
                 url:ctx+'articleType/showArticleType',//请求后台的URL（*）
                 method: 'post',                      //请求方式（*）
                 toolbar: '#exampleTableEventsToolbar',  //工具按钮用哪个容器
@@ -146,6 +169,17 @@
         return oTableInit;
 
     }
+
+
+    $("#addButton").on("click", function () {
+        $("#staffName").val("");
+        $("#staffId").val("");
+        $("#staffPosition").val("");
+        $("#staffAddress").val("");
+        $("#phone").val("");
+        //$(this).parents(".uploader").find(".filename").val($(this).val());
+        $("#articleModal").modal();
+    })
 
 </script>
 </body>
