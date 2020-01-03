@@ -1,7 +1,9 @@
 package controller;
 
+import config.HttpClientDownloaderLocal;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
+import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 
 
@@ -19,11 +21,16 @@ public class CsdnSpiderController implements PageProcessor {
 
     @Override
     public void process(Page page) {
+        String a = page.getHtml().toString();
 
     }
 
     @Override
     public Site getSite() {
         return site;
+    }
+
+    public static void main(String[] args) {
+        Spider.create(new CsdnSpiderController()).setDownloader(new HttpClientDownloaderLocal()).addUrl("https://www.csdn.net/nav/java").thread(5).run();
     }
 }
