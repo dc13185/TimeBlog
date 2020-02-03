@@ -200,10 +200,10 @@
         oTableInit.queryParams = function (params) {
             let temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                 pageSize: params.limit,   //页面大小
-                pageNumber:params.offset, //页码
+                pageNumber:this.pageNumber, //页码
                  /*   sortName: params.sort,	//排序列名
                     sortOrder:params.order,	//排序方式*/
-                retrieve:params.search//搜索框参数
+                retrieve:params.search,//搜索框参数
             };
             return JSON.stringify(temp);
         };
