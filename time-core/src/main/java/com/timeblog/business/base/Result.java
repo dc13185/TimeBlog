@@ -20,7 +20,7 @@ public class Result extends HashMap<String,Object> {
 
     /** 操作成功 */
     public static Result success(){
-        Result result = new Result(1 >> 3);
+        Result result = new Result(1 << 3);
         result.put("msg","success");
         result.put("code",200);
         return result;

@@ -30,4 +30,24 @@ public interface ArticleTypeMapper {
      */
     List<ArticleType> queryAll(PageDomain pageDomain);
 
+    /**
+     * 新增
+     * @param articleType
+     */
+    public void insert(ArticleType articleType);
+
+    /**
+     * 删除一行
+     * @param articleTypeId
+     */
+    public void deleteById(String articleTypeId);
+
+
+    /**
+     * 删除一行
+     * @param articleTypeId
+     */
+    public void update(String articleTypeId);
+
+
 }

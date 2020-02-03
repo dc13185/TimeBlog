@@ -49,7 +49,44 @@
                     <input type="hidden" id="storeType_id" name="storeType_id" >
                     <div class="form-group">
                         <label>类型名称</label>
-                        <input type="text" id="storeType_name" name="storeType_name" placeholder="请输入类型名" class="form-control">
+                        <input type="text" id="storeType_name" name="storeType_name" placeholder="请输入文章类型" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>输入描述</label>
+                        <input type="text" id="storeType_describe" name="storeType_describe" placeholder="请输入描述" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary btn-sm" id = "inconButton">点击选择图标</button>
+                        <div class="bs-glyphicons">
+                            <!--展示所有的图标-->
+                            <div class="row fontawesome-icon-list" id="inconModeal" >
+                                <div class="fa-hover col-md-3 col-sm-4 "><a href="#code"><i class="fa fa-code"></i> code</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#internet-explorer"><i class="fa fa-internet-explorer"></i> internet-explorer</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#commenting-o"><i class="fa fa-commenting-o"></i> commenting-o</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#balance-scale"><i class="fa fa-balance-scale"></i> balance-scale</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#hourglass-start"><i class="fa fa-hourglass-1"></i> hourglass-1 <span class="text-muted">(alias)</span></a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#wikipedia-w"><i class="fa fa-wikipedia-w"></i> wikipedia-w</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#ban"><i class="fa fa-ban"></i> ban</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#bug"><i class="fa fa-bug"></i> bug</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#picture-o"><i class="fa fa-photo"></i> photo <span class="text-muted">(alias)</span></a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#paper-plane-o"><i class="fa fa-send-o"></i> send-o <span class="text-muted">(alias)</span></a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#code-fork"><i class="fa fa-code-fork"></i> code-fork</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#ellipsis-h"><i class="fa fa-ellipsis-h"></i> ellipsis-h</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#book"><i class="fa fa-book"></i> book</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#calculator"><i class="fa fa-calculator"></i> calculator</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#paper-plane"><i class="fa fa-send"></i> send <span class="text-muted">(alias)</span></a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#wifi"><i class="fa fa-wifi"></i> wifi</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#globe"><i class="fa fa-globe"></i> globe</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#graduation-cap"><i class="fa fa-graduation-cap"></i> graduation-cap</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#keyboard-o"><i class="fa fa-keyboard-o"></i> keyboard-o</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#trophy"><i class="fa fa-trophy"></i> trophy</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#sun-o"><i class="fa fa-sun-o"></i> sun-o</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#pie-chart"><i class="fa fa-pie-chart"></i> pie-chart</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#paper-plane"><i class="fa fa-paper-plane"></i> paper-plane</a></div>
+                                <div class="fa-hover col-md-3 col-sm-4"><a href="#rss"><i class="fa fa-rss"></i> rss</a></div>
+                            </div>
+                        </div>
+
                     </div>
                 </form>
             </div>
@@ -61,10 +98,11 @@
     </div>
 </div>
 
-
 <head th:include="include :: footer"></head>
 <script type="text/javascript">
     $(function(){
+        //隐藏下拉
+        $("#inconModeal").hide();
         //初始化Table
         var oTable = new TableInit();
         oTable.Init();
@@ -116,7 +154,6 @@
                     }
                 },
                 responseHandler:function(res) {
-                    debugger;
                     return {
                         "total": res.total,//总页数
                         "rows": res.rows   //数据
@@ -140,7 +177,12 @@
                         }
                     },
                     {title:'文章类型',field: 'typeName',sortable:true },
-                    {title:'图标',field: 'icon',sortable:true },
+                    {title:'图标',field: 'icon',sortable:true,formatter:function (value, row, index) {
+                            return [
+                                '<i class="'+row.icon+'" style="cursor: pointer;margin-right: 10px"  ></i>'
+                            ].join("")
+
+                        }},
                     {title:'描述',field: 'description',sortable:true },
                     {title:'操作',field:"Button",align:"center",formatter:function (value, row, index) {
                             return [
@@ -156,7 +198,6 @@
 
         //得到查询的参数
         oTableInit.queryParams = function (params) {
-            debugger;
             let temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                 pageSize: params.limit,   //页面大小
                 pageNumber:params.offset, //页码
@@ -167,19 +208,66 @@
             return JSON.stringify(temp);
         };
         return oTableInit;
-
     }
 
-
+    //点击新增按钮
     $("#addButton").on("click", function () {
-        $("#staffName").val("");
-        $("#staffId").val("");
-        $("#staffPosition").val("");
-        $("#staffAddress").val("");
-        $("#phone").val("");
-        //$(this).parents(".uploader").find(".filename").val($(this).val());
+        Initialization();
         $("#articleModal").modal();
     })
+
+    //点击保存按钮
+    $(".saveSubmit").on("click", function () {
+        let url = ctx+'articleType/saveArticleType';
+        let typeName = $("#storeType_name").val();
+        if (typeName == null || typeName == ""){
+            toastr.error("请填写类型名称");
+            return false;
+        }
+        let storeTypeDescribe = $("#storeType_describe").val();
+        let icon = $(".fa-hover-click").children().attr("class");
+        let header = $("meta[name='_csrf_header']").attr("content");
+        let token =$("meta[name='_csrf']").attr("content");
+        let json = {"typeName":typeName, "description":storeTypeDescribe,"icon":icon,"articleType":1};
+        $.ajax({
+            type: 'post',
+            url: url,
+            dataType:"json",
+            data: JSON.stringify(json),
+            cache: false,
+            async: false,
+            beforeSend : function(xhr) {
+                xhr.setRequestHeader(header, token);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            },
+            success: function (data) {
+                Initialization();
+                $('#exampleTableEvents').bootstrapTable(('refresh'));
+                $("#articleModal").modal("hide");
+            }
+        });
+    })
+
+    //点击选择图标模态
+    $("#inconButton").on("click",function(){
+        $("#inconModeal").show();
+    })
+
+    //点击图标选择的
+    $(".fa-hover").on("click",function(){
+        $(".fa-hover").children().removeAttr("class");
+        $(this).children().attr("class"," fa-hover-click");
+    })
+
+    //初始化方法
+    function Initialization(){
+        debugger;
+        $("#storeType_name").val("");
+        $("#storeType_describe").val("");
+        $("#inconModeal").hide();
+        $(".fa-hover").children().removeAttr("class");
+    }
+
 
 </script>
 </body>

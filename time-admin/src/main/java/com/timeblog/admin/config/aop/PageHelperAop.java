@@ -36,22 +36,16 @@ public class PageHelperAop {
     */ 
     @Around("serviceFindFunction()")
     public Object serviceImplAop(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-
         //获取连接点方法运行时的入参列表
         Object[] args = proceedingJoinPoint.getArgs();
-
         //获取方法入参，必须为pageDomain
         PageDomain pageDomain = (PageDomain)args[0];
-
         //分页开始
         Page<Object> page = PageHelper.startPage(pageDomain.getPageNumber(),pageDomain.getPageSize());
-
         //引入方法开始执行,返回一定为Result
         Result result = (Result)proceedingJoinPoint.proceed();
-
         //再将分页总数放进去
         result.put("total",page.getTotal());
-
         //再进行返回
         return result;
     }

@@ -32,4 +32,41 @@
     </select>
 
 
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="typeId" useGeneratedKeys="true">
+        insert into timeblog.time_article_type(type_name, sort, icon, isAvailable, description)
+        values (#{typeName}, #{sort}, #{icon}, #{isAvailable}, #{description})
+    </insert>
+
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from timeblog.time_article_type where type_id = #{typeId}
+    </delete>
+
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update timeblog.time_article_type
+        <set>
+            <if test="typeName != null and typeName != ''">
+                type_name = #{typeName},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="icon != null and icon != ''">
+                icon = #{icon},
+            </if>
+            <if test="isavailable != null">
+                isAvailable = #{isavailable},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+        </set>
+        where type_id = #{typeId}
+    </update>
+
+
 </mapper>

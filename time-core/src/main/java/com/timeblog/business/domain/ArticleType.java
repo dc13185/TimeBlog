@@ -1,6 +1,8 @@
 package com.timeblog.business.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author: dong.chao
@@ -8,6 +10,8 @@ import lombok.Data;
  * @description: 文章类型
  **/
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArticleType extends BaseDomain {
 
     private String typeId;
@@ -16,7 +20,7 @@ public class ArticleType extends BaseDomain {
     private String typeName;
 
     /** 排序 */
-    private int sort;
+    private Integer sort;
 
     /**
      * 图标
@@ -26,7 +30,7 @@ public class ArticleType extends BaseDomain {
     /**
      * 是否可用 1：可用   0：不可用
      */
-    private int isAvailable;
+    private Integer isAvailable;
 
     /**
      * 描述

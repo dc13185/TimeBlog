@@ -3943,6 +3943,25 @@ img.circle-border {
     text-decoration: none;
 }
 
+.fa-hover-a-click {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    color: #222222;
+    line-height: 32px;
+    height: 32px;
+    padding-left: 10px;
+    border-radius: 4px;
+}
+
+ .fa-hover-click {
+    background-color: #1d9d74;
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+
 .fontawesome-icon-list .fa-hover a:hover .fa {
     font-size: 30px;
     vertical-align: -6px;

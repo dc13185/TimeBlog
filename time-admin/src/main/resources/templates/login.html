@@ -68,11 +68,9 @@
 <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"  type="text/javascript" ></script>
 <script src="../static/js/plugins/checkcode/longbow.slidercaptcha.js" th:src="@{/js/plugins/checkcode/longbow.slidercaptcha.js}" type="text/javascript"></script>
 <script  th:inline="javascript" type="text/javascript">
-    /*<![CDATA[*/
     $(function(){
         $("#loginBtn").click(function () {
-            // $(".container-fluid").show(200);
-
+            //$(".container-fluid").show(200);
             var url =  [[@{/login/from}]]  ;
             var loginName = $("#loginName").val();
             var password = $("#password").val();
@@ -119,7 +117,7 @@
             return 'http://images.sdgxgz.com/Pic' + Math.round(Math.random() * 136) + '.jpg';
         },
         onSuccess: function () {
-            // window.location.href = 'https://gitee.com/LongbowEnterprise/SliderCaptcha';
+            window.location.href = 'https://gitee.com/LongbowEnterprise/SliderCaptcha';
             var url =  [[@{/login/from}]]  ;
             var loginName = $("#loginName").val();
             var password = $("#password").val();
@@ -144,16 +142,13 @@
                         alert(data.msg);
                         $('#captcha').sliderCaptcha('reset');
                     }else if(data.code == '200'){
-
                         var uri =  [[@{/index/toIndexView}]]  ;
                         location.href = uri;
-
                     }
                 }
             });
         }
     });
-    /*]]>*/
 
 
 

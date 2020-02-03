@@ -40,8 +40,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-       /*  .successHandler(myAuthenticationSuccessHandler)
-                .failureHandler(myAuthenticationFailHander)*/
         http
             .authorizeRequests()
                  // 请求路径"/"，"/home"允许访问
@@ -63,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //设置frame在同一个域名下可以访问
         .and().headers().frameOptions().sameOrigin()
         .and()
-            .logout()
+                .logout()
             .permitAll();
     }
 

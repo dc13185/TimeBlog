@@ -44,4 +44,5 @@ public class Article extends BaseDomain  {
 
 
 
+
 }
