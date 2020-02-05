@@ -67,5 +67,19 @@
 			"hideMethod": "fadeOut"
 		};
 
+		function check(object){
+			let checkFields = object.getElementsByClassName("check_attr");
+			for (let i = 0; i <checkFields.length ; i++) {
+				let checkField = checkFields[i];
+				let value = checkField.value;
+				if(value == null || value == ""){
+					let tips = checkField.getAttribute("placeholder");
+					toastr.error(tips);
+					return false;
+				}
+			}
+			return true;
+		}
+
 	</script>
 </div>

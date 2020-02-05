@@ -49,11 +49,11 @@
                     <input type="hidden" id="storeType_id" name="storeType_id" >
                     <div class="form-group">
                         <label>类型名称</label>
-                        <input type="text" id="storeType_name" name="storeType_name" placeholder="请输入文章类型" class="form-control">
+                        <input type="text"  id="storeType_name" name="storeType_name" placeholder="请输入文章类型" class="form-control check_attr">
                     </div>
                     <div class="form-group">
                         <label>输入描述</label>
-                        <input type="text" id="storeType_describe" name="storeType_describe" placeholder="请输入描述" class="form-control">
+                        <input type="text" id="storeType_describe" name="storeType_describe" placeholder="请输入描述" class="form-control check_attr">
                     </div>
                     <div class="form-group">
                         <button type="button" class="btn btn-primary btn-sm" id = "inconButton">点击选择图标</button>
@@ -220,15 +220,15 @@
     $(".saveSubmit").on("click", function () {
         let url = ctx+'articleType/saveArticleType';
         let typeName = $("#storeType_name").val();
-        if (typeName == null || typeName == ""){
-            toastr.error("请填写类型名称");
-            return false;
-        }
         let storeTypeDescribe = $("#storeType_describe").val();
         let icon = $(".fa-hover-click").children().attr("class");
         let header = $("meta[name='_csrf_header']").attr("content");
         let token =$("meta[name='_csrf']").attr("content");
         let json = {"typeName":typeName, "description":storeTypeDescribe,"icon":icon,"articleType":1};
+        let flag = check(articleModal);
+        if (!flag){
+            return false;
+        }
         $.ajax({
             type: 'post',
             url: url,
@@ -261,12 +261,12 @@
 
     //初始化方法
     function Initialization(){
-        debugger;
         $("#storeType_name").val("");
         $("#storeType_describe").val("");
         $("#inconModeal").hide();
         $(".fa-hover").children().removeAttr("class");
     }
+
 
 
 </script>
