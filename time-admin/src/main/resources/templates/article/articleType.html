@@ -136,9 +136,9 @@
                 showRefresh: false,                  //是否显示刷新按钮
                 minimumCountColumns: 2,             //最少允许的列数
                 clickToSelect: true,                //是否启用点击选中行
-                //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
                 uniqueId: "id",                     //每一行的唯一标识，一般为主键列
-                showToggle:false,                    //是否显示详细视图和列表视图的切换按钮
+                showToggle:false,                   //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //是否显示详细视图
                 detailView: false,                   //是否显示父子表
                 iconSize: 'outline',
@@ -146,7 +146,6 @@
                 showExport: false,                     //是否显示导出
                 buttonsAlign:"right",  //按钮位置
                 exportDataType: "selected",              //basic', 'all', 'selected'.
-                exportTypes:['excel','txt','json', 'xml'],  //导出文件类型   //'json', 'xml', 'csv', 'txt', 'sql', 'excel'
                 Icons:'glyphicon-export',
                 ajaxOptions:{
                     beforeSend: function (xhr) {
@@ -189,12 +188,26 @@
                                 '<i class="fa fa-edit editButton" style="cursor: pointer;" ></i>'
                             ].join("")
 
-                        }
+                        },events:operateEvents
                     }
 
                 ],
             });
         };
+
+
+        //其他事件
+        window.operateEvents ={
+            "click .editButton":function(e,value,row,index){
+                $.TYPE_ID = row.typeId;
+                $("#storeType_name").val(row.typeName);
+                $("#storeType_describe").val(row.description);
+                $("#inconModeal").show();
+                let flag = row.icon.replace("fa","").trim();
+                $("#inconModeal").find("."+flag+"").parent().attr("class"," fa-hover-click");
+                $("#articleModal").modal();
+            }
+        }
 
         //得到查询的参数
         oTableInit.queryParams = function (params) {
@@ -222,8 +235,6 @@
         let typeName = $("#storeType_name").val();
         let storeTypeDescribe = $("#storeType_describe").val();
         let icon = $(".fa-hover-click").children().attr("class");
-        let header = $("meta[name='_csrf_header']").attr("content");
-        let token =$("meta[name='_csrf']").attr("content");
         let json = {"typeName":typeName, "description":storeTypeDescribe,"icon":icon,"articleType":1};
         let flag = check(articleModal);
         if (!flag){
@@ -235,14 +246,11 @@
             dataType:"json",
             data: JSON.stringify(json),
             cache: false,
-            async: false,
-            beforeSend : function(xhr) {
-                xhr.setRequestHeader(header, token);
-                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            },
+            async: true,
             success: function (data) {
                 Initialization();
                 $('#exampleTableEvents').bootstrapTable(('refresh'));
+                $(".page-last").trigger("click");
                 $("#articleModal").modal("hide");
             }
         });
@@ -259,15 +267,15 @@
         $(this).children().attr("class"," fa-hover-click");
     })
 
-    //初始化方法
-    function Initialization(){
+
+
+    $('#articleModal').on('hide.bs.modal', function () {
+        $.TYPE_ID = "";
         $("#storeType_name").val("");
         $("#storeType_describe").val("");
         $("#inconModeal").hide();
         $(".fa-hover").children().removeAttr("class");
-    }
-
-
+    });
 
 </script>
 </body>
