@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -60,6 +62,33 @@ public class ArticleTypeController extends BaseController {
         return Result.success();
     }
 
+
+    @RequestMapping("/editArticleType")
+    @ResponseBody
+    public Result editArticleType(@RequestBody ArticleType articleType){
+        try {
+            articleTypeMapper.update(articleType);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return Result.error(e.getMessage());
+        }
+        return Result.success();
+    }
+
+
+    @RequestMapping("/deleteArticleType")
+    @ResponseBody
+    public Result deleteArticleType(@RequestBody HashMap<String,String> map){
+        try {
+            String typeIds = map.get("typeIds");
+            List<String> typeIdList = Arrays.asList(typeIds.split(","));
+            articleTypeMapper.deleteById(typeIdList);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return Result.error(e.getMessage());
+        }
+        return Result.success();
+    }
 
 
 }

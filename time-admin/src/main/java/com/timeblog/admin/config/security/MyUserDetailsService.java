@@ -37,11 +37,17 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String loginName) throws UsernameNotFoundException {
         logger.info("用户{}开始登录",loginName);
-        UserInfo userInfo =  sysUserMapper.queryUserByLoginName(loginName);
-        if (userInfo == null){
-            return null;
+        try {
+            UserInfo userInfo =  sysUserMapper.queryUserByLoginName(loginName);
+            if (userInfo == null){
+                return null;
+            }
+            return userInfo;
+        }catch (Exception e){
+            e.printStackTrace();
         }
-         return userInfo;
+        return null;
+
     }
 
 

@@ -195,8 +195,7 @@
             });
         };
 
-
-        //其他事件
+        //修改
         window.operateEvents ={
             "click .editButton":function(e,value,row,index){
                 $.TYPE_ID = row.typeId;
@@ -225,17 +224,47 @@
 
     //点击新增按钮
     $("#addButton").on("click", function () {
-        Initialization();
         $("#articleModal").modal();
+    })
+
+    //点击删除按钮
+    $("#deleteButton").on("click",function () {
+        let rows = $('#exampleTableEvents').bootstrapTable('getAllSelections');
+        if(rows.length == 0){
+            toastr.error("至少选择一项！");
+            return false;
+        }
+        let ids = new Array();
+        for (let i=0;i<rows.length;i++){
+            ids.push(rows[i].typeId);
+        }
+        let data = {"typeIds":ids.toString()}
+        $.ajax({
+            type: 'post',
+            url: ctx+'articleType/deleteArticleType',
+            dataType:"json",
+            data: JSON.stringify(data),
+            cache: false,
+            async: true,
+            success: function (data) {
+                $('#exampleTableEvents').bootstrapTable(('refresh'));
+            }
+        });
+
     })
 
     //点击保存按钮
     $(".saveSubmit").on("click", function () {
-        let url = ctx+'articleType/saveArticleType';
+        let url ;
+        if($.TYPE_ID  && $.TYPE_ID != ""){
+            url = ctx+'articleType/editArticleType';
+        }else{
+            url = ctx+'articleType/saveArticleType';
+        }
         let typeName = $("#storeType_name").val();
         let storeTypeDescribe = $("#storeType_describe").val();
         let icon = $(".fa-hover-click").children().attr("class");
-        let json = {"typeName":typeName, "description":storeTypeDescribe,"icon":icon,"articleType":1};
+        let json = {"typeName":typeName, "description":storeTypeDescribe,"icon":icon,"articleType":1,"typeId":$.TYPE_ID};
         let flag = check(articleModal);
         if (!flag){
             return false;
@@ -248,9 +277,10 @@
             cache: false,
             async: true,
             success: function (data) {
-                Initialization();
                 $('#exampleTableEvents').bootstrapTable(('refresh'));
-                $(".page-last").trigger("click");
+                if(!$.TYPE_ID  && $.TYPE_ID != ""){
+                    $(".page-last").trigger("click");
+                }
                 $("#articleModal").modal("hide");
             }
         });
