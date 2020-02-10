@@ -40,13 +40,17 @@
 
 
     <!--通过主键删除-->
-    <delete id="deleteById">
-        delete from timeblog.time_article_type where type_id = #{typeId}
+    <delete id="deleteById" >
+        delete from timeblog.time_article_type
+         where type_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </delete>
 
 
     <!--通过主键修改数据-->
-    <update id="update">
+    <update id="update" >
         update timeblog.time_article_type
         <set>
             <if test="typeName != null and typeName != ''">
@@ -58,8 +62,8 @@
             <if test="icon != null and icon != ''">
                 icon = #{icon},
             </if>
-            <if test="isavailable != null">
-                isAvailable = #{isavailable},
+            <if test="isAvailable != null">
+                isAvailable = #{isAvailable},
             </if>
             <if test="description != null and description != ''">
                 description = #{description},

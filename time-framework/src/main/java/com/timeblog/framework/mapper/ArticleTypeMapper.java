@@ -38,16 +38,16 @@ public interface ArticleTypeMapper {
 
     /**
      * 删除一行
-     * @param articleTypeId
+     * @param articleTypeIds
      */
-    public void deleteById(String articleTypeId);
+    public void deleteById(List articleTypeIds);
 
 
     /**
      * 删除一行
-     * @param articleTypeId
+     * @param articleType
      */
-    public void update(String articleTypeId);
+    public void update(ArticleType articleType);
 
 
 }

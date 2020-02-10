@@ -1,0 +1,180 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include :: header"></head>
+<link th:href="@{/css/plugins/editormd/editormd.min.css}" rel="stylesheet"/>
+<link th:href="@{/css/plugins/iCheck/custom.css}" rel="stylesheet"/>
+<style>
+    #articleContext{
+        width: 30%;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5> 文章列表 / 编辑文章</h5>
+        </div>
+        <div class="ibox-content" >
+            <div class="form-group">
+                <label>文章标题</label>
+                <input type="text"  id="articleContext" name="articleContext" placeholder="请输入文章标题"  class="form-control check_attr">
+            </div>
+        </div>
+        <div class="ibox-content" id="editor">
+            <textarea ></textarea>
+        </div>
+
+        <div class="ibox-content" >
+            <div class="form-group">
+                <button type="button" class="btn btn-primary saveSubmit">上一步</button>
+                <button type="button" class="btn btn-primary saveSubmit">下一步</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--文章新增-->
+<div class="modal inmodal" id="themeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog  modal-sm">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                </button>
+                <p class="modal-title">选择编辑主题</p>
+            </div>
+            <div class="modal-body">
+                <form method="get" class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-10">
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio" value="default"  checked="" name = "theme"><i></i> default</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="3024-day" name = "theme"><i></i> 3024-day</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="3024-night" name = "theme"><i></i> 3024-night</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="ambiance" name = "theme"><i></i> ambiance</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="ambiance-mobile" name = "theme"><i></i>ambiance-mobile</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="base16-dark" name = "theme"><i></i>base16-dark</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="base16-light" name = "theme"><i></i>base16-light</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="blackboard" name = "theme"><i></i>blackboard</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="cobalt" name = "theme"><i></i>cobalt</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="eclipse" name = "theme"><i></i>eclipse</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="mbo" name = "theme"><i></i>mbo</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="mdn-like" name = "theme"><i></i>mdn-like</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="midnight" name = "theme"><i></i>midnight</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="monokai" name = "theme"><i></i>monokai</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="night" name = "theme"><i></i>night</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="rubyblue" name = "theme"><i></i>rubyblue</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="solarized" name = "theme"><i></i>solarized</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="the-matrix" name = "theme"><i></i>the-matrix</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="twilight" name = "theme"><i></i>twilight</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="xq-dark" name = "theme"><i></i>xq-dark</label>
+                            </div>
+                            <div class="radio i-checks">
+                                <label class="select-theme"><input type="radio"  value="xq-light" name = "theme"><i></i>xq-light</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary saveSubmit">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<head th:include="include :: footer"></head>
+<script th:src="@{/js/plugins/editormd/editormd.min.js}"></script>
+<script th:src="@{/js/plugins/iCheck/icheck.min.js}"></script>
+<script>
+    $(function() {
+        let editor = editormd("editor", {
+            width  : "100%",
+            height : "100%",
+            path   : ctx+"js/plugins/editormd/lib/",
+            emoji  : true,
+            watch  : false, //关闭实时预览
+            toolbarIcons : function() {
+                return ["undo","redo","|","bold","del","italic","|","h1","h2","h3","h4","h5","h6","|","list-ul","list-ol","hr","|","link","reference-link","image","code","preformatted-text","code-block","table","datetime","emoji","html-entities","pagebreak","|","goto-line","watch","preview","fullscreen","clear","search","|","themeIcon"]
+            },
+            toolbarIconsClass : {
+                themeIcon : "fa-gears"
+            },
+            lang : {
+                toolbar : {
+                    themeIcon : "主题设置",
+                }
+            },
+            toolbarHandlers : {
+                /**
+                 * @param {Object}      cm         CodeMirror对象
+                 * @param {Object}      icon       图标按钮jQuery元素对象
+                 * @param {Object}      cursor     CodeMirror的光标对象，可获取光标所在行和位置
+                 * @param {String}      selection  编辑器选中的文本
+                 */
+                themeIcon : function(cm, icon, cursor, selection) {
+                   $("#themeModal").modal("show");
+                },
+            },
+            onfullscreenExit : function() {
+                $("#editor").css("width","100%");
+                $("#editor").css("height","100%");
+            }
+        });
+        //渲染选择框
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+        //控制主题
+        $('.select-theme').on("click",function (e) {
+            let theme = e.toElement.children[0].firstChild.value;
+            editor.setCodeMirrorTheme(theme);
+        })
+        $(".iCheck-helper").on("click",function (e) {
+            let theme = e.toElement.parentNode.firstChild.value;
+            editor.setCodeMirrorTheme(theme);
+        })
+
+    });
+</script>
+</body>
+</html>
