@@ -125,7 +125,9 @@
             </goals>
           </execution>
         </executions>
+        <version>2.2.2.RELEASE</version>
       </plugin>
+
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

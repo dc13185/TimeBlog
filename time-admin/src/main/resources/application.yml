@@ -37,10 +37,14 @@ mybatis:
   # 加载全局的配置文件
   # configLocation: classpath:mapper/mybatis-config.xml
 
-
+# 首页设置
 security:
   indexUrl: /index/toIndexView
 
+# 文件上传目录设置
+imageFile:
+  path: D:/develop/TestFile/image
+  url: /images/**
 
 # pagehelper
 pagehelper:
@@ -48,3 +52,5 @@ pagehelper:
   reasonable: true
   support-methods-arguments: true
   params: count=countSql
+
+

@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author: dong.chao
@@ -47,10 +48,10 @@ public class ArticleTypeController extends BaseController {
     @RequestMapping("/saveArticleType")
     @ResponseBody
     public Result saveArticleType(@RequestBody ArticleType articleType){
+        Optional<ArticleType> optionalArticleType = Optional.ofNullable(articleType);
         //默认为可用
-        if (articleType.getIsAvailable() == null){
-            articleType.setIsAvailable(1);
-        }
+        Integer isAvailable = optionalArticleType.map(ArticleType::getIsAvailable).orElse(1);
+        articleType.setIsAvailable(isAvailable);
         //序列先不做
         articleType.setSort(0);
         try {

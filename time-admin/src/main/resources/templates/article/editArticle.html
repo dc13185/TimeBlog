@@ -123,6 +123,7 @@
 
 <head th:include="include :: footer"></head>
 <script th:src="@{/js/plugins/editormd/editormd.min.js}"></script>
+<script th:src="@{/js/plugins/editormd/uploadImg.js}"></script>
 <script th:src="@{/js/plugins/iCheck/icheck.min.js}"></script>
 <script>
     $(function() {
@@ -132,8 +133,11 @@
             path   : ctx+"js/plugins/editormd/lib/",
             emoji  : true,
             watch  : false, //关闭实时预览
+            imageUpload : true, //必须(上传图片)
+            imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL : ctx+"article/uploadImage", //必须
             toolbarIcons : function() {
-                return ["undo","redo","|","bold","del","italic","|","h1","h2","h3","h4","h5","h6","|","list-ul","list-ol","hr","|","link","reference-link","image","code","preformatted-text","code-block","table","datetime","emoji","html-entities","pagebreak","|","goto-line","watch","preview","fullscreen","clear","search","|","themeIcon"]
+                return ["undo","redo","|","bold","del","italic","|","h1","h2","h3","h4","h5","h6","|","list-ul","list-ol","hr","|","link","reference-link","image","code","preformatted-text","code-block","table","datetime","emoji","html-entities","pagebreak","|","goto-line","watch","preview","fullscreen","clear","search","|","themeIcon","help"]
             },
             toolbarIconsClass : {
                 themeIcon : "fa-gears"
@@ -153,6 +157,9 @@
                 themeIcon : function(cm, icon, cursor, selection) {
                    $("#themeModal").modal("show");
                 },
+            },
+            onload : function() {
+                initPasteDragImg(this); //调用上传图片方法
             },
             onfullscreenExit : function() {
                 $("#editor").css("width","100%");

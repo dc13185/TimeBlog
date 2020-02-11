@@ -49,9 +49,9 @@
 		//Sercurity Token设置(统一请求头设置)
         let header = $("meta[name='_csrf_header']").attr("content");
         let token =$("meta[name='_csrf']").attr("content");
+
         $(document).ajaxSend(function(event, jqxhr, settings) {
             jqxhr.setRequestHeader(header, token);
-            jqxhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         })
 
         //校验提示方法
