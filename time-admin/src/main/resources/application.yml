@@ -43,7 +43,7 @@ security:
 
 # 文件上传目录设置
 imageFile:
-  path: D:/develop/TestFile/image
+  path: D:/develop/TestFile/image/
   url: /images/**
 
 # pagehelper

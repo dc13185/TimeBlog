@@ -50,13 +50,14 @@ function uploadImg(file,Editor) {
         contentType: false,
         dataType: 'json',
         success: function (msg) {
-            var success = msg['success'];
-            if (success == 1) {
-                var url = msg["url"];
+            debugger;
+            let code = msg.code;
+            if (code == 200) {
+                let url = msg.url;
                 if (/\.(png|jpg|jpeg|gif|bmp|ico)$/.test(url)) {
-                    Editor.insertValue("![图片alt](" + msg["url"] + " ''图片title'')");
+                    Editor.insertValue("![图片alt]("+msg.url + " ''"+msg.title+"'')");
                 } else {
-                    Editor.insertValue("[下载附件](" + msg["url"] + ")");
+                    Editor.insertValue("[下载附件](" + msg.url + ")");
                 }
             } else {
                 console.log(msg);

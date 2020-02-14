@@ -43,6 +43,16 @@ public class Result extends HashMap<String,Object> {
         return result;
     }
 
+    //添加操作
+    public Result add(String key, Object value){
+        this.put(key,value);
+        return this;
+    }
+
+
+
+
+
 
 
     public static void main(String[] args) {

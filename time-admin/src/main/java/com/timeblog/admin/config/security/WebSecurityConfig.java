@@ -1,5 +1,7 @@
 package com.timeblog.admin.config.security;
 
+import com.timeblog.admin.config.constant.SystemConstant;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +62,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .permitAll()
                 //设置frame在同一个域名下可以访问
         .and().headers().frameOptions().sameOrigin()
-        .and()
-                .logout()
-            .permitAll();
+        .and().logout().permitAll()
+        .and().csrf().ignoringAntMatchers(SystemConstant.CRSF_CLOSE_URL);
+
     }
 
 

@@ -47,14 +47,18 @@ public class ArticleTypeController extends BaseController {
 
     @RequestMapping("/saveArticleType")
     @ResponseBody
-    public Result saveArticleType(@RequestBody ArticleType articleType){
-        Optional<ArticleType> optionalArticleType = Optional.ofNullable(articleType);
-        //默认为可用
-        Integer isAvailable = optionalArticleType.map(ArticleType::getIsAvailable).orElse(1);
-        articleType.setIsAvailable(isAvailable);
-        //序列先不做
-        articleType.setSort(0);
+    public Result saveArticleType(@RequestBody ArticleType articleType) throws Exception {
         try {
+            //为空报异常
+            Optional.ofNullable(articleType).orElseThrow(()->new Exception("文章实例为空"));
+            Optional.ofNullable(articleType).ifPresent(at ->{
+                if (at.getIsAvailable() == null){
+                    //默认可用
+                    at.setIsAvailable(0);
+                }
+                //序列先不做
+                at.setSort(0);
+            });
             articleTypeMapper.insert(articleType);
         }catch (Exception e){
             System.out.println(e.getMessage());
