@@ -1,4 +1,4 @@
-package com.timeblog.system.utils;
+package com.timeblog.framework.system.utils;
 
 import java.io.*;
 import java.util.*;

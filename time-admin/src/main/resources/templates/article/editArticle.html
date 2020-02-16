@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="ibox-content" id="editor">
-            <textarea ></textarea>
+            <textarea id="mdContent" ></textarea>
         </div>
 
         <div class="ibox-content" >
@@ -136,7 +136,7 @@
             watch  : false, //关闭实时预览
             imageUpload : true, //必须(上传图片)
             imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-            imageUploadURL : ctx+"article/uploadImage", //必须
+            imageUploadURL : ctx+"article/uploadImage",
             toolbarIcons : function() {
                 return ["undo","redo","|","bold","del","italic","|","h1","h2","h3","h4","h5","h6","|","list-ul","list-ol","hr","|","link","reference-link","image","code","preformatted-text","code-block","table","datetime","emoji","html-entities","pagebreak","|","goto-line","watch","preview","fullscreen","clear","search","|","themeIcon","help"]
             },
@@ -161,6 +161,12 @@
             },
             onload : function() {
                 initPasteDragImg(this); //调用上传图片方法
+                let keyMap = {
+                    "Ctrl-S": function(cm) {
+                        saveTempArticle();
+                    }
+                };
+                this.addKeyMap(keyMap);
             },
             onfullscreenExit : function() {
                 $("#editor").css("width","100%");
@@ -182,7 +188,46 @@
             editor.setCodeMirrorTheme(theme);
         })
 
+
     });
+
+
+    function saveTempArticle() {
+        debugger
+        let url = ctx+"article/saveTempArticle";
+        let content = $("#mdContent").val();
+        let jsonContent = {"articleContextMd":content};
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: JSON.stringify(jsonContent),
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            },
+            success: function (msg) {
+                let code = msg.code;
+                if (code == 200) {
+                    let url = msg.url;
+                    if (/\.(png|jpg|jpeg|gif|bmp|ico)$/.test(url)) {
+                        Editor.insertValue("![图片alt]("+msg.url + " ''"+msg.title+"'')");
+                    } else {
+                        Editor.insertValue("[下载附件](" + msg.url + ")");
+                    }
+                } else {
+                    console.log(msg);
+                    alert("上传失败");
+                }
+            }
+        });
+    }
+
+
+
+
+
 </script>
 </body>
 </html>

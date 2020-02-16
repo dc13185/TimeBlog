@@ -48,22 +48,17 @@ public class ArticleTypeController extends BaseController {
     @RequestMapping("/saveArticleType")
     @ResponseBody
     public Result saveArticleType(@RequestBody ArticleType articleType) throws Exception {
-        try {
-            //为空报异常
-            Optional.ofNullable(articleType).orElseThrow(()->new Exception("文章实例为空"));
-            Optional.ofNullable(articleType).ifPresent(at ->{
-                if (at.getIsAvailable() == null){
-                    //默认可用
-                    at.setIsAvailable(0);
-                }
-                //序列先不做
-                at.setSort(0);
-            });
-            articleTypeMapper.insert(articleType);
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            return Result.error(e.getMessage());
-        }
+        //为空报异常
+        Optional.ofNullable(articleType).orElseThrow(()->new Exception("文章实例为空"));
+        Optional.ofNullable(articleType).ifPresent(at ->{
+            if (at.getIsAvailable() == null){
+                //默认可用
+                at.setIsAvailable(0);
+            }
+            //序列先不做
+            at.setSort(0);
+        });
+        articleTypeMapper.insert(articleType);
         return Result.success();
     }
 
@@ -84,14 +79,9 @@ public class ArticleTypeController extends BaseController {
     @RequestMapping("/deleteArticleType")
     @ResponseBody
     public Result deleteArticleType(@RequestBody HashMap<String,String> map){
-        try {
-            String typeIds = map.get("typeIds");
-            List<String> typeIdList = Arrays.asList(typeIds.split(","));
-            articleTypeMapper.deleteById(typeIdList);
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            return Result.error(e.getMessage());
-        }
+        String typeIds = map.get("typeIds");
+        List<String> typeIdList = Arrays.asList(typeIds.split(","));
+        articleTypeMapper.deleteById(typeIdList);
         return Result.success();
     }
 

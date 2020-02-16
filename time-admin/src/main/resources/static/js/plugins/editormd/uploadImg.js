@@ -50,7 +50,6 @@ function uploadImg(file,Editor) {
         contentType: false,
         dataType: 'json',
         success: function (msg) {
-            debugger;
             let code = msg.code;
             if (code == 200) {
                 let url = msg.url;

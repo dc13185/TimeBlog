@@ -19,5 +19,8 @@ public class AopConfig {
         return new PageHelperAop();
     }
 
+    @Bean
+    public WebExceptionAspect webExceptionAspect(){return new WebExceptionAspect();}
+
 
 }

@@ -48,6 +48,12 @@
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.timeblog</groupId>
+      <artifactId>time-core</artifactId>
+    </dependency>
+
+
     <!--thymeleaf集成springsecurity-->
     <dependency>
       <groupId>org.thymeleaf.extras</groupId>
@@ -61,10 +67,12 @@
       <version>${springboot-mysql.version}</version>
     </dependency>
 
+    <!--集成redis-->
     <dependency>
-      <groupId>com.timeblog</groupId>
-      <artifactId>time-core</artifactId>
-   </dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-redis</artifactId>
+    </dependency>
+
 
 
   </dependencies>
