@@ -22,7 +22,7 @@ spring:
     password: dc1318533144cg..
     #连接超时
     timeout: 3000
-    database: 1
+    database: 0
     jedis:
       pool:
         max-active: 10

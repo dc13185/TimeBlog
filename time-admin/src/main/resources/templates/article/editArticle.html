@@ -16,7 +16,7 @@
         <div class="ibox-content" >
             <div class="form-group">
                 <label>文章标题</label>
-                <input type="text"  id="articleContext" name="articleContext" placeholder="请输入文章标题"  class="form-control check_attr">
+                <input type="text"  id="articleTitle" name="articleTitle" placeholder="请输入文章标题"  class="form-control check_attr">
             </div>
         </div>
         <div class="ibox-content" id="editor">
@@ -25,8 +25,7 @@
 
         <div class="ibox-content" >
             <input type ="hidden" >
-            <div class="form-group">
-                <button type="button" class="btn btn-primary saveSubmit">上一步</button>
+            <div class="">
                 <button type="button" class="btn btn-primary saveSubmit">下一步</button>
             </div>
         </div>
@@ -126,8 +125,9 @@
 <script th:src="@{/js/plugins/editormd/editormd.min.js}"></script>
 <script th:src="@{/js/plugins/editormd/uploadImg.js}"></script>
 <script th:src="@{/js/plugins/iCheck/icheck.min.js}"></script>
-<script>
+<script th:inline="javascript">
     $(function() {
+        $.ARTICLE_ID = -1;
         let editor = editormd("editor", {
             width  : "100%",
             height : "100%",
@@ -167,6 +167,7 @@
                     }
                 };
                 this.addKeyMap(keyMap);
+                loadMark(editor);
             },
             onfullscreenExit : function() {
                 $("#editor").css("width","100%");
@@ -187,16 +188,14 @@
             let theme = e.toElement.parentNode.firstChild.value;
             editor.setCodeMirrorTheme(theme);
         })
-
-
     });
 
 
     function saveTempArticle() {
-        debugger
         let url = ctx+"article/saveTempArticle";
         let content = $("#mdContent").val();
-        let jsonContent = {"articleContextMd":content};
+        let articleTitle = $("#articleTitle").val();
+        let jsonContent = {"articleId":$.ARTICLE_ID,"articleContextMd":content,"articleTitle":articleTitle};
         $.ajax({
             url: url,
             type: 'post',
@@ -208,20 +207,23 @@
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             },
             success: function (msg) {
-                let code = msg.code;
-                if (code == 200) {
-                    let url = msg.url;
-                    if (/\.(png|jpg|jpeg|gif|bmp|ico)$/.test(url)) {
-                        Editor.insertValue("![图片alt]("+msg.url + " ''"+msg.title+"'')");
-                    } else {
-                        Editor.insertValue("[下载附件](" + msg.url + ")");
-                    }
-                } else {
-                    console.log(msg);
-                    alert("上传失败");
+                debugger;
+                if (msg.code == 200){
+                    $.ARTICLE_ID = msg.articleId;
+                    toastr.success("保存成功");
+                }else{
+                    toastr.error("保存失败！请检查网络设置！");
                 }
             }
         });
+    }
+
+
+    function loadMark(editor) {
+        let context = [[${tempArticle}]];
+        if (context != null){
+            editor.setMarkdown(context);
+        }
     }
 
 

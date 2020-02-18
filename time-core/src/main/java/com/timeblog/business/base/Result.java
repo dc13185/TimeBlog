@@ -1,6 +1,5 @@
 package com.timeblog.business.base;
 
-import com.timeblog.business.domain.ArticleType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +42,7 @@ public class Result extends HashMap<String,Object> {
         return result;
     }
 
-    //添加操作
+    /** 添加失败 */
     public Result add(String key, Object value){
         this.put(key,value);
         return this;

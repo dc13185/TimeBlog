@@ -1,6 +1,9 @@
 package com.timeblog.business.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 /**
@@ -9,6 +12,9 @@ import lombok.Data;
  * @description: 文章
  **/
 @Data
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Article extends BaseDomain  {
 
     private int articleId;
@@ -34,11 +40,12 @@ public class Article extends BaseDomain  {
     /** 是否原创 0:置顶 1：非置顶   */
     private int isTop;
 
-    /** 0:删除 1:未删除 */
+    /** -1:删除 0:草稿类容 1:正式发布 */
     private int status;
 
     /** 关键字 */
     private String keywords;
+
 
 
 
