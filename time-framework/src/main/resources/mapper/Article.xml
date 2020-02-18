@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timeblog.framework.mapper.ArticleMapper">
+
+    <resultMap type="com.timeblog.business.domain.Article" id="TimeArticleMap">
+        <result property="articleId" column="article_id" jdbcType="INTEGER"/>
+        <result property="articleTitle" column="article_title" jdbcType="VARCHAR"/>
+        <result property="articleContextHtml" column="article_contextHtml" jdbcType="OTHER"/>
+        <result property="articleContextMd" column="article_contextMd" jdbcType="OTHER"/>
+        <result property="coverImage" column="cover_image" jdbcType="VARCHAR"/>
+        <result property="isComment" column="isComment" jdbcType="INTEGER"/>
+        <result property="isOriginal" column="isOriginal" jdbcType="INTEGER"/>
+        <result property="isTop" column="isTop" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="keyWords" column="keywords" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TimeArticleMap">
+        select
+          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status, keywords
+        from timeblog.time_article
+        where article_id = #{articleId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TimeArticleMap">
+        select
+          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status, keywords
+        from timeblog.time_article
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TimeArticleMap">
+        select
+        article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status, keywords
+        from timeblog.time_article
+        <where>
+            <if test="articleId != null">
+                and article_id = #{articleId}
+            </if>
+            <if test="articleTitle != null and articleTitle != ''">
+                and article_title = #{articleTitle}
+            </if>
+            <if test="articleContextHtml != null">
+                and article_contextHtml = #{articleContextHtml}
+            </if>
+            <if test="articleContextMd != null">
+                and article_contextMd = #{articleContextMd}
+            </if>
+            <if test="coverImage != null and coverImage != ''">
+                and cover_image = #{coverImage}
+            </if>
+            <if test="isComment != null">
+                and isComment = #{isComment}
+            </if>
+            <if test="isOriginal != null">
+                and isOriginal = #{isOriginal}
+            </if>
+            <if test="isTop != null">
+                and isTop = #{isTop}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="keywords != null">
+                and keywords = #{keywords}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="articleId" useGeneratedKeys="true" >
+        insert into timeblog.time_article(article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status, keywords)
+        values (#{articleTitle}, #{articleContextHtml}, #{articleContextMd}, #{coverImage}, #{isComment}, #{isOriginal}, #{isTop}, #{status}, #{keywords})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update timeblog.time_article
+        <set>
+            <if test="articleTitle != null and articleTitle != ''">
+                article_title = #{articleTitle},
+            </if>
+            <if test="articleContextHtml != null">
+                article_contextHtml = #{articleContextHtml},
+            </if>
+            <if test="articleContextMd != null">
+                article_contextMd = #{articleContextMd},
+            </if>
+            <if test="coverImage != null and coverImage != ''">
+                cover_image = #{coverImage},
+            </if>
+            <if test="isComment != null">
+                isComment = #{isComment},
+            </if>
+            <if test="isOriginal != null">
+                isOriginal = #{isOriginal},
+            </if>
+            <if test="isTop != null">
+                isTop = #{isTop},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="keywords != null">
+                keywords = #{keywords},
+            </if>
+        </set>
+        where article_id = #{articleId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from timeblog.time_article where article_id = #{articleId}
+    </delete>
+
+
+
+
+</mapper>
