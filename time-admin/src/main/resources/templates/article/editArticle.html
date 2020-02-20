@@ -9,24 +9,24 @@
 </style>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox float-e-margins">
+    <div class="ibox float-e-margins" id="context">
         <div class="ibox-title">
             <h5> 文章列表 / 编辑文章</h5>
         </div>
         <div class="ibox-content" >
             <div class="form-group">
                 <label>文章标题</label>
-                <input type="text"  id="articleTitle" name="articleTitle" placeholder="请输入文章标题"  class="form-control check_attr">
+                <input name="check_attr" type="text"  id="articleTitle"  placeholder="请输入文章标题"  class="form-control check_attr">
             </div>
         </div>
         <div class="ibox-content" id="editor">
-            <textarea id="mdContent" ></textarea>
+            <textarea name="check_attr" id="mdContent" placeholder="请输入文章内容"  ></textarea>
         </div>
 
         <div class="ibox-content" >
             <input type ="hidden" >
             <div class="">
-                <button type="button" class="btn btn-primary saveSubmit">下一步</button>
+                <button type="button" class="btn btn-primary nextSubmit">下一步</button>
             </div>
         </div>
     </div>
@@ -191,7 +191,7 @@
     });
 
 
-    function saveTempArticle() {
+    function saveTempArticle(status) {
         let url = ctx+"article/saveTempArticle";
         let content = $("#mdContent").val();
         let articleTitle = $("#articleTitle").val();
@@ -207,12 +207,16 @@
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             },
             success: function (msg) {
-                debugger;
-                if (msg.code == 200){
-                    $.ARTICLE_ID = msg.articleId;
-                    toastr.success("保存成功");
+                if(status){
+                    debugger;
+                    window.location.href=ctx+"article/toCompleteArticle?articleId="+msg.articleId;
                 }else{
-                    toastr.error("保存失败！请检查网络设置！");
+                    if (msg.code == 200){
+                        $.ARTICLE_ID = msg.articleId;
+                        toastr.success("保存成功！");
+                    }else{
+                        toastr.error("保存失败！请检查网络设置！");
+                    }
                 }
             }
         });
@@ -225,6 +229,19 @@
             editor.setMarkdown(context);
         }
     }
+
+    $(".nextSubmit").on("click",function () {
+        let flag = check(context);
+        let content = $("#mdContent").val();
+        if (content == ""){
+            toastr.error("请填写文章内容！")
+            return false;
+        }
+        if(flag){
+            saveTempArticle("next");
+        }
+
+    })
 
 
 

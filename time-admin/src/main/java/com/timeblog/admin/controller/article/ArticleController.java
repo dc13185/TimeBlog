@@ -6,7 +6,10 @@ import com.timeblog.admin.config.constant.SystemConstant;
 import com.timeblog.business.base.Result;
 import com.timeblog.business.domain.Article;
 import com.timeblog.business.domain.ArticleType;
+import com.timeblog.business.domain.PageDomain;
 import com.timeblog.framework.mapper.ArticleMapper;
+import com.timeblog.framework.mapper.ArticleTypeMapper;
+import com.timeblog.framework.system.utils.BeanUtils;
 import com.timeblog.framework.system.utils.FileUtils;
 import com.timeblog.framework.system.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,14 +28,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 /**
  * @author DongChao
@@ -59,7 +65,16 @@ public class ArticleController {
     @Resource
     private ArticleMapper articleMapper;
 
+    @Resource
+    private ArticleTypeMapper articleTypeMapper;
 
+    /**
+     * @author: dongchao
+     * @create: 2020/2/18-18:00
+     * @description: 跳转至修改文章页面
+     * @param:
+     * @return:
+     */
     @RequestMapping("/toEditArticle")
     public ModelAndView toArticleType(){
         ModelAndView modelAndView = new ModelAndView("article/editArticle");
@@ -67,6 +82,27 @@ public class ArticleController {
         if (null != context){
             modelAndView.addObject("tempArticle",context);
         }
+        return modelAndView;
+    }
+
+    /**
+     * @author: dongchao
+     * @create: 2020/2/18-18:00
+     * @description: 完成修改文章页面
+     * @param:
+     * @return:
+     */
+    @RequestMapping("/toCompleteArticle")
+    public ModelAndView toCompleteArticle(String articleId) throws Exception{
+        //查出所有的分类
+        List<ArticleType> articleTypes = articleTypeMapper.queryAll(new PageDomain());
+        articleTypes = articleTypes.stream().sorted(Comparator.comparing(ArticleType::getTypeName)).collect(Collectors.toList());
+        Map map = (Map) redisUtils.get(SystemConstant.TEMP_ARTICLE_FLAG+articleId);
+        Article article = BeanUtils.conversionToObject(map,Article.class);
+        //返回modelAndView
+        ModelAndView modelAndView = new ModelAndView("article/otherArticle");
+        modelAndView.addObject("article",article);
+        modelAndView.addObject("articleTypes",articleTypes);
         return modelAndView;
     }
 
@@ -132,7 +168,7 @@ public class ArticleController {
                 articleMapper.insert(article);
                 //草稿存入redis
                 String articleContext = article.getArticleContextMd();
-                Map map = JSON.parseObject(JSON.toJSONString(article), Map.class);
+                Map map = BeanUtils.conversionToMap(article);
                 redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId(),map);
                 List<String> tempList = (List<String>) redisUtils.get(SystemConstant.TEMP_ARTICLE_IMAGES_FLAG);
                 if (null != tempList){
@@ -163,10 +199,23 @@ public class ArticleController {
     }
 
 
+    /**
+     * @author: dongchao
+     * @create: 2020/2/20-16:25
+     * @description:完善所有文章配置
+     * @param:
+     * @return:
+     */
+    @RequestMapping("completeArticle")
+    @ResponseBody
+    public Result completeArticle(@RequestBody Article article) throws Exception{
+        return  Result.success();
+    }
+
+
 
     public static void main(String[] args) {
         String a = "www.asdasdh.hahah/qiumingshan/2019-01-12/hahahha.png";
-
         Matcher m = SystemConstant.IMAGE_PATTERN.matcher(a);
         if(m.find()){
             System.out.println(m.group(0));

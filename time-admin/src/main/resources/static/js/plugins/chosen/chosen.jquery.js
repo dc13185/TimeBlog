@@ -272,6 +272,7 @@
             }
             this.result_clear_highlight();
             this.results_build();
+            this.results_showing = false;
             if (this.results_showing) {
                 return this.winnow_results();
             }
@@ -649,7 +650,7 @@
             this.search_field.bind('blur.chosen', function(evt) {
                 _this.input_blur(evt);
             });
-            this.search_field.bind('keyup.chosen', function(evt) {
+           this.search_field.bind('keyup.chosen', function(evt) {
                 _this.keyup_checker(evt);
             });
             this.search_field.bind('keydown.chosen', function(evt) {
