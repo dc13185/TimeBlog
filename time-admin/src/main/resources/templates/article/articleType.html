@@ -1,6 +1,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="include :: header"></head>
+<link th:href="@{/css/plugins/chosen/chosen.css}" rel="stylesheet"/>
+<link th:href="@{/css/style.css}" rel="stylesheet"/>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
@@ -55,6 +57,17 @@
                         <label>输入描述</label>
                         <input type="text" id="storeType_describe" name="storeType_describe" placeholder="请输入描述" class="form-control check_attr">
                     </div>
+
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <select data-placeholder="请选择文章类型" id="article-type-chosen" style="width:350px;" tabindex="2" >
+                                <option value="">请选择文章类型</option>
+                                <option  th:each="articleType,articleTypeStat : ${articleTypes}" th:value="${articleType.typeId}" th:text="${articleType.typeName}" hassubinfo="true"></option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <button type="button" class="btn btn-primary btn-sm" id = "inconButton">点击选择图标</button>
                         <div class="bs-glyphicons">
@@ -99,14 +112,19 @@
 </div>
 
 <head th:include="include :: footer"></head>
+<script th:src="@{/js/plugins/chosen/chosen.jquery.js}"></script>
 <script type="text/javascript">
     $(function(){
+        $("#article-type-chosen").chosen({
+            disable_search:false,disable_search_threshold:5,width:300, search_contains:true, no_results_text:'查找不到相应分类'
+        });
         //隐藏下拉
         $("#inconModeal").hide();
         //初始化Table
         var oTable = new TableInit();
         oTable.Init();
     });
+
 
     let TableInit = function () {
         let header = $("meta[name='_csrf_header']").attr("content");
@@ -124,6 +142,7 @@
                 sortable: true,                     //是否启用排序
                 sortName:"id",
                 sortOrder: "desc",                   //排序方式
+                detailView: true,                    //父子表
                 queryParams: oTableInit.queryParams,//传递参数（*）
                 queryParamsType: 'limit',
                 sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
@@ -137,10 +156,9 @@
                 minimumCountColumns: 2,             //最少允许的列数
                 clickToSelect: true,                //是否启用点击选中行
                 //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-                uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+                uniqueId: "typeId",                     //每一行的唯一标识，一般为主键列
                 showToggle:false,                   //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //是否显示详细视图
-                detailView: false,                   //是否显示父子表
                 iconSize: 'outline',
                 contentType: "application/json;charset=utf-8", //解决POST提交问题
                 showExport: false,                     //是否显示导出
@@ -157,11 +175,6 @@
                         "total": res.total,//总页数
                         "rows": res.rows   //数据
                     };
-                },
-                icons: {
-                    refresh: 'glyphicon-repeat',
-                    toggle: 'glyphicon-list-alt',
-                    columns: 'glyphicon-list'
                 },
                 columns: [
                     {checkbox: true },
@@ -192,8 +205,13 @@
                     }
 
                 ],
+                //注册加载子表的事件。注意下这里的三个参数！
+                onExpandRow: function (index, row, $detail) {
+                   initSubTable(index, row, $detail);
+                }
             });
         };
+
 
         //修改
         window.operateEvents ={
@@ -222,6 +240,54 @@
         return oTableInit;
     }
 
+
+
+    //初始化子表格
+   function initSubTable (index, row, $detail) {
+       let parentId = row.typeId;
+       let json = {"parentId":parentId};
+       $.ajax({
+           type: 'post',
+           url: ctx+"articleType/showArticleTypeByParentId",
+           dataType:"json",
+           data: JSON.stringify(json),
+           cache: false,
+           async: true,
+           beforeSend: function (xhr) {
+               xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+           },
+           success: function (res) {
+               let data = res.rows;
+               let cur_table = $detail.html('<table></table>').find('table');
+               $.SUB_TABLE = $(cur_table);
+               $(cur_table).bootstrapTable({
+                   clickToSelect: true,
+                   data: data,
+                   pagination: true,
+                   uniqueId: "typeId",
+                   columns: [
+                       {checkbox: true },
+                       {title:'文章类型',field: 'typeName',sortable:true },
+                       {title:'图标',field: 'icon',sortable:true,formatter:function (value, row, index) {
+                               return [
+                                   '<i class="'+row.icon+'" style="cursor: pointer;margin-right: 10px"  ></i>'
+                               ].join("")
+
+                           }},
+                       {title:'描述',field: 'description',sortable:true },
+                       {title:'操作',field:"Button",align:"center",formatter:function (value, row, index) {
+                               return [
+                                   '<i class="fa fa-edit editButton" style="cursor: pointer;" ></i>'
+                               ].join("")
+
+                           },events:operateEvents
+                       }
+                   ],
+               });
+           }
+       });
+    };
+
     //点击新增按钮
     $("#addButton").on("click", function () {
         $("#articleModal").modal();
@@ -230,13 +296,22 @@
     //点击删除按钮
     $("#deleteButton").on("click",function () {
         let rows = $('#exampleTableEvents').bootstrapTable('getAllSelections');
-        if(rows.length == 0){
+        debugger;
+        let subRows = [];
+
+        if ($.SUB_TABLE){
+            subRows = $.SUB_TABLE.bootstrapTable('getAllSelections');
+        }
+        if(rows.length == 0  && (subRows.length == 0 || !Array.isArray(subRows))){
             toastr.error("至少选择一项！");
             return false;
         }
         let ids = new Array();
         for (let i=0;i<rows.length;i++){
             ids.push(rows[i].typeId);
+        }
+        for (let i=0;i<subRows.length;i++){
+            ids.push(subRows[i].typeId);
         }
         let data = {"typeIds":ids.toString()}
         $.ajax({
@@ -267,7 +342,8 @@
         let typeName = $("#storeType_name").val();
         let storeTypeDescribe = $("#storeType_describe").val();
         let icon = $(".fa-hover-click").children().attr("class");
-        let json = {"typeName":typeName, "description":storeTypeDescribe,"icon":icon,"articleType":1,"typeId":$.TYPE_ID};
+        let parentId = $("#article-type-chosen").val();
+        let json = {"typeName":typeName, "description":storeTypeDescribe,"icon":icon,"articleType":1,"typeId":$.TYPE_ID,"parentId":parentId};
         let flag = check(articleModal);
         if (!flag){
             return false;

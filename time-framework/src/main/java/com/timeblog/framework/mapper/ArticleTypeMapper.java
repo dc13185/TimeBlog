@@ -21,6 +21,14 @@ public interface ArticleTypeMapper {
      */
     ArticleType queryById(Integer typeId);
 
+    /**
+     * 通过父ID查询单条数据
+     *
+     * @param typeId 主键
+     * @return 实例对象
+     */
+    List<ArticleType> queryByParentId(Integer typeId);
+
 
     /**
      * 通过实体作为筛选条件查询

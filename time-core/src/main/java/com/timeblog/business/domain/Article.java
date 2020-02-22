@@ -46,6 +46,8 @@ public class Article extends BaseDomain  {
     /** 关键字 */
     private String keywords;
 
+    /** 分类ID */
+    private int articleTypeId;
 
 
 

@@ -28,6 +28,11 @@ public class SystemConstant {
 
 
     /**
+     *  临时草稿的Key
+     */
+    public static String TEMP_ARTICLE_TYPES = "tempArticleTypes";
+
+    /**
      *  获取图片文件路径正则
      */
     public static Pattern IMAGE_PATTERN = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}[\\s\\S]{1,}");

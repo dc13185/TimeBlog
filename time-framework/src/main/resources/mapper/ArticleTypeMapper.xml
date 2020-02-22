@@ -4,6 +4,7 @@
 
     <resultMap type="com.timeblog.business.domain.ArticleType" id="TimeArticleTypeMap">
         <result property="typeId" column="type_id" jdbcType="INTEGER"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
         <result property="typeName" column="type_name" jdbcType="VARCHAR"/>
         <result property="sort" column="sort" jdbcType="INTEGER"/>
         <result property="icon" column="icon" jdbcType="VARCHAR"/>
@@ -19,23 +20,30 @@
         where type_id = #{typeId}
     </select>
 
+    <!--查询单个-->
+    <select id="queryByParentId" resultMap="TimeArticleTypeMap">
+        select
+            type_id, type_name, sort, icon, isAvailable, description
+        from timeblog.time_article_type
+        where parent_id = #{parentId}
+    </select>
+
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TimeArticleTypeMap">
         select  type_id, type_name, sort, icon, isAvailable, description
         from timeblog.time_article_type
-        <where>
-            <if test="retrieve != null">
-                and type_name = #{retrieve}
-            </if>
-        </where>
+        where  parent_id = -1
+        <if test="retrieve != null and retrieve != '' ">
+            and type_name like CONCAT('%',#{retrieve},'%')
+        </if>
     </select>
 
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="typeId" useGeneratedKeys="true">
-        insert into timeblog.time_article_type(type_name, sort, icon, isAvailable, description)
-        values (#{typeName}, #{sort}, #{icon}, #{isAvailable}, #{description})
+        insert into timeblog.time_article_type(parent_id,type_name, sort, icon, isAvailable, description)
+        values (#{parentId},#{typeName}, #{sort}, #{icon}, #{isAvailable}, #{description})
     </insert>
 
 

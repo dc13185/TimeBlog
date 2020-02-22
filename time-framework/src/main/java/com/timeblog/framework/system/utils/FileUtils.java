@@ -1,6 +1,11 @@
 package com.timeblog.framework.system.utils;
 
+
+
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -405,15 +410,23 @@ public class FileUtils {
     }
 
 
-    /* 得到文件后缀名 随机
-     *
-     * @param fileName
+    /** 得到文件后缀名 随机
+     * @param srcFileName
      * @return
      */
     public static String getRandomBySrcFileName(String srcFileName) {
           String ext =  getFileExt(srcFileName);
           String newFileName = UUID.randomUUID().toString().replaceAll("-","")+"."+ext;
           return newFileName;
+    }
+
+    /** 得到文件后缀名 随机
+     * @param
+     * @return
+     */
+    public static String getRandomFileName() {
+        String newFileName = UUID.randomUUID().toString().replaceAll("-","")+".";
+        return newFileName;
     }
 
 
@@ -478,6 +491,38 @@ public class FileUtils {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+
+    public static String GenerateImage(String imgStr, String imgFilePath) throws Exception {
+        // 图像数据为空
+        if (imgStr == null){
+            return "";
+        }
+        Base64.Decoder decoder = Base64.getDecoder();
+        // Base64解码,对字节数组字符串进行Base64解码并生成图片
+        imgStr = imgStr.replaceAll(" ", "+");
+        System.out.println(imgStr);
+        byte[] b = decoder.decode(imgStr.replace("data:image/jpeg;base64,", ""));
+        for (int i = 0; i < b.length; ++i) {
+            // 调整异常数据
+            if (b[i] < 0) {
+                b[i] += 256;
+            }
+        }
+        String imgName = getRandomFileName()+"jpg";
+        // 生成jpeg图片D:\test\attendance\src\main\webapp\assets\images\leave
+        Path path = Paths.get(imgFilePath);
+        //不存在就创建
+        if (!Files.exists(path)){
+            Files.createDirectories(path);
+        }
+        imgFilePath = imgFilePath+imgName;
+        OutputStream out = new FileOutputStream(imgFilePath);
+        out.write(b);
+        out.flush();
+        out.close();
+        return imgName;
     }
 
     public static void main(String[] args) {

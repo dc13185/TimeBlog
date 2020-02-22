@@ -2,6 +2,7 @@ package com.timeblog.business.domain;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Date;
  * @description: 基础实体信息
  **/
 @Data
-public class BaseDomain {
+public class BaseDomain implements Serializable {
 
     protected Date createTime;
 

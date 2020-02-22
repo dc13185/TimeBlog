@@ -1,8 +1,11 @@
 package com.timeblog.business.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
  * @author: dong.chao
@@ -10,11 +13,14 @@ import lombok.NoArgsConstructor;
  * @description: 文章类型
  **/
 @Data
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleType extends BaseDomain {
+public class ArticleType extends BaseDomain  {
 
     private String typeId;
+
+    private String parentId;
 
     /** 类型名 */
     private String typeName;
@@ -36,6 +42,7 @@ public class ArticleType extends BaseDomain {
      * 描述
      */
     private String description;
+
 
 
 }

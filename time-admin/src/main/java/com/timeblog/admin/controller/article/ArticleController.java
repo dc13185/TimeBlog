@@ -11,6 +11,7 @@ import com.timeblog.framework.mapper.ArticleMapper;
 import com.timeblog.framework.mapper.ArticleTypeMapper;
 import com.timeblog.framework.system.utils.BeanUtils;
 import com.timeblog.framework.system.utils.FileUtils;
+import com.timeblog.framework.system.utils.IpUtils;
 import com.timeblog.framework.system.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import us.codecraft.webmagic.utils.IPUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -127,7 +129,7 @@ public class ArticleController {
         //复制文件
         Files.copy(file.getInputStream(),targetPath);
         //拼接图片路径
-        String ip = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getServletContext().getContextPath();
+        String ip = IpUtils.getProjectPath(request);
         String url = ip + imageUrl.replace("**","")+urlPath;
         //加添图片路径到redis
         List<String> tempList = (List<String>) redisUtils.get(SystemConstant.TEMP_ARTICLE_IMAGES_FLAG);
@@ -208,7 +210,16 @@ public class ArticleController {
      */
     @RequestMapping("completeArticle")
     @ResponseBody
-    public Result completeArticle(@RequestBody Article article) throws Exception{
+    public Result completeArticle(@RequestBody Article article,HttpServletRequest request) throws Exception{
+        //上传封面
+        String nowDate = LocalDate.now().toString();
+        String filePath =  imageFilePath + nowDate+"/";
+        String imageFileName = FileUtils.GenerateImage(article.getCoverImage(),filePath);
+        String ip = IpUtils.getProjectPath(request);
+        String url = ip + imageUrl.replace("**","")+nowDate+"/"+imageFileName;
+        //入库
+        article = article.toBuilder().coverImage(url).build();
+        articleMapper.update(article);
         return  Result.success();
     }
 

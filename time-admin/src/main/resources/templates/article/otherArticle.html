@@ -1,0 +1,284 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include :: header"></head>
+<link th:href="@{/css/plugins/switchery/switchery.css}" rel="stylesheet"/>
+<link th:href="@{/css/plugins/cropper/cropper.min.css}" rel="stylesheet"/>
+<link th:href="@{/css/plugins/chosen/chosen.css}" rel="stylesheet"/>
+<link th:href="@{/css/style.css}" rel="stylesheet"/>
+<style>
+    .image-crop{
+        height: 60% !important;
+    }
+    .cropper-container{
+        top: 0px !important;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title  back-change">
+                <h5> 文章列表 / 编辑文章</h5>
+            <div class="ibox-content" >
+                <h4>选择文章分类</h4>
+                <div class="form-group">
+                    <div class="input-group">
+                        <select data-placeholder="请选择文章类型" id="article-type-chosen" style="width:350px;" tabindex="2" >
+                            <option value="">请选择文章类型</option>
+                            <option  th:each="articleType,articleTypeStat : ${articleTypes}" th:value="${articleType.typeId}" th:text="${articleType.typeName}" hassubinfo="true"></option>
+                        </select>
+                    </div>
+                </div>
+                <h4>添加标签</h4>
+                <div class="form-group">
+                    <div class="input-group">
+                        <select data-placeholder="选择标签，可按回车键添加"  id="label-select" class="chosen-select" multiple style="width:350px;" tabindex="4">
+                            <option value="">请选择省份</option>
+                            <option value="北京" hassubinfo="true">北京</option>
+                            <option value="天津" hassubinfo="true">天津</option>
+                            <option value="130000" hassubinfo="true">河北省</option>
+                            <option value="140000" hassubinfo="true">山西省</option>
+                            <option value="150000" hassubinfo="true">内蒙古自治区</option>
+                            <option value="210000" hassubinfo="true">辽宁省</option>
+                            <option value="220000" hassubinfo="true">吉林省</option>
+                            <option value="230000" hassubinfo="true">黑龙江省</option>
+                            <option value="310000" hassubinfo="true">上海</option>
+                            <option value="320000" hassubinfo="true">江苏省</option>
+                            <option value="330000" hassubinfo="true">浙江省</option>
+                            <option value="340000" hassubinfo="true">安徽省</option>
+                            <option value="350000" hassubinfo="true">福建省</option>
+                            <option value="360000" hassubinfo="true">江西省</option>
+                            <option value="370000" hassubinfo="true">山东省</option>
+                            <option value="410000" hassubinfo="true">河南省</option>
+                            <option value="420000" hassubinfo="true">湖北省</option>
+                            <option value="430000" hassubinfo="true">湖南省</option>
+                            <option value="440000" hassubinfo="true">广东省</option>
+                            <option value="450000" hassubinfo="true">广西壮族自治区</option>
+                            <option value="460000" hassubinfo="true">海南省</option>
+                            <option value="500000" hassubinfo="true">重庆</option>
+                            <option value="510000" hassubinfo="true">四川省</option>
+                            <option value="520000" hassubinfo="true">贵州省</option>
+                            <option value="530000" hassubinfo="true">云南省</option>
+                            <option value="540000" hassubinfo="true">西藏自治区</option>
+                            <option value="610000" hassubinfo="true">陕西省</option>
+                            <option value="620000" hassubinfo="true">甘肃省</option>
+                            <option value="630000" hassubinfo="true">青海省</option>
+                            <option value="640000" hassubinfo="true">宁夏回族自治区</option>
+                            <option value="650000" hassubinfo="true">新疆维吾尔自治区</option>
+                            <option value="710000" hassubinfo="true">台湾省</option>
+                            <option value="810000" hassubinfo="true">香港特别行政区</option>
+                            <option value="820000" hassubinfo="true">澳门特别行政区</option>
+                            <option value="990000" hassubinfo="true">海外</option>
+                        </select>
+                    </div>
+                </div>
+                <h4>是否置顶</h4>
+                <input type="checkbox" class="is-top"  />
+                <h4>是否开启评论</h4>
+                <input type="checkbox" class="is-comment" checked />
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-md-5">
+                        <h4>上传封面：</h4>
+                        <div class="img-preview img-preview-sm"></div>
+                        <h4>说明：</h4>
+                        <p>
+                            你可以不上传图片封面，默认会显示空白
+                        </p>
+                        <div class="btn-group">
+                            <label title="上传图片" for="inputImage" class="btn btn-primary">
+                                <input type="file" accept="image/*" name="file" id="inputImage" class="hide"> 上传新图片
+                            </label>
+                        </div>
+                        <div class="btn-group btn-tools">
+                            <button class="btn btn-white" id="zoomIn" type="button">放大</button>
+                            <button class="btn btn-white" id="zoomOut" type="button">缩小</button>
+                            <button class="btn btn-white" id="rotateLeft" type="button">左旋转</button>
+                            <button class="btn btn-white" id="rotateRight" type="button">右旋转</button>
+                            <button class="btn btn-warning" id="setDrag" type="button">裁剪</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="image-crop">
+                            <img id="article-img" th:src="@{/img/img-blank.png}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ibox-content" >
+                <div class="">
+                    <button type="button" class="btn btn-warning saveSubmit">上一步</button>
+                    <button type="button" class="btn btn-info saveSubmit">保存草稿</button>
+                    <button type="button" class="btn btn-success saveSubmit">发布</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+
+<head th:include="include :: footer"></head>
+<script th:src="@{/js/plugins/switchery/switchery.js}"></script>
+<script th:src="@{/js/plugins/cropper/cropper.min.js}"></script>
+<script th:src="@{/js/plugins/chosen/chosen.jquery.js}"></script>
+<script th:inline="javascript">
+
+    $(document).ready(function () {
+        $.TOP = [[${article.isTop}]];
+        $.COMMENT = [[${article.isComment}]];;
+        let top = document.querySelector('.is-top');
+        let comment = document.querySelector('.is-comment');
+        let topSwitchery = new Switchery(top, {color: '#1AB394'});
+        let commentSwitchery = new Switchery(comment, {color: '#1AB394'});
+
+        switchStatus(topSwitchery,$.TOP);
+        switchStatus(commentSwitchery,$.COMMENT);
+        top.onchange = function() {
+           $.TOP = top.checked ? 1:0;
+        };
+        comment.onchange = function() {
+            $.COMMENT = comment.checked ? 1:0;
+        };
+
+        //图片上传控件
+        let $image = $(".image-crop > img")
+        $($image).cropper({
+            aspectRatio: 1.618,
+            preview: ".img-preview",
+            done: function (data) {
+                // 输出结果
+            }
+        });
+
+        var $inputImage = $("#inputImage");
+        if (window.FileReader) {
+            $inputImage.change(function () {
+                var fileReader = new FileReader(),
+                    files = this.files,
+                    file;
+
+                if (!files.length) {
+                    return;
+                }
+
+                file = files[0];
+                if (/^image\/\w+$/.test(file.type)) {
+                    $(".image-crop").show();
+                    $(".btn-tools").show();
+                    fileReader.readAsDataURL(file);
+                    fileReader.onload = function () {
+                        $inputImage.val("");
+                        $image.cropper("reset", true).cropper("replace", this.result);
+                    };
+                } else {
+                    toastr.warning("请选择图片文件");
+                }
+            });
+        } else {
+            $inputImage.addClass("hide");
+        }
+
+
+        $("#zoomIn").click(function () {
+            $image.cropper("zoom", 0.1);
+        });
+
+        $("#zoomOut").click(function () {
+            $image.cropper("zoom", -0.1);
+        });
+
+        $("#rotateLeft").click(function () {
+            $image.cropper("rotate", 45);
+        });
+
+        $("#rotateRight").click(function () {
+            $image.cropper("rotate", -45);
+        });
+
+        $("#setDrag").click(function () {
+            $image.cropper("setDragMode", "crop");
+        });
+
+        $(".image-crop").hide();
+        $(".btn-tools").hide();
+
+        $("#article-type-chosen").chosen({
+            disable_search:false,disable_search_threshold:5, search_contains:true, no_results_text:'查找不到相应分类'
+        });
+
+        $("#label-select").chosen({
+            disable_search:false,disable_search_threshold:10, search_contains:true, no_results_text:'查找不到相应标签，按回车键进行添加'
+        });
+
+        //回车添加标签
+       $(".input-group").keydown(function(event) {
+            if (event.keyCode == 13) {
+                var t = $(".search-field").children(":first").val();
+                if (t && t!=""){
+                    let bq = "<option value=\""+t+"\" hassubinfo=\"true\" selected>"+t+"</option>";
+                    $(".chosen-select").append(bq);
+                    $('.chosen-select').trigger("chosen:updated");
+                }
+            }
+        })
+    });
+
+    function  switchStatus(event,status){
+        if(status == 0){
+            event.setPosition(false);
+        }else{
+            event.handleOnchange(true);
+        }
+
+    }
+
+    $(".saveSubmit").on("click", function() {
+        saveArticle(1);
+    });
+
+
+
+    //保存文章
+    function saveArticle(status){
+        let articleId = [[${article.articleId}]];
+        let articleType = $("#article-type-chosen").val();
+        let labelSelect = $("#label-select").val().toString();
+        if (articleType == ""){
+            toastr.warning("请选择文章类型");
+        }
+        let fileDate = $("#article-img")[0].currentSrc;
+        if (!fileDate.indexOf("img-blank")){
+            let data = $("#article-img").cropper('getCroppedCanvas');
+            console.log(data);
+            let base64 = data.toDataURL('base64'); // 转换为base64
+            fileDate = encodeURIComponent(base64)
+        }
+        let jsonContent ={"articleId":articleId,"articleType":articleType,"keywords":labelSelect,"coverImage":fileDate,"status":status}
+        let url = ctx+"article/completeArticle";
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: JSON.stringify(jsonContent),
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            },
+            success: function (msg) {
+                alert(msg);
+            }
+        });
+
+
+
+
+    }
+
+</script>
+
+</body>
+</html>
