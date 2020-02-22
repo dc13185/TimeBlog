@@ -57,12 +57,11 @@
                         <label>输入描述</label>
                         <input type="text" id="storeType_describe" name="storeType_describe" placeholder="请输入描述" class="form-control check_attr">
                     </div>
-
-
                     <div class="form-group">
+                        <label>选择父级文章类型(不选即为父级节点)</label><br/>
                         <div class="input-group">
-                            <select data-placeholder="请选择文章类型" id="article-type-chosen" style="width:350px;" tabindex="2" >
-                                <option value="">请选择文章类型</option>
+                            <select data-placeholder="选择父级文章类型" id="article-type-chosen" style="width:350px;" tabindex="2" >
+                                <option value="">选择父级文章类型</option>
                                 <option  th:each="articleType,articleTypeStat : ${articleTypes}" th:value="${articleType.typeId}" th:text="${articleType.typeName}" hassubinfo="true"></option>
                             </select>
                         </div>
@@ -217,11 +216,19 @@
         window.operateEvents ={
             "click .editButton":function(e,value,row,index){
                 $.TYPE_ID = row.typeId;
+                if (row.parentId != -1){
+                    $("#article-type-chosen").val(row.parentId);
+                    $("#article-type-chosen").trigger("chosen:updated");
+                }else{
+                    $('#article-type-chosen').prop('disabled', true).trigger("chosen:updated");
+                }
                 $("#storeType_name").val(row.typeName);
                 $("#storeType_describe").val(row.description);
-                $("#inconModeal").show();
-                let flag = row.icon.replace("fa","").trim();
-                $("#inconModeal").find("."+flag+"").parent().attr("class"," fa-hover-click");
+                if (row.icon != null && row.icon != ""){
+                    $("#inconModeal").show();
+                    let flag = row.icon.replace("fa","").trim();
+                    $("#inconModeal").find("."+flag+"").parent().attr("class"," fa-hover-click");
+                }
                 $("#articleModal").modal();
             }
         }
@@ -296,9 +303,7 @@
     //点击删除按钮
     $("#deleteButton").on("click",function () {
         let rows = $('#exampleTableEvents').bootstrapTable('getAllSelections');
-        debugger;
         let subRows = [];
-
         if ($.SUB_TABLE){
             subRows = $.SUB_TABLE.bootstrapTable('getAllSelections');
         }
@@ -382,6 +387,7 @@
 
 
     $('#articleModal').on('hide.bs.modal', function () {
+        $('#article-type-chosen').trigger("chosen:updated");
         $.TYPE_ID = "";
         $("#storeType_name").val("");
         $("#storeType_describe").val("");

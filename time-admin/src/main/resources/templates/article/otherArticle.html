@@ -128,15 +128,27 @@
 
     $(document).ready(function () {
         $.TOP = [[${article.isTop}]];
-        $.COMMENT = [[${article.isComment}]];;
+        $.COMMENT = [[${article.isComment}]];
+        debugger;
+        let imgUrl = [[${article.coverImage}]];
+        //初始化类型
+        $("#article-type-chosen").val([[${article.articleTypeId}]]);
+        $('#article-type-chosen').trigger("chosen:updated");
+        //初始化图片
+        if (imgUrl !== null){
+            $("#article-img").attr("src",imgUrl)
+        }
+
         let top = document.querySelector('.is-top');
         let comment = document.querySelector('.is-comment');
         let topSwitchery = new Switchery(top, {color: '#1AB394'});
         let commentSwitchery = new Switchery(comment, {color: '#1AB394'});
-
+        //初始化开关
         switchStatus(topSwitchery,$.TOP);
         switchStatus(commentSwitchery,$.COMMENT);
+
         top.onchange = function() {
+            debugger;
            $.TOP = top.checked ? 1:0;
         };
         comment.onchange = function() {
@@ -228,9 +240,11 @@
 
     function  switchStatus(event,status){
         if(status == 0){
-            event.setPosition(false);
+            event.element.checked = false;
+            event.setPosition();
         }else{
-            event.handleOnchange(true);
+            event.element.checked = true;
+            event.setPosition();
         }
 
     }
@@ -256,7 +270,7 @@
             let base64 = data.toDataURL('base64'); // 转换为base64
             fileDate = encodeURIComponent(base64)
         }
-        let jsonContent ={"articleId":articleId,"articleType":articleType,"keywords":labelSelect,"coverImage":fileDate,"status":status}
+        let jsonContent ={"articleId":articleId,"articleTypeId":articleType,"keywords":labelSelect,"coverImage":fileDate,"status":status}
         let url = ctx+"article/completeArticle";
         $.ajax({
             url: url,

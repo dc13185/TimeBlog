@@ -11,6 +11,9 @@ import java.util.regex.Pattern;
  */
 public class SystemConstant {
 
+
+    public static String SOURCE_IMG = "http";
+
     /**
      * 不启用CSRL的URL
      */

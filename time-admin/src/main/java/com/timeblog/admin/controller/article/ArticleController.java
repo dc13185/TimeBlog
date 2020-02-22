@@ -99,8 +99,11 @@ public class ArticleController {
         //查出所有的分类
         List<ArticleType> articleTypes = articleTypeMapper.queryAll(new PageDomain());
         articleTypes = articleTypes.stream().sorted(Comparator.comparing(ArticleType::getTypeName)).collect(Collectors.toList());
-        Map map = (Map) redisUtils.get(SystemConstant.TEMP_ARTICLE_FLAG+articleId);
-        Article article = BeanUtils.conversionToObject(map,Article.class);
+        Article article = (Article) redisUtils.get(SystemConstant.TEMP_ARTICLE_FLAG+articleId);
+        if (article == null){
+            article = articleMapper.queryById(Integer.parseInt(articleId));
+            redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+articleId,article);
+        }
         //返回modelAndView
         ModelAndView modelAndView = new ModelAndView("article/otherArticle");
         modelAndView.addObject("article",article);
@@ -156,8 +159,7 @@ public class ArticleController {
         if (-1 != article.getArticleId()){
             article = article.toBuilder().status(0).build();
             //将草稿存入redis
-            Map map = JSON.parseObject(JSON.toJSONString(article), Map.class);
-            redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId(),map);
+            redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId(),article);
             articleMapper.update(article);
         }else {
             if (StringUtils.isEmpty(article.getArticleTitle())){
@@ -170,8 +172,7 @@ public class ArticleController {
                 articleMapper.insert(article);
                 //草稿存入redis
                 String articleContext = article.getArticleContextMd();
-                Map map = BeanUtils.conversionToMap(article);
-                redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId(),map);
+                redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId(),article);
                 List<String> tempList = (List<String>) redisUtils.get(SystemConstant.TEMP_ARTICLE_IMAGES_FLAG);
                 if (null != tempList){
                     //如果临时图片内容不为空
@@ -212,14 +213,34 @@ public class ArticleController {
     @ResponseBody
     public Result completeArticle(@RequestBody Article article,HttpServletRequest request) throws Exception{
         //上传封面
-        String nowDate = LocalDate.now().toString();
-        String filePath =  imageFilePath + nowDate+"/";
-        String imageFileName = FileUtils.GenerateImage(article.getCoverImage(),filePath);
-        String ip = IpUtils.getProjectPath(request);
-        String url = ip + imageUrl.replace("**","")+nowDate+"/"+imageFileName;
-        //入库
-        article = article.toBuilder().coverImage(url).build();
+        if (!StringUtils.contains(article.getCoverImage(),SystemConstant.SOURCE_IMG)){
+            String nowDate = LocalDate.now().toString();
+            String filePath =  imageFilePath + nowDate+"/";
+            String imageFileName = FileUtils.GenerateImage(article.getCoverImage(),filePath);
+            String ip = IpUtils.getProjectPath(request);
+            String url = ip + imageUrl.replace("**","")+nowDate+"/"+imageFileName;
+            //修改URL 路径
+            article = article.toBuilder().coverImage(url).build();
+            //判断其原来的值是否
+            Article srcArticle =  (Article)redisUtils.get(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId());
+            if (srcArticle == null){
+                srcArticle = articleMapper.queryById(article.getArticleId());
+            }
+            //如果原来的封面是上传的，就删除
+            if (srcArticle.getCoverImage() != null && !srcArticle.getCoverImage().contains(SystemConstant.SOURCE_IMG)){
+                Matcher m = SystemConstant.IMAGE_PATTERN.matcher(srcArticle.getCoverImage());
+                if(m.find()){
+                    String imagePath = m.group(0);
+                    Path path = Paths.get(imageFilePath + imagePath);
+                    Files.delete(path);
+                }
+            }
+        }
+
+
+        redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId(),article);
         articleMapper.update(article);
+
         return  Result.success();
     }
 
