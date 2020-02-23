@@ -37,17 +37,18 @@ public class Article extends BaseDomain  {
     /** 是否原创 1：是  0：否  -1:不显示 */
     private int isOriginal;
 
-    /** 是否原创 0:置顶 1：非置顶   */
+    /** 是否原创 0:不指定 1：指定   */
     private int isTop;
 
     /** -1:删除 0:草稿类容 1:正式发布 */
     private int status;
 
-    /** 关键字 */
-    private String keywords;
-
     /** 分类ID */
     private int articleTypeId;
+
+
+    /** 标签id */
+    private String labelIds;
 
 
 

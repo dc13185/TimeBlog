@@ -1,22 +1,24 @@
 package com.timeblog.business.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 /**
- * @author: dong.chao
- * @create: 2019-07-29 18:36
- * @description: 文章标签
- **/
+ * (TimeLabel)实体类
+ *
+ * @author makejava
+ * @since 2020-02-23 10:00:49
+ */
 @Data
-public class Label {
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class Label extends BaseDomain {
 
-    private int labelId;
-
+    private Integer labelId;
+    
     private String labelName;
-
-    /**
-     * 标签描述
-     */
-    private String description;
-
 }

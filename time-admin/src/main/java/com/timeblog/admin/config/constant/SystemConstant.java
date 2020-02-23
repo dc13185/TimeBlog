@@ -36,6 +36,16 @@ public class SystemConstant {
     public static String TEMP_ARTICLE_TYPES = "tempArticleTypes";
 
     /**
+     *  文章标签
+     */
+    public static String ARTICLE_LABEL_FLAG = "articleLabelFlag";
+
+    /**
+     *  文章对应的类型
+     */
+    public static String ARTICLE_TO_LABEL_FLAG = "articleToLabelFlag";
+
+    /**
      *  获取图片文件路径正则
      */
     public static Pattern IMAGE_PATTERN = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}[\\s\\S]{1,}");

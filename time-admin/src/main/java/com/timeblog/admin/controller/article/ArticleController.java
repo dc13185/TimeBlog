@@ -1,44 +1,43 @@
 package com.timeblog.admin.controller.article;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.timeblog.admin.config.constant.SystemConstant;
 import com.timeblog.business.base.Result;
-import com.timeblog.business.domain.Article;
-import com.timeblog.business.domain.ArticleType;
-import com.timeblog.business.domain.PageDomain;
+import com.timeblog.business.domain.*;
+import com.timeblog.framework.mapper.ArticleLabelMapper;
 import com.timeblog.framework.mapper.ArticleMapper;
 import com.timeblog.framework.mapper.ArticleTypeMapper;
-import com.timeblog.framework.system.utils.BeanUtils;
+import com.timeblog.framework.mapper.LabelMapper;
 import com.timeblog.framework.system.utils.FileUtils;
 import com.timeblog.framework.system.utils.IpUtils;
 import com.timeblog.framework.system.utils.RedisUtils;
+import net.bytebuddy.description.field.FieldDescription;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import us.codecraft.webmagic.utils.IPUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -69,6 +68,12 @@ public class ArticleController {
 
     @Resource
     private ArticleTypeMapper articleTypeMapper;
+
+    @Resource
+    private LabelMapper labelMapper;
+
+    @Resource
+    private ArticleLabelMapper articleLabelMapper;
 
     /**
      * @author: dongchao
@@ -104,8 +109,29 @@ public class ArticleController {
             article = articleMapper.queryById(Integer.parseInt(articleId));
             redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+articleId,article);
         }
+        //查出文章对应标签
+        List<Label> articleToLabels;
+        HashMap<String,List<Label>> articleToLabelMap = (HashMap<String,List<Label>>) redisUtils.get(SystemConstant.ARTICLE_TO_LABEL_FLAG);
+        if (articleToLabelMap == null){
+            articleToLabelMap = Maps.newHashMap();
+            articleToLabels =  labelMapper.queryLabelsByArticleId(Integer.parseInt(articleId));
+            articleToLabelMap.put(articleId,articleToLabels);
+            redisUtils.set(SystemConstant.ARTICLE_TO_LABEL_FLAG,articleToLabelMap);
+        }else{
+            articleToLabels = articleToLabelMap.get(articleId);
+        }
+        List<Integer> articleToLabelIds = articleToLabels.stream().map(Label::getLabelId).collect(Collectors.toList());
+        //查出所有标签
+        List<Label> allArticleLabel = (List<Label>) redisUtils.get(SystemConstant.ARTICLE_LABEL_FLAG);
+        if (allArticleLabel == null){
+            allArticleLabel = labelMapper.queryAll(null);
+            redisUtils.set(SystemConstant.ARTICLE_LABEL_FLAG,allArticleLabel);
+        }
+
         //返回modelAndView
         ModelAndView modelAndView = new ModelAndView("article/otherArticle");
+        modelAndView.addObject("articleToLabels",articleToLabelIds);
+        modelAndView.addObject("allArticleLabel",allArticleLabel);
         modelAndView.addObject("article",article);
         modelAndView.addObject("articleTypes",articleTypes);
         return modelAndView;
@@ -236,22 +262,80 @@ public class ArticleController {
                 }
             }
         }
+        //标签上传
+        if (StringUtils.isNoneEmpty(article.getLabelIds())){
+            String [] labelIds = article.getLabelIds().split(",");
+            List<Label> labels =  (List<Label>)redisUtils.get(SystemConstant.ARTICLE_LABEL_FLAG);
+            //存入redis 文章的对应标签
+            List<Label> articleToLabels = Lists.newArrayList();
+            if (labels == null){
+                labels = Lists.newArrayList();
+            }
+            //该文章已存在标签
+            List<Label> articleToLabelList = labelMapper.queryLabelsByArticleId(article.getArticleId());
+            //需要删除的标签
+            List<Integer> presenceLabels = Lists.newArrayList();
+            if (!CollectionUtils.isEmpty(articleToLabelList)){
+                presenceLabels = articleToLabelList.stream().map(Label::getLabelId).collect(Collectors.toList());
+                articleToLabelList = Lists.newArrayList();
+            }
 
+            for (String labelFlag : labelIds) {
+                Label label = labels.stream().filter(l -> l.getLabelId().toString().equals(labelFlag) || l.getLabelName().equals(labelFlag))
+                        .findAny().orElse(null);
+                Integer srcArticleId = article.getArticleId();
+                Integer srcLabelId;
+                //如果找不到，则为新增
+                if (label == null) {
+                    label = Label.builder().labelName(labelFlag).build();
+                    //入库，入redis
+                    labelMapper.insert(label);
+                    labels.add(label);
+                }
+                srcLabelId = label.getLabelId();
+                articleToLabels.add(label);
+                //如果该文章以有的,不包含其中的 需要新增。去除已有的,就是删除的
+                if (!presenceLabels.contains(srcLabelId)){
+                    //根据文章id找出所有标签
+                    ArticleLabel articleLabel = ArticleLabel.builder().labelId(srcLabelId).articleId(srcArticleId).createDate(new Date()).build();
+                    articleLabelMapper.insert(articleLabel);
+                }else{
+                    presenceLabels.remove(srcLabelId);
+                }
+            }
+            //删除其原有的标签
+            if (!CollectionUtils.isEmpty(presenceLabels)){
+                articleLabelMapper.deleteByArticleIds(presenceLabels);
+            }
+            //所有标签存入redis
+            redisUtils.set(SystemConstant.ARTICLE_LABEL_FLAG, labels);
+            //文章对应标签存入redis
+            HashMap<String,List<Label>> articleToLabelMap = (HashMap<String, List<Label>>)redisUtils.get(SystemConstant.ARTICLE_TO_LABEL_FLAG);
+            if (articleToLabelMap == null){
+                articleToLabelMap = Maps.newHashMap();
+            }
+            articleToLabelMap.put(article.getArticleId()+"",articleToLabels);
+            redisUtils.set(SystemConstant.ARTICLE_TO_LABEL_FLAG,articleToLabelMap);
+        }
 
+        //修改文章中redis配置
         redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId(),article);
+        //数据库中修改
         articleMapper.update(article);
-
         return  Result.success();
     }
 
 
 
     public static void main(String[] args) {
-        String a = "www.asdasdh.hahah/qiumingshan/2019-01-12/hahahha.png";
-        Matcher m = SystemConstant.IMAGE_PATTERN.matcher(a);
-        if(m.find()){
-            System.out.println(m.group(0));
-        }
+        List<Label> articleToLabelList = Lists.newArrayList();
+        articleToLabelList.add(new Label(2,"测试"));
+        articleToLabelList.add(new Label(3,"测试"));
+        Integer  srcLabelId = 2;
+        articleToLabelList = articleToLabelList.stream().filter(l -> {
+            return  !l.getLabelId().equals(srcLabelId);
+        }).collect(Collectors.toList());
+        System.out.println(articleToLabelList.size());
     }
 
 

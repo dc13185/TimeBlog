@@ -502,7 +502,6 @@ public class FileUtils {
         Base64.Decoder decoder = Base64.getDecoder();
         // Base64解码,对字节数组字符串进行Base64解码并生成图片
         imgStr = imgStr.replaceAll(" ", "+");
-        System.out.println(imgStr);
         byte[] b = decoder.decode(imgStr.replace("data:image/jpeg;base64,", ""));
         for (int i = 0; i < b.length; ++i) {
             // 调整异常数据
