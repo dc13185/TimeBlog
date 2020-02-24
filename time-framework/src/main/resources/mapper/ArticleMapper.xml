@@ -12,13 +12,14 @@
         <result property="isOriginal" column="isOriginal" jdbcType="INTEGER"/>
         <result property="isTop" column="isTop" jdbcType="INTEGER"/>
         <result property="status" column="status" jdbcType="INTEGER"/>
-        <result property="keyWords" column="keywords" jdbcType="INTEGER"/>
+        <result property="updateTime" column="update_time" jdbcType="DATE"/>
+        <result property="createTime" column="create_time" jdbcType="DATE"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="TimeArticleMap">
         select
-          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status, keywords
+          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,update_time ,create_time
         from timeblog.time_article
         where article_id = #{articleId}
     </select>
@@ -26,7 +27,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="TimeArticleMap">
         select
-          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status, keywords
+          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,update_time ,create_time
         from timeblog.time_article
         limit #{offset}, #{limit}
     </select>
@@ -34,46 +35,19 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TimeArticleMap">
         select
-        article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status, keywords
+        article_id, article_title, cover_image, isComment, isOriginal, isTop, status ,update_time , create_time
         from timeblog.time_article
-        <where>
-            <if test="articleId != null">
-                and article_id = #{articleId}
-            </if>
-            <if test="articleTitle != null and articleTitle != ''">
-                and article_title = #{articleTitle}
-            </if>
-            <if test="articleContextHtml != null">
-                and article_contextHtml = #{articleContextHtml}
-            </if>
-            <if test="articleContextMd != null">
-                and article_contextMd = #{articleContextMd}
-            </if>
-            <if test="coverImage != null and coverImage != ''">
-                and cover_image = #{coverImage}
-            </if>
-            <if test="isComment != null">
-                and isComment = #{isComment}
-            </if>
-            <if test="isOriginal != null">
-                and isOriginal = #{isOriginal}
-            </if>
-            <if test="isTop != null">
-                and isTop = #{isTop}
-            </if>
-            <if test="status != null">
-                and status = #{status}
-            </if>
-            <if test="keywords != null">
-                and keywords = #{keywords}
-            </if>
-        </where>
+        where status != -1
+        <if test="retrieve != null and retrieve != '' ">
+            and article_title = like CONCAT('%',#{retrieve},'%')
+        </if>
+        order by isTop desc , status asc , update_time desc
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="articleId" useGeneratedKeys="true" >
-        insert into timeblog.time_article(article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status, keywords)
-        values (#{articleTitle}, #{articleContextHtml}, #{articleContextMd}, #{coverImage}, #{isComment}, #{isOriginal}, #{isTop}, #{status}, #{keywords})
+        insert into timeblog.time_article(article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,create_time ,update_time)
+        values (#{articleTitle}, #{articleContextHtml}, #{articleContextMd}, #{coverImage}, #{isComment}, #{isOriginal}, #{isTop}, #{status},#{createTime},#{updateTime})
     </insert>
 
     <!--通过主键修改数据-->
@@ -104,8 +78,11 @@
             <if test="status != null">
                 status = #{status},
             </if>
-            <if test="keywords != null">
-                keywords = #{keywords},
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
             </if>
         </set>
         where article_id = #{articleId}

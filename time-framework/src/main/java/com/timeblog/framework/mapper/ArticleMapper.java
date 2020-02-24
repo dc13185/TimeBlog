@@ -1,6 +1,7 @@
 package com.timeblog.framework.mapper;
 
 import com.timeblog.business.domain.Article;
+import com.timeblog.business.domain.PageDomain;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -36,10 +37,10 @@ public interface ArticleMapper {
     /**
      * 通过实体作为筛选条件查询
      *
-     * @param Article 实例对象
+     * @param pageDomain 查询所有
      * @return 对象列表
      */
-    List<Article> queryAll(Article Article);
+    List<Article> queryAll(PageDomain pageDomain);
 
     /**
      * 新增数据

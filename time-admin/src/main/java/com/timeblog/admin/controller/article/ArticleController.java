@@ -75,6 +75,22 @@ public class ArticleController {
     @Resource
     private ArticleLabelMapper articleLabelMapper;
 
+
+
+
+    @RequestMapping("/toArticleList")
+    public String toArticleList(){
+        return "article/articleList";
+    }
+
+    @RequestMapping("/showArticleList")
+    @ResponseBody
+    public Result showArticleListWithPage(@RequestBody PageDomain pageDomain){
+        List<Article> articleTypeList =  articleMapper.queryAll(pageDomain);
+        return Result.success(articleTypeList);
+    }
+
+
     /**
      * @author: dongchao
      * @create: 2020/2/18-18:00
@@ -83,9 +99,15 @@ public class ArticleController {
      * @return:
      */
     @RequestMapping("/toEditArticle")
-    public ModelAndView toArticleType(){
+    public ModelAndView toEditArticle(String articleId){
         ModelAndView modelAndView = new ModelAndView("article/editArticle");
         String context = (String)redisUtils.get(SystemConstant.TEMP_ARTICLE_FLAG);
+        if (StringUtils.isNotEmpty(articleId)){
+            Article article = articleMapper.queryById(Integer.parseInt(articleId));
+            context = article.getArticleContextMd();
+            modelAndView.addObject("articleId",article.getArticleId());
+            modelAndView.addObject("articleTitle",article.getArticleTitle());
+        }
         if (null != context){
             modelAndView.addObject("tempArticle",context);
         }
@@ -101,13 +123,13 @@ public class ArticleController {
      */
     @RequestMapping("/toCompleteArticle")
     public ModelAndView toCompleteArticle(String articleId) throws Exception{
+        ModelAndView modelAndView = new ModelAndView("article/otherArticle");
         //查出所有的分类
         List<ArticleType> articleTypes = articleTypeMapper.queryAll(new PageDomain());
         articleTypes = articleTypes.stream().sorted(Comparator.comparing(ArticleType::getTypeName)).collect(Collectors.toList());
         Article article = (Article) redisUtils.get(SystemConstant.TEMP_ARTICLE_FLAG+articleId);
         if (article == null){
             article = articleMapper.queryById(Integer.parseInt(articleId));
-            redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+articleId,article);
         }
         //查出文章对应标签
         List<Label> articleToLabels;
@@ -120,7 +142,11 @@ public class ArticleController {
         }else{
             articleToLabels = articleToLabelMap.get(articleId);
         }
-        List<Integer> articleToLabelIds = articleToLabels.stream().map(Label::getLabelId).collect(Collectors.toList());
+
+        if (articleToLabels != null){
+            List<Integer> articleToLabelIds = articleToLabels.stream().map(Label::getLabelId).collect(Collectors.toList());
+            modelAndView.addObject("articleToLabels",articleToLabelIds);
+        }
         //查出所有标签
         List<Label> allArticleLabel = (List<Label>) redisUtils.get(SystemConstant.ARTICLE_LABEL_FLAG);
         if (allArticleLabel == null){
@@ -129,8 +155,6 @@ public class ArticleController {
         }
 
         //返回modelAndView
-        ModelAndView modelAndView = new ModelAndView("article/otherArticle");
-        modelAndView.addObject("articleToLabels",articleToLabelIds);
         modelAndView.addObject("allArticleLabel",allArticleLabel);
         modelAndView.addObject("article",article);
         modelAndView.addObject("articleTypes",articleTypes);
@@ -182,19 +206,21 @@ public class ArticleController {
     @RequestMapping("saveTempArticle")
     @ResponseBody
     public Result saveTempArticle(@RequestBody Article article) throws Exception{
-        if (-1 != article.getArticleId()){
-            article = article.toBuilder().status(0).build();
+        //先设默认值
+        article = article.toBuilder().status(0).isComment(1).isOriginal(1).isTop(0).build();
+        article.setUpdateTime(new Date());
+        if (null != article.getArticleId()){
             //将草稿存入redis
             redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId(),article);
             articleMapper.update(article);
         }else {
+            article.setCreateTime(new Date());
             if (StringUtils.isEmpty(article.getArticleTitle())){
                 //如果没有设置标题，可认为存临时草稿
                 String mdContext = article.getArticleContextMd();
                 redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG,mdContext);
             }else{
                 //如果有标题，则可设置为草稿 ,设置默认值
-                article = article.toBuilder().status(0).isComment(1).isOriginal(1).isTop(0).build();
                 articleMapper.insert(article);
                 //草稿存入redis
                 String articleContext = article.getArticleContextMd();
@@ -220,7 +246,6 @@ public class ArticleController {
                     });
                     redisUtils.remove(SystemConstant.TEMP_ARTICLE_IMAGES_FLAG);
                 }
-                redisUtils.remove(SystemConstant.TEMP_ARTICLE_FLAG);
             }
         }
 
@@ -314,16 +339,41 @@ public class ArticleController {
             if (articleToLabelMap == null){
                 articleToLabelMap = Maps.newHashMap();
             }
-            articleToLabelMap.put(article.getArticleId()+"",articleToLabels);
+             articleToLabelMap.put(article.getArticleId()+"",articleToLabels);
             redisUtils.set(SystemConstant.ARTICLE_TO_LABEL_FLAG,articleToLabelMap);
         }
 
         //修改文章中redis配置
-        redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId(),article);
+        redisUtils.remove(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId());
         //数据库中修改
         articleMapper.update(article);
         return  Result.success();
     }
+
+
+    @RequestMapping("editArticle")
+    @ResponseBody
+    public Result editArticle(@RequestBody HashMap<String,String> hashMap){
+        String statusKey = hashMap.get("statusKey");
+        Integer statusValue = Integer.parseInt(hashMap.get("statusValue"));
+        Integer articleId = Integer.parseInt(hashMap.get("articleId"));
+
+        Article.ArticleBuilder articleBuilder =  Article.builder().articleId(articleId);
+        switch (statusKey){
+            case "status" :
+                articleBuilder.status(statusValue); break;
+            case "isTop" :
+                articleBuilder.isTop(statusValue); break;
+            case "isComment" :
+                articleBuilder.isComment(statusValue); break;
+        }
+        //入库修改
+        Article article = articleBuilder.build();
+        articleMapper.update(article);
+        return Result.success();
+    }
+
+
 
 
 

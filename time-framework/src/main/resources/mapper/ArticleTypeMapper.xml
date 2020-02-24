@@ -15,7 +15,7 @@
     <!--查询单个-->
     <select id="queryById" resultMap="TimeArticleTypeMap">
         select
-            type_id, type_name, sort, icon, isAvailable, description
+            type_id,parentId, type_name, sort, icon, isAvailable, description
         from timeblog.time_article_type
         where type_id = #{typeId}
     </select>
@@ -23,7 +23,7 @@
     <!--查询单个-->
     <select id="queryByParentId" resultMap="TimeArticleTypeMap">
         select
-            type_id, type_name, sort, icon, isAvailable, description
+            type_id , parent_id , type_name, sort, icon, isAvailable, description
         from timeblog.time_article_type
         where parent_id = #{parentId}
     </select>
@@ -31,7 +31,7 @@
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TimeArticleTypeMap">
-        select  type_id, type_name, sort, icon, isAvailable, description
+        select  type_id, parent_id, type_name, sort, icon, isAvailable, description
         from timeblog.time_article_type
         where  parent_id = -1
         <if test="retrieve != null and retrieve != '' ">
@@ -61,6 +61,9 @@
     <update id="update" >
         update timeblog.time_article_type
         <set>
+            <if test="parentId != null and parentId != ''">
+                parent_id = #{parentId},
+            </if>
             <if test="typeName != null and typeName != ''">
                 type_name = #{typeName},
             </if>

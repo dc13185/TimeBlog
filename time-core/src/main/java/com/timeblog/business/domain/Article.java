@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 
 /**
  * @author: dong.chao
@@ -17,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Article extends BaseDomain  {
 
-    private int articleId;
+    private Integer articleId;
 
     /** 文章标题 */
     private String articleTitle;
@@ -32,23 +34,25 @@ public class Article extends BaseDomain  {
     private String coverImage;
 
     /** 是否开启评论 1：开启  0：不开启 */
-    private int isComment;
+    private Integer isComment;
 
     /** 是否原创 1：是  0：否  -1:不显示 */
-    private int isOriginal;
+    private Integer isOriginal;
 
     /** 是否原创 0:不指定 1：指定   */
-    private int isTop;
+    private Integer isTop;
 
     /** -1:删除 0:草稿类容 1:正式发布 */
-    private int status;
+    private Integer status;
 
     /** 分类ID */
-    private int articleTypeId;
-
+    private Integer articleTypeId;
 
     /** 标签id */
     private String labelIds;
+
+
+
 
 
 

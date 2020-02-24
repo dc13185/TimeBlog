@@ -238,7 +238,6 @@
         let fileDate = $("#article-img")[0].currentSrc;
         if (!fileDate.indexOf("img-blank")){
             let data = $("#article-img").cropper('getCroppedCanvas');
-            console.log(data);
             let base64 = data.toDataURL('base64'); // 转换为base64
             fileDate = encodeURIComponent(base64)
         }
@@ -255,7 +254,9 @@
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             },
             success: function (msg) {
-                alert(msg);
+                if(msg.code == 200){
+                    window.location.href = ctx+"article/toArticleList";
+                }
             }
         });
 

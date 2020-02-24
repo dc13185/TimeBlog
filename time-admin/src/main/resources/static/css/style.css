@@ -7909,3 +7909,10 @@ body.skin-3 {
         font-size: 12px
     }
 }
+
+
+
+#exampleTableEvents{
+    table-layout:fixed !important;
+}
+
