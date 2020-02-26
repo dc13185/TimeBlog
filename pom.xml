@@ -15,6 +15,7 @@
         <module>time-core</module>
         <module>time-admin</module>
         <module>time-spider</module>
+        <module>time-web-blog</module>
     </modules>
 
     <properties>
@@ -99,6 +100,7 @@
                 <version>${time.version}</version>
             </dependency>
 
+
             <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
@@ -120,7 +122,11 @@
             </dependency>
 
 
-
+            <dependency>
+                <groupId>com.timeblog</groupId>
+                <artifactId>time-web-blog</artifactId>
+                <version>${time.version}</version>
+            </dependency>
 
 
         </dependencies>
