@@ -1,4 +1,4 @@
-package com.timeblog.admin.config.constant;
+package com.timeblog.framework.system.constant;
 
 import java.util.regex.Pattern;
 
@@ -51,7 +51,23 @@ public class SystemConstant {
     public static Pattern IMAGE_PATTERN = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}[\\s\\S]{1,}");
 
 
+    /**
+     *  博客相应配置的Key
+     */
+    public static String WEB_BLOG_CONFIG = "webBlogConfig";
+
+
+    /**
+     *  博客相应句子的Key
+     */
+    public static String WEB_BLOG_SENTENCE = "webBlogSentence";
+
+
+
+
     //todo  更换主题设计   一个Key对应一个主题
+
+
 
 
 

@@ -1,0 +1,95 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include :: header"></head>
+<link th:href="@{/css/plugins/switchery/switchery.css}" rel="stylesheet"/>
+<link th:href="@{/css/plugins/cropper/cropper.min.css}" rel="stylesheet"/>
+<link th:href="@{/css/plugins/chosen/chosen.css}" rel="stylesheet"/>
+<link th:href="@{/css/style.css}" rel="stylesheet"/>
+<link  th:href="@{/css/plugins/selectImg/selectImg.css}" rel="stylesheet" type="text/css"/>
+<link  th:href="@{/css/plugins/selectImg/iconfont.css}" rel="stylesheet" />
+<style>
+    .config-input{
+        width: 40%;
+    }
+    .ibox-mybox{
+        height: 800px;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins" id="context">
+        <div class="ibox-title">
+            <h5>系统设置</h5>
+        </div>
+        <div class="ibox-content ibox-mybox" >
+            <div class="form-group">
+                <label>博客名称*</label>
+                <input name="check_attr" type="text"  id="blogName"   placeholder="请输入博客名称"  class="form-control config-input check_attr">
+            </div>
+
+            <div class="form-group">
+                <label>博客标题*</label>
+                <input name="check_attr" type="text"  id="blogTitle"   placeholder="请输入博客标题"  class="form-control config-input check_attr">
+            </div>
+
+            <div class="form-group">
+                <label>博主QQ</label>
+                <input name="check_attr" type="text"  id="blogAuthorQQ"   placeholder="请输入博主QQ号码"  class="form-control config-input">
+            </div>
+
+            <div class="form-group">
+                <label>博主微信</label>
+                <input name="check_attr" type="text"  id="blogAuthorWX"   placeholder="请输入博主微信号码"  class="form-control config-input">
+            </div>
+
+            <div class="form-group">
+                <label>博主邮箱</label>
+                <input name="check_attr" type="text"  id="blogAuthorMail"   placeholder="请输入博主邮箱"  class="form-control config-input">
+            </div>
+            <div class="form-group">
+                <label>选择壁纸</label>
+                <div class="selectImgDiv" id="selectItemDiv">
+                    <div class="item">
+                        <div class="img_show">
+                            <img th:src="@{/image/background.jpg}"/>
+                        </div>
+                        <div class="img_title">
+                            1.png
+                        </div>
+                        <div class="img_isCheck">
+                            <i class="iconfont icon-xuanzhong"></i>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="img_show">
+                            <img th:src="@{/image/background-style.jpg}"/>
+                        </div>
+                        <div class="img_title">
+                            1.png
+                        </div>
+                        <div class="img_isCheck">
+                            <i class="iconfont icon-xuanzhong"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ibox-content" >
+            <input type ="hidden" >
+            <div class="">
+                <button type="button" class="btn btn-primary nextSubmit">下一步</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<head th:include="include :: footer"></head>
+<script th:src="@{/js/plugins/switchery/switchery.js}"></script>
+<script th:src="@{/js/plugins/cropper/cropper.min.js}"></script>
+<script th:src="@{/js/plugins/chosen/chosen.jquery.js}"></script>
+<script th:inline="javascript">
+</script>
+</body>
+</html>

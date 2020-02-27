@@ -58,4 +58,13 @@ public interface ArticleTypeMapper {
     public void update(ArticleType articleType);
 
 
+    /**
+     * 查出最后一级节点类型
+     *
+     * @param
+     * @return 对象列表
+     */
+    List<ArticleType> queryNotParentNode();
+
+
 }

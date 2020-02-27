@@ -2,13 +2,13 @@ package com.timeblog.admin.controller.article;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.timeblog.admin.config.constant.SystemConstant;
 import com.timeblog.business.base.Result;
 import com.timeblog.business.domain.*;
 import com.timeblog.framework.mapper.ArticleLabelMapper;
 import com.timeblog.framework.mapper.ArticleMapper;
 import com.timeblog.framework.mapper.ArticleTypeMapper;
 import com.timeblog.framework.mapper.LabelMapper;
+import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.FileUtils;
 import com.timeblog.framework.system.utils.IpUtils;
 import com.timeblog.framework.system.utils.RedisUtils;
@@ -125,12 +125,9 @@ public class ArticleController {
     public ModelAndView toCompleteArticle(String articleId) throws Exception{
         ModelAndView modelAndView = new ModelAndView("article/otherArticle");
         //查出所有的分类
-        List<ArticleType> articleTypes = articleTypeMapper.queryAll(new PageDomain());
+        List<ArticleType> articleTypes = articleTypeMapper.queryNotParentNode();
         articleTypes = articleTypes.stream().sorted(Comparator.comparing(ArticleType::getTypeName)).collect(Collectors.toList());
-        Article article = (Article) redisUtils.get(SystemConstant.TEMP_ARTICLE_FLAG+articleId);
-        if (article == null){
-            article = articleMapper.queryById(Integer.parseInt(articleId));
-        }
+        Article article = articleMapper.queryById(Integer.parseInt(articleId));
         //查出文章对应标签
         List<Label> articleToLabels;
         HashMap<String,List<Label>> articleToLabelMap = (HashMap<String,List<Label>>) redisUtils.get(SystemConstant.ARTICLE_TO_LABEL_FLAG);
@@ -166,7 +163,7 @@ public class ArticleController {
      * @author: dongchao
      * @create: 2020/2/11
      * @description: editor.md 上传图片
-     * @return: 
+     * @return:
      * @param: file
      */
     @RequestMapping("uploadImage")
@@ -342,7 +339,6 @@ public class ArticleController {
              articleToLabelMap.put(article.getArticleId()+"",articleToLabels);
             redisUtils.set(SystemConstant.ARTICLE_TO_LABEL_FLAG,articleToLabelMap);
         }
-
         //修改文章中redis配置
         redisUtils.remove(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId());
         //数据库中修改

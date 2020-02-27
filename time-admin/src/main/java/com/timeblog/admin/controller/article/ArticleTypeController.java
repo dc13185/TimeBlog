@@ -1,12 +1,12 @@
 package com.timeblog.admin.controller.article;
 
 import com.google.common.collect.Lists;
-import com.timeblog.admin.config.constant.SystemConstant;
 import com.timeblog.business.base.BaseController;
 import com.timeblog.business.base.Result;
 import com.timeblog.business.domain.ArticleType;
 import com.timeblog.business.domain.PageDomain;
 import com.timeblog.framework.mapper.ArticleTypeMapper;
+import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

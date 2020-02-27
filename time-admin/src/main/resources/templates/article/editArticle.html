@@ -212,8 +212,8 @@
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             },
             success: function (msg) {
+                debugger;
                 if(status){
-                    debugger;
                     window.location.href=ctx+"article/toCompleteArticle?articleId="+msg.articleId;
                 }else{
                     if (msg.code == 200){

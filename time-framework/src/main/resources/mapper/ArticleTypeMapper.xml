@@ -84,4 +84,15 @@
     </update>
 
 
+
+    <!--cc-->
+    <select id="queryNotParentNode" resultMap="TimeArticleTypeMap">
+           SELECT t3.* FROM time_article_type t3 WHERE t3.type_id NOT IN (
+                SELECT t1.type_id FROM time_article_type t1 JOIN time_article_type t2 ON t1.type_id = t2.parent_id
+                    GROUP BY t1.type_id
+                )
+    </select>
+
+
+
 </mapper>

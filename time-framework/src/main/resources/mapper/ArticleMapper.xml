@@ -10,6 +10,7 @@
         <result property="coverImage" column="cover_image" jdbcType="VARCHAR"/>
         <result property="isComment" column="isComment" jdbcType="INTEGER"/>
         <result property="isOriginal" column="isOriginal" jdbcType="INTEGER"/>
+        <result property="articleTypeId" column="article_type_id" jdbcType="INTEGER"/>
         <result property="isTop" column="isTop" jdbcType="INTEGER"/>
         <result property="status" column="status" jdbcType="INTEGER"/>
         <result property="updateTime" column="update_time" jdbcType="DATE"/>
@@ -19,7 +20,7 @@
     <!--查询单个-->
     <select id="queryById" resultMap="TimeArticleMap">
         select
-          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,update_time ,create_time
+          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,update_time ,create_time,article_type_id
         from timeblog.time_article
         where article_id = #{articleId}
     </select>
@@ -27,7 +28,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="TimeArticleMap">
         select
-          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,update_time ,create_time
+          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,update_time ,create_time,article_type_id
         from timeblog.time_article
         limit #{offset}, #{limit}
     </select>
@@ -35,7 +36,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TimeArticleMap">
         select
-        article_id, article_title, cover_image, isComment, isOriginal, isTop, status ,update_time , create_time
+        article_id, article_title, cover_image, isComment, isOriginal, isTop, status ,update_time , create_time,article_type_id
         from timeblog.time_article
         where status != -1
         <if test="retrieve != null and retrieve != '' ">
@@ -46,8 +47,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="articleId" useGeneratedKeys="true" >
-        insert into timeblog.time_article(article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,create_time ,update_time)
-        values (#{articleTitle}, #{articleContextHtml}, #{articleContextMd}, #{coverImage}, #{isComment}, #{isOriginal}, #{isTop}, #{status},#{createTime},#{updateTime})
+        insert into timeblog.time_article(article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,create_time ,update_time,article_type_id)
+        values (#{articleTitle}, #{articleContextHtml}, #{articleContextMd}, #{coverImage}, #{isComment}, #{isOriginal}, #{isTop}, #{status},#{createTime},#{updateTime},#{articleTypeId})
     </insert>
 
     <!--通过主键修改数据-->
@@ -78,8 +79,14 @@
             <if test="status != null">
                 status = #{status},
             </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
             <if test="createTime != null">
                 create_time = #{createTime},
+            </if>
+            <if test="articleTypeId != null">
+                article_type_id = #{articleTypeId},
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime},

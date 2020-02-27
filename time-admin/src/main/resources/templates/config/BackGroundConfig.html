@@ -1,0 +1,189 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include :: header"></head>
+<link th:href="@{/css/plugins/blueimp/css/blueimp-gallery.min.css}" rel="stylesheet"/>
+<link th:href="@{/css/plugins/cropper/cropper.min.css}" rel="stylesheet"/>
+<link th:href="@{/css/style.css}" rel="stylesheet"/>
+<style>
+    .lightBoxGallery img {
+        margin: 5px;
+        width: 300px;
+        height: 200px;
+    }
+    .button-from{
+        padding-top: 50px;
+        padding-left: 5px;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>背景图管理</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="lightBoxGallery">
+                        <a th:href="@{/image/background.jpg}" title="图片" data-gallery=""><img th:src="@{/image/background.jpg}"></a>
+                        <a th:href="@{/image/background-style.jpg}" title="图片" data-gallery=""><img th:src="@{/image/background-style.jpg}"></a>
+                        <div id="blueimp-gallery" class="blueimp-gallery">
+                            <div class="slides"></div>
+                            <h3 class="title"></h3>
+                            <a class="prev">‹</a>
+                            <a class="next">›</a>
+                            <a class="close">×</a>
+                            <a class="play-pause"></a>
+                            <ol class="indicator"></ol>
+                        </div>
+                    </div>
+                    <div class="button-from">
+                        <button type="button" class="btn btn-primary nextSubmit">新增背景图</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--文章新增-->
+<div class="modal inmodal" id="themeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                </button>
+                <p class="modal-title">选择编辑主题</p>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        <h4>输入背景风格(名称)：</h4>
+                        <div class="form-group">
+                            <input name="check_attr" type="text"  id="backGroundName"   placeholder="输入背景风格"  class="form-control config-input">
+                        </div>
+                        <h4>上传背景图：</h4>
+                        <div class="img-preview img-preview-sm"></div>
+                        <h4>说明：</h4>
+                        <p>
+                           背景图没有控制裁剪尺寸，建议背景图通常尺寸为1920/1280，宽长比为1.5
+                        </p>
+                        <div class="btn-group">
+                            <label title="上传图片" for="inputImage" class="btn btn-primary">
+                                <input type="file" accept="image/*" name="file" id="inputImage" class="hide"> 上传新图片
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="image-crop">
+                            <img id="article-img" style="width: 300px" th:src="@{/img/img-blank.png}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary submitBtn" >确定上传</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<head th:include="include :: footer"></head>
+<!-- blueimp gallery -->
+<script th:src="@{/js/plugins/blueimp/jquery.blueimp-gallery.min.js}"></script>
+<script th:src="@{/js/plugins/cropper/cropper.min.js}"></script>
+<script th:inline="javascript">
+    $(function () {
+        $(".nextSubmit").on("click",function () {
+            $("#themeModal").modal("show");
+        })
+
+
+        $.isUploadImage = false;
+        //图片上传控件
+        let $image = $(".image-crop > img")
+        $($image).cropper({
+            preview: ".img-preview",
+        });
+        var $inputImage = $("#inputImage");
+        if (window.FileReader) {
+            $inputImage.change(function () {
+                var fileReader = new FileReader(),
+                    files = this.files,
+                    file;
+                if (!files.length) {
+                    return;
+                }
+                file = files[0];
+                if (/^image\/\w+$/.test(file.type)) {
+                    $(".image-crop").show();
+                    $(".btn-tools").show();
+                    fileReader.readAsDataURL(file);
+                    $.isUploadImage = true;
+                    fileReader.onload = function () {
+                        $inputImage.val("");
+                        $image.cropper("reset", true).cropper("replace", this.result);
+                    };
+                } else {
+                    toastr.warning("请选择图片文件");
+                }
+            });
+        } else {
+            $inputImage.addClass("hide");
+        }
+
+
+        //确定上传
+        $(".submitBtn").on("click",function () {
+            if($.isUploadImage){
+                let fileData = $("#article-img")[0].currentSrc; // 转换为base64
+                let backGroundName = $("#backGroundName").val();
+                if (backGroundName == ""){
+                    toastr.warning("请输入图片风格名称");
+                    return;
+                }
+                let url = ctx+"config/uploadBackGroundImage";
+                let jsonContent = {"fileData":fileData,"backGroundName":backGroundName};
+                console.log(fileData);
+                $.ajax({
+                    url: url,
+                    type: 'post',
+                    data: JSON.stringify(jsonContent),
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                    },
+                    success: function (msg) {
+                        if(msg.code == 200){
+                            let node  = "<a href='"+msg.url+"' title=\"图片\" data-gallery=\"\"><img src='"+msg.url+"'></a>";
+                            $("#blueimp-gallery").before(node);
+                            $("#themeModal").hide();
+                        }
+                    }
+                });
+
+
+            }else{
+                toastr.warning("请选择图片");
+            }
+        })
+
+
+        //窗口关闭
+        $('#themeModal').on('hide.bs.modal', function () {
+            $.isUploadImage = false;
+            $image.cropper('clear')
+            $(".img-preview > img").attr("src","");
+        });
+
+    })
+
+</script>
+</body>
+</html>

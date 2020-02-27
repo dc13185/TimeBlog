@@ -2,10 +2,12 @@ package com.timeblog.framework.system.utils;
 
 
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -502,7 +504,11 @@ public class FileUtils {
         Base64.Decoder decoder = Base64.getDecoder();
         // Base64解码,对字节数组字符串进行Base64解码并生成图片
         imgStr = imgStr.replaceAll(" ", "+");
-        byte[] b = decoder.decode(imgStr.replace("data:image/jpeg;base64,", ""));
+        imgStr = imgStr.replace("data:image/jpeg;base64,", "")
+                .replace("data:image/png;base64,","")
+                .replace("data:image/bmp;base64,","");
+
+        byte[] b = decoder.decode(imgStr);
         for (int i = 0; i < b.length; ++i) {
             // 调整异常数据
             if (b[i] < 0) {
@@ -522,6 +528,22 @@ public class FileUtils {
         out.flush();
         out.close();
         return imgName;
+    }
+
+    /**
+     * @author: dongchao
+     * @create: 2020/2/27-15:15
+     * @description:上传base64数据封装
+     * @param:[fileData:base64数据，imageFilePath:配置的上传路径，imageUrl:配置的图片URL，request]
+     * @return:
+     */
+    public static String uploadBase64Image(String fileData, String imageFilePath,String imageUrl, HttpServletRequest request) throws Exception {
+        String nowDate = LocalDate.now().toString();
+        String filePath =  imageFilePath + nowDate+"/";
+        String imageFileName = FileUtils.GenerateImage(fileData,filePath);
+        String ip = IpUtils.getProjectPath(request);
+        String url = ip + imageUrl.replace("**","")+nowDate+"/"+imageFileName;
+        return url;
     }
 
     public static void main(String[] args) {
