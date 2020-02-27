@@ -41,12 +41,13 @@
 }
 .selectImgDiv .item .img_isCheck{
     position: relative;
-    top:-333px;
+    top:-319px;
     text-align: right;
 
 }
 .selectImgDiv .item .img_isCheck i{
     font-size: 50px;
     display: none;
-    color: #66FF33;
+    color: #9bb693;
+    opacity: 0.7;
 }

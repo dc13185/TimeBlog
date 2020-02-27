@@ -28,35 +28,6 @@
         select
           blog_title, blog_name, blog_style, blog_create_time, blog_author_mail, blog_author_qq, blog_author_wx, index_top_article_type, index_background
         from timeblog.time_web_config
-        <where>
-            <if test="blogTitle != null and blogTitle != ''">
-                and blog_title = #{blogTitle}
-            </if>
-            <if test="blogName != null and blogName != ''">
-                and blog_name = #{blogName}
-            </if>
-            <if test="blogStyle != null and blogStyle != ''">
-                and blog_style = #{blogStyle}
-            </if>
-            <if test="blogCreateTime != null">
-                and blog_create_time = #{blogCreateTime}
-            </if>
-            <if test="blogAuthorMail != null and blogAuthorMail != ''">
-                and blog_author_mail = #{blogAuthorMail}
-            </if>
-            <if test="blogAuthorQq != null and blogAuthorQq != ''">
-                and blog_author_qq = #{blogAuthorQq}
-            </if>
-            <if test="blogAuthorWx != null and blogAuthorWx != ''">
-                and blog_author_wx = #{blogAuthorWx}
-            </if>
-            <if test="indexTopArticleType != null">
-                and index_top_article_type = #{indexTopArticleType}
-            </if>
-            <if test="indexBackground != null and indexBackground != ''">
-                and index_background = #{indexBackground}
-            </if>
-        </where>
     </select>
 
     <!--新增所有列-->
@@ -97,7 +68,6 @@
                 index_background = #{indexBackground},
             </if>
         </set>
-        BlogWebConfig
     </update>
 
 

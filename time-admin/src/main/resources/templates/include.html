@@ -62,7 +62,7 @@
 				let value = checkField.value;
 				if(value == null || value == ""){
 					let tips = checkField.getAttribute("placeholder");
-					toastr.error(tips);
+					toastr.warning(tips);
 					return false;
 				}
 			}

@@ -38,7 +38,7 @@ public interface WebBackgroundDao {
      * @param WebBackground 实例对象
      * @return 对象列表
      */
-    List<WebBackground> queryAll(WebBackground WebBackground);
+    List<WebBackground> queryAll();
 
     /**
      * 新增数据

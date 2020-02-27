@@ -26,6 +26,7 @@
                     <div class="lightBoxGallery">
                         <a th:href="@{/image/background.jpg}" title="图片" data-gallery=""><img th:src="@{/image/background.jpg}"></a>
                         <a th:href="@{/image/background-style.jpg}" title="图片" data-gallery=""><img th:src="@{/image/background-style.jpg}"></a>
+                        <a th:each="webBackground,articleTypeStat : ${webBackgroundList}" th:href="${webBackground.backgroundUrl}" title="图片" data-gallery=""><img th:src="${webBackground.backgroundUrl}"></a>
                         <div id="blueimp-gallery" class="blueimp-gallery">
                             <div class="slides"></div>
                             <h3 class="title"></h3>

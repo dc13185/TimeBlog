@@ -1,22 +1,29 @@
 package com.timeblog.admin.controller.config;
 
 import com.timeblog.business.base.Result;
+import com.timeblog.business.domain.BlogWebConfig;
 import com.timeblog.business.domain.WebBackground;
+import com.timeblog.framework.mapper.BlogWebConfigDao;
 import com.timeblog.framework.mapper.WebBackgroundDao;
+import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.FileUtils;
 import com.timeblog.framework.system.utils.IpUtils;
+import com.timeblog.framework.system.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Dong.Chao
@@ -39,15 +46,32 @@ public class WebConfigController {
     @Resource
     private WebBackgroundDao webBackgroundDao;
 
+    @Resource
+    private BlogWebConfigDao blogWebConfigDao;
+
+    @Autowired
+    private RedisUtils redisUtils;
+
     @RequestMapping("/toConfig")
-    public String toConfig(){
-        return "config/webConfig";
+    public ModelAndView toConfig(){
+        BlogWebConfig blogWebConfig = blogWebConfigDao.queryAll();
+        if (blogWebConfig == null){
+            blogWebConfig = new BlogWebConfig();
+        }
+        List<WebBackground> webBackgroundList = webBackgroundDao.queryAll();
+        ModelAndView modelAndView = new ModelAndView("config/webConfig");
+        modelAndView.addObject("webBackgroundList",webBackgroundList)
+                    .addObject("blogWebConfig",blogWebConfig);
+        return modelAndView;
     }
 
 
     @RequestMapping("/toBackGroundConfig")
-    public String toBackGroundConfig(){
-        return "config/BackGroundConfig";
+    public ModelAndView toBackGroundConfig(){
+        List<WebBackground> webBackgroundList = webBackgroundDao.queryAll();
+        ModelAndView modelAndView = new ModelAndView("config/BackGroundConfig");
+        modelAndView.addObject("webBackgroundList",webBackgroundList);
+        return modelAndView;
     }
 
 
@@ -61,6 +85,27 @@ public class WebConfigController {
         webBackgroundDao.insert(webBackground);
         //修改URL 路径
         return Result.success().add("url",url);
+    }
+
+
+    /**
+     * @author: dongchao
+     * @create: 2020/2/27-22:06
+     * @description: 设置系统配置
+     * @param:
+     * @return:
+     */
+    @RequestMapping("/settingBlogConfig")
+    @ResponseBody
+    public Result settingBlogConfig(@RequestBody BlogWebConfig blogWebConfig){
+        BlogWebConfig readBlogWebConfig = blogWebConfigDao.queryAll();
+        if(readBlogWebConfig == null){
+            blogWebConfigDao.insert(blogWebConfig);
+        }else{
+            blogWebConfigDao.update(readBlogWebConfig);
+        }
+        redisUtils.set(SystemConstant.WEB_BLOG_CONFIG,blogWebConfig);
+        return Result.success();
     }
 
 

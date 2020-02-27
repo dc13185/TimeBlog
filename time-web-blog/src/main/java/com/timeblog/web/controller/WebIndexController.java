@@ -1,6 +1,8 @@
 package com.timeblog.web.controller;
 
+import com.timeblog.business.domain.BlogWebConfig;
 import com.timeblog.framework.mapper.ArticleTypeMapper;
+import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,14 +29,12 @@ public class WebIndexController {
 
     @RequestMapping("/toIndex")
     public ModelAndView toArticleList(){
-        //获取背景
-        String backgroundUrl = "http://localhost:8080/time_admin_war_exploded/image/background.jpg";
-        //获取背景句子
-        String sentence = "“我们一路奋战，不是为了改变世界，而是为了不让世界改变我们。”";
 
+        BlogWebConfig blogWebConfig = (BlogWebConfig)redisUtils.get(SystemConstant.WEB_BLOG_CONFIG);
+        String sentence = "“我们一路奋战，不是为了改变世界，而是为了不让世界改变我们。”";
         ModelAndView modelAndView = new ModelAndView("web/index");
         modelAndView
-                .addObject("backgroundUrl",backgroundUrl)
+                .addObject("blogWebConfig",blogWebConfig)
                 .addObject("sentence",sentence);
         return modelAndView;
     }

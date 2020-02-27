@@ -30,7 +30,7 @@ public interface BlogWebConfigDao {
      * @param BlogWebConfig 实例对象
      * @return 对象列表
      */
-    List<BlogWebConfig> queryAll(BlogWebConfig BlogWebConfig);
+    BlogWebConfig queryAll();
 
     /**
      * 新增数据
