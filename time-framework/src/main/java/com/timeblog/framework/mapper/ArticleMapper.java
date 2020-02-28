@@ -53,6 +53,16 @@ public interface ArticleMapper {
      */
     List<Article> queryAll(PageDomain pageDomain);
 
+
+
+    /**
+     * 通过实体作为筛选条件查询
+     *
+     * @param pageDomain 查询所有已经发布了的
+     * @return 对象列表
+     */
+    List<Article> queryAllFormal(PageDomain pageDomain);
+
     /**
      * 新增数据
      *

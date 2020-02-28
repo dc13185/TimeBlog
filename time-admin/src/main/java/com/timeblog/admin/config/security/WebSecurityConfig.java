@@ -38,6 +38,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${security.staticUrl}")
     private String staticUrl;
 
+    @Value("${security.csrfCloseUrl}")
+    private String csrfCloseUrl;
+
+
    /** 通过authorizeRequests()定义哪些URL需要被保护、
        哪些不需要被保护。
        例如以上代码指定了/和/home不需要任何认证就可以访问，其他的路径都必须通过身份验证。
@@ -47,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         String [] staticUrls = staticUrl.split(",");
+        String [] csrfCloseUrls = csrfCloseUrl.split(",");
         http
             .authorizeRequests()
                  // 请求路径"/"，"/home"允许访问
@@ -68,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //设置frame在同一个域名下可以访问
         .and().headers().frameOptions().sameOrigin()
         .and().logout().permitAll()
-        .and().csrf().ignoringAntMatchers(SystemConstant.CRSF_CLOSE_URL);
+        .and().csrf().ignoringAntMatchers(csrfCloseUrls);
 
     }
 

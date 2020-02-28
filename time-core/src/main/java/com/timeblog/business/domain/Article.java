@@ -32,7 +32,6 @@ public class Article extends BaseDomain  {
 
     /** 文章图片 */
     private String coverImage;
-
     /** 是否开启评论 1：开启  0：不开启 */
     private Integer isComment;
 

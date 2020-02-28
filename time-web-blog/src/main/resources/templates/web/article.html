@@ -16,6 +16,8 @@
     <link rel="stylesheet" th:href="@{/css/gloable.css}" />
     <link rel="stylesheet" th:href="@{/css/nprogress.css}" />
     <link rel="stylesheet" th:href="@{/css/blog.css}" />
+	<link rel="stylesheet" th:href="@{/css/plugins/page/page.css}" />
+
 </head>
 <body>
     <div class="header">
@@ -44,12 +46,12 @@
         <div class="container-fixed">
 		    <div class="col-content">
 		        <div class="inner">
-		            <article class="article-list bloglist" id="LAY_bloglist" >
-						<section class="article-item zoomIn article">
+		            <article class="article-list bloglist" id="bloglist" >
+						<section class="article-item zoomIn article articleModel">
 							<div class="fc-flag">置顶</div>
 							<h5 class="title">
 								<span class="fc-blue">【原创】</span>
-								<a href="read.html">.NET Spire.Doc组件</a>
+								<a href="read.html" class="article-title">.NET Spire.Doc组件</a>
 							</h5>
 							<div class="time">
 								<span class="day">21</span>
@@ -58,7 +60,7 @@
 							</div>
 							<div class="content">
 								<a href="read.html" class="cover img-light">
-									<img src="../../static/image/cover/2019121192339714.png">
+									<img class="article-img" src="../../static/image/cover/2019121192339714.png">
 								</a>
 								Spire.Doc for .NET是一款由E-iceblue公司开发的专业的Word .NET类库，使用该工具开发人员可以在任意.NET平台（C#，VB.NET，ASP.NET）上快速创建，读取，写入，转换，打印Word文档。作为一个独立的Word 组件，Spire.Doc的运行无需安装Microsoft Word。而且，它可以将Microsoft Word文档创建功能集成到开发者的任何.NET应用程序。
 							</div>
@@ -82,9 +84,36 @@
 								</div>
 							</aside>
 						</section>
-
+						<section class="article-item zoomIn article">
+							<div class="fc-flag">置顶</div>
+							<h5 class="title">
+								<span class="fc-blue">【原创】</span>
+								<a href="read.html">.NET Spire.Doc组件</a>
+							</h5>
+							<div class="time">
+								<span class="day">21</span>
+								<span class="month fs-18">1<span class="fs-14">月</span></span>
+								<span class="year fs-18 ml10">2019</span>
+							</div>
+							<div class="content">
+								<a href="read.html" class="cover img-light"><img  src="../../static/image/cover/2019121192339714.png"></a>
+								<div class="article-tntroduction">Spire.Doc for .NET是一款由E-iceblue公司开发的专业的Word .NET类库，使用该工具开发人员可以在任意.NET平台（C#，VB.NET，ASP.NET）上快速创建，读取，写入，转换，打印Word文档。作为一个独立的Word 组件，Spire.Doc的运行无需安装Microsoft Word。而且，它可以将Microsoft Word文档创建功能集成到开发者的任何.NET应用程序。</div>
+							</div>
+							<div class="read-more">
+								<a href="read.html" class="fc-black f-fwb">继续阅读</a>
+							</div>
+							<aside class="f-oh footer">
+								<div class="f-fl tags article-label">
+									<span class="fa fa-tags fs-16"></span>
+									<a class="tag">ASP.NET MVC</a>
+								</div>
+								<div class="f-fr"><span class="read"><i class="fa fa-eye fs-16"></i><i class="num">57</i></span><span class="ml20"><i class="fa fa-comments fs-16"></i><a href="javascript:void(0)" class="num fc-grey">1</a></span>
+								</div>
+							</aside>
+						</section>
 		            </article>
 		        </div>
+				<div id="pager" class="pager clearfix"></div>
 		    </div>
 		    <div class="col-other">
 		        <div class="inner">
@@ -164,6 +193,7 @@
 		    </div>
 		</div>
     </div>
+
     <footer class="grid-footer">
         <div class="footer-fixed">
             <div class="copyright">
@@ -181,12 +211,16 @@
             </div>
         </div>
     </footer>
+
     <script  th:src="@{/layui/layui.js}"></script>
     <script  th:src="@{/js/yss/gloable.js}"></script>
     <script  th:src="@{/js/plugins/nprogress.js}"></script>
     <script>NProgress.start();</script>
  	<script  th:src="@{/js/yss/article.js}"></script>
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script  th:src="@{/js/plugins/page/jquery.z-pager.js}"></script>
     <script th:inline="javascript">
+		var ctx = [[@{/}]];
         window.onload = function () {
             NProgress.done();
         };
@@ -195,8 +229,86 @@
 			var $ = layui.jquery;
 			var backgroundUrl  =  [[${blogWebConfig.indexBackground}]];
 			$(".header").css("background-image","url("+backgroundUrl+")");
+			initArticleData(1,5);
+
+			$("#pager").zPager({
+				totalData: 50,
+				htmlBox: $('#wraper'),
+				btnShow: true,
+				ajaxSetData: false
+			});
 		})
 
-    </script>
+		function initArticleData(pageNumber,pageSize) {
+			let jsonContent = {"pageNumber": pageNumber, "pageSize": pageSize}
+			$.ajax({
+				url: ctx + "web/article/showArticleList",
+				type: 'post',
+				data: JSON.stringify(jsonContent),
+				processData: false,
+				contentType: false,
+				dataType: 'json',
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+				},
+				success: function (msg) {
+					if (msg.code == 200) {
+						let rows = msg.rows;
+						for (let index in rows) {
+							let article = rows[index];
+							let articleModel = $(".articleModel").clone();
+							let updateTime = new Date(article.updateTime);
+							let  year = updateTime.format("yyyy");
+							let  day = updateTime.format("dd");
+							let  month = updateTime.format("MM");
+
+							articleModel.removeClass("articleModel");
+							articleModel.find(".article-title").text(article.articleTitle);
+							articleModel.find(".day").text(day);
+							articleModel.find(".month").text(month);
+							articleModel.find(".year").text(year);
+							articleModel.find(".article-img").attr("src",article.coverImage);
+							$("#bloglist").append(articleModel);
+						}
+					}
+				}
+			});
+
+		}
+
+
+
+		function currentPage(currentPage){
+			/*
+                触发页码数位置： Page/js/jquery.z-pager.js 64行
+            */
+			console.log("当前页码数：" + currentPage);
+		}
+
+
+
+
+		Date.prototype.format = function(fmt) {
+			var o = {
+				"M+" : this.getMonth()+1,                 //月份
+				"d+" : this.getDate(),                    //日
+				"h+" : this.getHours(),                   //小时
+				"m+" : this.getMinutes(),                 //分
+				"s+" : this.getSeconds(),                 //秒
+				"q+" : Math.floor((this.getMonth()+3)/3), //季度
+				"S"  : this.getMilliseconds()             //毫秒
+			};
+			if(/(y+)/.test(fmt)) {
+				fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+			}
+			for(var k in o) {
+				if(new RegExp("("+ k +")").test(fmt)){
+					fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+				}
+			}
+			return fmt;
+		}
+
+	</script>
 </body>
 </html>

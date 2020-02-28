@@ -23,17 +23,17 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class PageHelperAop {
 
-    @Pointcut("execution(public * com.timeblog.admin.controller.*.*Controller.*WithPage(..))")
+    @Pointcut("execution(public * com.timeblog.admin.controller.*.*Controller.*WithPage(..)) || execution(public * com.timeblog.web.controller.*Controller.*WithPage(..)) ")
     public void serviceFindFunction(){}
 
 
-    /** 
+    /**
     * @Description: 使用AOP环绕通知进行分页
-    * @Param: [proceedingJoinPoint] 
-    * @return: java.lang.Object 
+    * @Param: [proceedingJoinPoint]
+    * @return: java.lang.Object
     * @Author: dong.chao
-    * @Date: 2019/9/7 
-    */ 
+    * @Date: 2019/9/7
+    */
     @Around("serviceFindFunction()")
     public Object serviceImplAop(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         //获取连接点方法运行时的入参列表
