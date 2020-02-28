@@ -98,11 +98,11 @@ public class WebConfigController {
     @RequestMapping("/settingBlogConfig")
     @ResponseBody
     public Result settingBlogConfig(@RequestBody BlogWebConfig blogWebConfig){
-        BlogWebConfig readBlogWebConfig = blogWebConfigDao.queryAll();
-        if(readBlogWebConfig == null){
+        BlogWebConfig flag = blogWebConfigDao.queryAll();
+        if(flag == null){
             blogWebConfigDao.insert(blogWebConfig);
         }else{
-            blogWebConfigDao.update(readBlogWebConfig);
+            blogWebConfigDao.update(blogWebConfig);
         }
         redisUtils.set(SystemConstant.WEB_BLOG_CONFIG,blogWebConfig);
         return Result.success();

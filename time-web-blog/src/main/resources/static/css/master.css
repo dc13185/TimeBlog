@@ -1,4 +1,4 @@
-﻿.header{margin:0 auto;width:100%;height:100%;background-color:#000;position:fixed!important;background-image:url(https://yssimage.oss-cn-hangzhou.aliyuncs.com/bg9.jpg);background-size:100% 100%}
+﻿.header{margin:0 auto;width:100%;height:100%;background-color:#000;position:fixed!important;background-size:100% 100%}
 *{margin:0;padding:0}
 a,img{text-decoration:none;border:none}
 button,input,textarea{outline:0;border:none;font:14px/1.5 "Microsoft YaHei","微软雅黑","Helvetica Neue","Hiragino Sans GB",Helvetica,Tahoma,sans-serif;color:#515250}
@@ -66,4 +66,5 @@ body,html{background-color:rgba(255,255,255,.5);font:14px/1.5 "Helvetica neue",H
 .nav li{float:none;border-bottom:1px solid #e8e9e7}
 .nav li:last-child{border:0}
 }
+.article-icon{padding-top: 9px}
 @font-face{font-family:BarbaraHand;src:url(../font/barbarahand-webfont.eot);src:url(../font/barbarahand-webfont.eot?#iefix) format('embedded-opentype'),url(../font/barbarahand-webfont.woff2) format('woff2'),url(../font/barbarahand-webfont.woff) format('woff'),url(../font/barbarahand-webfont.ttf) format('truetype'),url(../font/barbarahand-webfont.svg#BarbaraHand) format('svg');font-weight:400;font-style:normal}

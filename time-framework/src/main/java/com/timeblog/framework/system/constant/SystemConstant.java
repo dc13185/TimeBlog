@@ -25,13 +25,13 @@ public class SystemConstant {
     public static String TEMP_ARTICLE_FLAG = "tempArticle";
 
     /**
-     *  临时草稿的Key
+     *  文章图片的Key
      */
     public static String TEMP_ARTICLE_IMAGES_FLAG = "tempArticleImages";
 
 
     /**
-     *  临时草稿的Key
+     *  文章所有类型Key
      */
     public static String TEMP_ARTICLE_TYPES = "tempArticleTypes";
 
@@ -41,7 +41,7 @@ public class SystemConstant {
     public static String ARTICLE_LABEL_FLAG = "articleLabelFlag";
 
     /**
-     *  文章对应的类型
+     *  文章对应的标签的KEy
      */
     public static String ARTICLE_TO_LABEL_FLAG = "articleToLabelFlag";
 

@@ -8,13 +8,14 @@
         <result property="articleContextHtml" column="article_contextHtml" jdbcType="OTHER"/>
         <result property="articleContextMd" column="article_contextMd" jdbcType="OTHER"/>
         <result property="coverImage" column="cover_image" jdbcType="VARCHAR"/>
+        <result property="articleIntroduction" column="article_introduction" jdbcType="VARCHAR"/>
         <result property="isComment" column="isComment" jdbcType="INTEGER"/>
         <result property="isOriginal" column="isOriginal" jdbcType="INTEGER"/>
         <result property="articleTypeId" column="article_type_id" jdbcType="INTEGER"/>
         <result property="isTop" column="isTop" jdbcType="INTEGER"/>
         <result property="status" column="status" jdbcType="INTEGER"/>
-        <result property="updateTime" column="update_time" jdbcType="DATE"/>
-        <result property="createTime" column="create_time" jdbcType="DATE"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <!--查询单个-->
@@ -28,10 +29,22 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="TimeArticleMap">
         select
-          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,update_time ,create_time,article_type_id
+          article_id, article_title,  cover_image, isComment, isOriginal, isTop, status ,update_time ,create_time,article_type_id,article_introduction
         from timeblog.time_article
         limit #{offset}, #{limit}
     </select>
+
+
+
+    <!--查询指定行数据-->
+    <select id="queryAllByTypeAndLimit" resultMap="TimeArticleMap">
+        select
+          article_id, article_title, cover_image, isComment, isOriginal, isTop, status ,update_time ,create_time,article_type_id
+        from timeblog.time_article where article_type_id = #{articleTypeId}
+        limit #{offset}, #{limit}
+    </select>
+
+
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TimeArticleMap">

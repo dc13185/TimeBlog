@@ -38,6 +38,15 @@ public interface ArticleTypeMapper {
      */
     List<ArticleType> queryAll(PageDomain pageDomain);
 
+
+    /**
+     * 通过实体作为筛选条件查询
+     *
+     * @param pageDomain 实例对象
+     * @return 对象列表
+     */
+    List<ArticleType> queryAllTimeArticleTypes();
+
     /**
      * 新增
      * @param articleType

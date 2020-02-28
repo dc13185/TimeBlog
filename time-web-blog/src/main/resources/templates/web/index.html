@@ -4,7 +4,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width" />
-    <title>时光机</title>
+    <title th:text="${blogWebConfig.blogTitle}"></title>
     <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
     <link th:href="@{/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
     <link th:href="@{/css/index_style.css}" rel="stylesheet"/>
@@ -44,35 +44,22 @@
                 <div class="warp-box">
                     <div class="new-article">
                         <div class="inner wow fadeInDown" data-wow-delay=".2s">
-                            <h1>热门文章</h1>
-                            <p>
-                                很想给你写封信,告诉你这里的天气.
-                                <br>昨夜的那场电影,还有我的心情.
-                            </p>
+                            <h1 th:text="${articleType.typeName}"></h1>
+                            <p th:text="${articleType.description}"> </p>
                         </div>
                     </div>
                     <div class="layui-row">
-                        <div class="layui-col-xs12 layui-col-sm4 layui-col-md4  wow fadeInUp" style="padding: 0 10px">
+                        <div th:each="article,articleStat : ${articles}"  class="layui-col-xs12 layui-col-sm4 layui-col-md4  wow fadeInUp" style="padding: 0 10px">
                             <div class="single-news">
                                 <div class="news-head">
-                                    <img th:src="@{/image/1.jpg}">
+                                    <img th:src="${article.coverImage}">
                                     <a href="#" class="link"><i class="fa fa-link image-link"></i></a>
                                 </div>
                                 <div class="news-content">
-                                    <h4>
-                                        <a href="#">
-                                            标题
-                                        </a>
-                                    </h4>
-                                    <div class="date">
-                                        2017年2月16日
-                                    </div>
-                                    <p>
-                                        很想给你写封信,告诉你这里的天气. 昨夜的那场电影,还有我的心情.
-                                    </p>
-                                    <a href="#" class="btn">
-                                        阅读更多
-                                    </a>
+                                    <h4><a href="#" th:text="${article.articleTitle}"></a></h4>
+                                    <div class="date" th:text="${#dates.format(article.updateTime,'yyyy年MM月dd日 HH时mm分')}"></div>
+                                    <p th:text="${article.articleIntroduction}"></p>
+                                    <a href="#" class="btn">阅读更多</a>
                                 </div>
                             </div>
                         </div>
@@ -146,8 +133,8 @@
                         <div class="single-widget contact">
                             <h2>联系我</h2>
                             <ul class="list">
-                                <li><i class="fa fa-qq"></i>QQ: 1318533144 </li>
-                                <li><i class="fa fa-envelope"></i>邮箱: 1318533144@qq.com</li>
+                                <li><i class="fa fa-qq"></i>QQ: <div class="info" th:text="${blogWebConfig.blogAuthorQq}"></div> </li>
+                                <li><i class="fa fa-envelope"></i>邮箱: <div class="info" th:text="${blogWebConfig.blogAuthorQq}"></div></li>
                             </ul>
                         </div>
                     </div>

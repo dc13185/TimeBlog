@@ -52,6 +52,8 @@ public class Article extends BaseDomain  {
     private String labelIds;
 
 
+    /** 简述 */
+    private String articleIntroduction;
 
 
 

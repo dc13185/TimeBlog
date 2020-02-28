@@ -40,6 +40,13 @@
     </select>
 
 
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAllTimeArticleTypes" resultMap="TimeArticleTypeMap">
+        select  type_id, parent_id, type_name, sort, icon, isAvailable, description
+        from timeblog.time_article_type
+    </select>
+
+
     <!--新增所有列-->
     <insert id="insert" keyProperty="typeId" useGeneratedKeys="true">
         insert into timeblog.time_article_type(parent_id,type_name, sort, icon, isAvailable, description)
@@ -92,6 +99,10 @@
                     GROUP BY t1.type_id
                 )
     </select>
+
+
+
+
 
 
 
