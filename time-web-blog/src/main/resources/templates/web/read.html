@@ -1,17 +1,19 @@
-<!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width" />
     <title>文章阅读</title>
-    <link rel="stylesheet" href="../../static/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../static/layui/css/layui.css" />
-    <link rel="stylesheet" href="../../static/css/master.css" />
-    <link rel="stylesheet" href="../../static/css/gloable.css" />
-    <link rel="stylesheet" href="../../static/css/nprogress.css" />
-    <link rel="stylesheet" href="../../static/css/blog.css" />
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" />
+    <link rel="stylesheet" th:href="@{/css/master.css}" />
+    <link rel="stylesheet" th:href="@{/css/gloable.css}" />
+    <link rel="stylesheet" th:href="@{/css/nprogress.css}" />
+    <link rel="stylesheet" th:href="@{/css/blog.css}" />
+    <link rel="stylesheet" th:href="@{/css/plugins/editormd/editormd.preview.min.css}" />
+    <link rel="stylesheet" type="text/css"th:href="@{/css/plugins/like/zzsc-demo.css}" />
+    <link rel="stylesheet" type="text/css"th:href="@{/css/plugins/like/icons.css}" />
+    <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
 </head>
 <body>
     <div class="header">
@@ -19,7 +21,7 @@
     <header class="gird-header">
         <div class="header-fixed">
             <div class="header-inner">
-                <a href="javascript:void(0)" class="header-logo" id="logo">Mr.Yss</a>
+                <a href="javascript:void(0)" class="header-logo" id="logo" th:text="${blogWebConfig.blogName}"></a>
                 <nav class="nav" id="nav">
                     <ul>
                         <li><a href="index.html">首页</a></li>
@@ -41,76 +43,120 @@
     </header>
     <div class="doc-container" id="doc-container">
         <div class="container-fixed">
-            <div class="col-content" style="width:100%">
+            <div class="col-content" id="md-content" >
                 <div class="inner">
-                    <article class="article-list">
+                    <article class="article-list" >
                         <input type="hidden" value="@Model.BlogTypeID" id="blogtypeid" />
                         <section class="article-item">
                             <aside class="title" style="line-height:1.5;">
-                                <h4>使用码云和VS托管本地代码</h4>
+                                <h4 class="article-title" th:text="${article.articleTitle}"></h4>
                                 <p class="fc-grey fs-14">
-                                    <small>
-                                        作者：<a href="javascript:void(0)" target="_blank" class="fc-link">燕十三</a>
-                                    </small>
-                                    <small class="ml10">围观群众：<i class="readcount">37</i></small>
-                                    <small class="ml10">更新于 <label>2018-05-22:17:30:24</label> </small>
+                                    <small class="ml10">浏览量：<i class="readcount" th:text="${accessCount}"></i></small>
+                                    <small class="ml10">更新于：<label th:text="${#dates.format(article.updateTime,'yyyy年MM月dd日HH时mm分')}"></label> </small>
                                 </p>
                             </aside>
                             <div class="time mt10" style="padding-bottom:0;">
                                 <span class="day">22</span>
-                                <span class="month fs-18">5<small class="fs-14">月</small></span>
-                                <span class="year fs-18">2018</span>
+                                <span class="month fs-18" th:text="${#dates.format(article.updateTime,'MM')}" > </span>
+                                <span class="year fs-18" th:text="${#dates.format(article.updateTime,'yyyy')}"></span>
                             </div>
-                            <div class="content artiledetail" style="border-bottom: 1px solid #e1e2e0; padding-bottom: 20px;">
-                                内容自定义
-                                <div class="copyright mt20">
-                                    <p class="f-toe fc-black">
-                                        非特殊说明，本文版权归 燕十三 所有，转载请注明出处.
-                                    </p>
-                                    <p class="f-toe">
-                                        本文标题：
-                                        <a href="javascript:void(0)" class="r-title">使用码云和VS托管本地代码</a>
-                                    </p>
-                                    <p class="f-toe">
-                                        本文网址：
-                                        <a href="#">https://www.yanshisan.cn/Blog/Read/7</a>
-                                    </p>
+                            <div class="content artiledetail" >
+                                <div id="mdContent" style="width: 98%">
+                                    <textarea th:text="${article.articleContextMd}"></textarea>
                                 </div>
                                 <div id="aplayer" style="margin:5px 0"></div>
-                                <h6>延伸阅读</h6>
                                 <ol class="b-relation"></ol>
                             </div>
-                            <div class="bdsharebuttonbox share" data-tag="share_1">
-                                <ul>
-                                    <li class="f-praise"><span><a class="s-praise"></a></span></li>
-                                    <li class="f-weinxi"><a class="s-weinxi" data-cmd="weixin"></a></li>
-                                    <li class="f-sina"><a class="s-sina" data-cmd="tsina"></a></li>
-                                    <li class="f-qq" href="#"><i class="fa fa-qq"></i></li>
-                                    <li class="f-qzone"><a class="s-qzone" data-cmd="qzone"></a></li>
-                                </ul>
-                            </div>
-                            <div class="f-cb"></div>
-                            <div class="mt20 f-fwn fs-24 fc-grey comment" style="border-top: 1px solid #e1e2e0; padding-top: 20px;">
-                            </div>
-                            <fieldset class="layui-elem-field layui-field-title">
-                                <legend>发表评论</legend>
-                                <div class="layui-field-box">
-                                    <div class="leavemessage" style="text-align:initial">
-                                        <form class="layui-form blog-editor" action="">
-                                            <input type="hidden" name="articleid" id="articleid" value="@Model.ID">
-                                            <div class="layui-form-item">
-                                                <textarea name="editorContent" lay-verify="content" id="remarkEditor" placeholder="请输入内容" class="layui-textarea layui-hide"></textarea>
-                                            </div>
-                                            <div class="layui-form-item">
-                                                <button class="layui-btn" lay-submit="formLeaveMessage" lay-filter="formLeaveMessage">提交留言</button>
-                                            </div>
-                                        </form>
+                            <!--<div class="bdsharebuttonbox share" data-tag="share_1">
+                                <div class="sidebar-module">
+                                    <h5 class="sidebar-title"><i class="fa fa-hand-peace-o icon"></i><strong>说给你听</strong></h5>
+                                    <div class="div-quote">
+                                        <i class="fa fa-quote-left fa-fw"></i>
+                                        <p id="hitokoto" style="margin-left: 15px;">
+                                            测试一下
+                                        </p>
                                     </div>
-                                </div>
-                            </fieldset>
+                                </div>  点赞
+                            </div>-->
+                            <div class="separateline" ><span>正文结束，点个赞吧</span></div>
+                            <li class="grid__item">
+                                <button class="icobutton icobutton--heart"><span class="fa fa-heart"></span><span class="icobutton__text icobutton__text--side">3</span></button></button>
+                            </li>
+
+
+                            <div class="copyright mt20">
+                                <p class="f-toe fc-black">
+                                    非特殊说明，本文版权归 燕十三 所有，转载请注明出处.
+                                </p>
+                                <p class="f-toe">
+                                    文章分类：
+                                    <a href="javascript:void(0)" class="r-title">使用码云和VS托管本地代 撒大声地阿萨德asd 码</a>
+                                </p>
+                                <p class="f-toe">本文网址：<a href="#">https://www.yanshisan.cn/Blog/Read/7</a></p>
+                            </div>
+
                             <ul class="blog-comment" id="blog-comment"></ul>
                         </section>
                     </article>
+
+                    <div id="like-message" style="background-color: #ffffff">
+                        <fieldset class="layui-elem-field layui-field-title">
+                            <legend>发表评论</legend>
+                            <div class="layui-field-box">
+                                <div class="leavemessage" style="text-align:initial">
+                                    <form class="layui-form blog-editor" action="">
+                                        <input type="hidden" name="articleid" id="articleid" value="@Model.ID">
+                                        <div class="layui-form-item">
+                                            <textarea name="editorContent" lay-verify="content" id="remarkEditor" placeholder="请输入内容" class="layui-textarea "></textarea>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <button class="layui-btn" lay-submit="formLeaveMessage" lay-filter="formLeaveMessage">提交留言</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <div class="blog-sidebar" >
+                <div class="sidebar-module">
+                    <h5 class="sidebar-title"><i class="fa fa-hand-peace-o icon icon-diy"></i><strong>说给你听</strong></h5>
+                    <div class="div-quote">
+                        <i class="fa fa-quote-left fa-fw"></i>
+                        <p id="hitokoto" style="margin-left: 15px;">原来，天上的星，都是曾被人惦念而又遗忘的梦啊。</p>
+                    </div>
+                </div>
+                <div class="sidebar-module article-module">
+                    <h5 class="sidebar-title"><i class="fa fa-book icon icon-diy"></i><strong>本文目录</strong> </h5>
+                    <div id="article-menu" style="display: block;">
+                        <ul class="list-unstyled">
+                            <li style="padding-left:10px;line-height: 2;"><i class="fa fa-angle-right"></i>
+                                <a href="detail.html#menu_0" style="display:inline-block;">前言</a>
+                            </li>
+                            <li style="padding-left:10px;line-height: 2;"><i class="fa fa-angle-right"></i>
+                                <a href="detail.html#menu_1" style="display:inline-block;">使用Cordova的基本要求</a>
+                            </li>
+                            <li style="padding-left:10px;line-height: 2;"><i class="fa fa-angle-right"></i>
+                                <a href="detail.html#menu_2" style="display:inline-block;">创建APP</a>
+                            </li>
+                            <li style="padding-left:10px;line-height: 2;"><i class="fa fa-angle-right"></i>
+                                <a href="detail.html#menu_3" style="display:inline-block;">添加Android开发平台&nbsp;&nbsp;</a>
+                            </li>
+                            <li style="padding-left:10px;line-height: 2;"><i class="fa fa-angle-right"></i>
+                                <a href="detail.html#menu_4" style="display:inline-block;">导入Android Studio</a>
+                            </li>
+                            <li style="padding-left:10px;line-height: 2;"><i class="fa fa-angle-right"></i>
+                                <a href="detail.html#menu_5" style="display:inline-block;">使用cordova打包APP</a>
+                            </li>
+                            <li style="padding-left:10px;line-height: 2;"><i class="fa fa-angle-right"></i>
+                                <a href="detail.html#menu_6" style="display:inline-block;">使用AndroidStudio打包APP</a>
+                            </li>
+                            <li style="padding-left:10px;line-height: 2;"><i class="fa fa-angle-right"></i>
+                                <a href="detail.html#menu_7" style="display:inline-block;">参考资料</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,15 +178,38 @@
             </div>
         </div>
     </footer>
-    <script src="../../static/layui/layui.js"></script>
-    <script src="../../static/js/yss/gloable.js"></script>
-    <script src="../../static/js/plugins/nprogress.js"></script>
-    <script src="../../static/js/pagecomment.js"></script>
-    <script>NProgress.start();</script>
-    <script>
-        window.onload = function () {
-            NProgress.done();
-        };
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/plugins/editormd/lib/marked.min.js}"></script>
+    <script th:src="@{/js/plugins/editormd/lib/prettify.min.js}"></script>
+    <script th:src="@{/js/plugins/editormd/lib/raphael.min.js}"></script>
+    <script th:src="@{/js/plugins/editormd/lib/underscore.min.js}"></script>
+    <script th:src="@{/js/plugins/editormd/lib/sequence-diagram.min.js}"></script>
+    <script th:src="@{/js/plugins/editormd/lib/flowchart.min.js}"></script>
+    <script th:src="@{/js/plugins/editormd/lib/jquery.flowchart.min.js}"></script>
+    <script th:src="@{/js/plugins/editormd/editormd.min.js}"></script>
+    <script th:src="@{/layui/layui.js}"></script>
+    <script th:src="@{/js/yss/gloable.js}"></script>
+    <script th:src="@{/js/plugins/nprogress.js}"></script>
+    <script th:src="@{/js/pagecomment.js}"></script>
+    <script th:src="@{/js/plugins/like/mo.min.js}"></script>
+    <script th:src="@{/js/plugins/like/demo.js}"></script>
+    <script th:inline="javascript">
+    $(function(){
+        NProgress.done();
+        var backgroundUrl  =  [[${blogWebConfig.indexBackground}]];
+        $(".header").css("background-image","url("+backgroundUrl+")");
+        //转换开始,第一个参数是上面的div的id
+        editormd.markdownToHTML("mdContent", {
+            htmlDecode: "style,script,iframe", //可以过滤标签解码
+            emoji: true,
+            taskList:true,
+            tocm: true,
+            tex: true,               // 默认不解析
+            flowChart:true,         // 默认不解析
+            sequenceDiagram:true,  // 默认不解析
+        });
+        /*$("body").animate({ scrollTop: 0 }, 200);*/
+    })
     </script>
 </body>
 </html>

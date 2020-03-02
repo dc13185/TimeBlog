@@ -18,6 +18,32 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
+
+    <resultMap type="com.timeblog.business.domain.Article" id="TimeArticleLabelMap">
+        <result property="articleId" column="article_id" jdbcType="INTEGER"/>
+        <result property="articleTitle" column="article_title" jdbcType="VARCHAR"/>
+        <result property="articleContextHtml" column="article_contextHtml" jdbcType="OTHER"/>
+        <result property="articleContextMd" column="article_contextMd" jdbcType="OTHER"/>
+        <result property="coverImage" column="cover_image" jdbcType="VARCHAR"/>
+        <result property="articleIntroduction" column="article_introduction" jdbcType="VARCHAR"/>
+        <result property="isComment" column="isComment" jdbcType="INTEGER"/>
+        <result property="isOriginal" column="isOriginal" jdbcType="INTEGER"/>
+        <result property="articleTypeId" column="article_type_id" jdbcType="INTEGER"/>
+        <result property="isTop" column="isTop" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <collection property="labelList"  ofType="com.timeblog.business.domain.Label" >
+            <id column="label_id" property="labelId" jdbcType="INTEGER"/>
+            <result column="label_name" property="labelName"  jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+
+
+
+
+
     <!--查询单个-->
     <select id="queryById" resultMap="TimeArticleMap">
         select
@@ -59,13 +85,12 @@
     </select>
 
     <!--通过实体作为筛选条件查询-->
-    <select id="queryAllFormal" resultMap="TimeArticleMap">
-        select
-        article_id, article_title, cover_image, isComment, isOriginal, isTop, status ,update_time , create_time,article_type_id
-        from timeblog.time_article
-        where status = 0
+    <select id="queryAllFormal" resultMap="TimeArticleLabelMap">
+        SELECT ta.*,tl.* FROM time_article ta JOIN time_article_label tal ON ta.article_id  = tal.article_id
+        JOIN time_label tl ON tal.label_id = tl.label_id
+        where ta.status = 1
         <if test="retrieve != null and retrieve != '' ">
-            and article_title = like CONCAT('%',#{retrieve},'%')
+            and ta.article_title  like CONCAT('%',#{retrieve},'%')
         </if>
         order by isTop desc , status asc , update_time desc
     </select>

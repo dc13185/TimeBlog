@@ -2,7 +2,14 @@
     var $ = layui.jquery,
         layer = layui.layer,
         util = layui.util;
-    util.fixbar();
+    util.fixbar({
+        click: function(type){
+            if(type === 'top'){
+                alert($("html,body").scrollTop())
+                $(document).scrollTop(0);
+            }
+        }
+    });
     //导航控制
     master.start($);
 });

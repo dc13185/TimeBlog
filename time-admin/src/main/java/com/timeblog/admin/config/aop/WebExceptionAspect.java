@@ -7,8 +7,11 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Method;
 
 /**
  * @author dongchao
@@ -36,8 +39,13 @@ public class WebExceptionAspect {
             return  proceedingJoinPoint.proceed();
         } catch (Throwable throwable) {
             System.out.println(throwable.getMessage());
+            MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
+            //获取method对象
+            Method method = signature.getMethod();
+            //获取方法的返回值的类型
+            Class  returnType=   method.getReturnType();
             //方法名
-            String methodName = proceedingJoinPoint.getSignature().getName();
+            String methodName = method.getName();
             //类名
             String className = proceedingJoinPoint.getTarget().toString();
             String errorStr = "类:"+className+",方法:"+methodName+",出现异常.异常信息为:"+throwable.getMessage();

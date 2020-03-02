@@ -12,56 +12,60 @@ import java.util.regex.Pattern;
 public class SystemConstant {
 
 
-    public static String SOURCE_IMG = "http";
+    public static final String SOURCE_IMG = "http";
 
     /**
      * 不启用CSRL的URL
      */
-    public static String CRSF_CLOSE_URL = "/article/uploadImage/**";
+    public static  String CRSF_CLOSE_URL = "/article/uploadImage/**";
 
     /**
      * 临时草稿的Key
      */
-    public static String TEMP_ARTICLE_FLAG = "tempArticle";
+    public static final String TEMP_ARTICLE_FLAG = "tempArticle";
 
     /**
      *  文章图片的Key
      */
-    public static String TEMP_ARTICLE_IMAGES_FLAG = "tempArticleImages";
+    public static final String TEMP_ARTICLE_IMAGES_FLAG = "tempArticleImages";
 
 
     /**
      *  文章所有类型Key
      */
-    public static String TEMP_ARTICLE_TYPES = "tempArticleTypes";
+    public static final String TEMP_ARTICLE_TYPES = "tempArticleTypes";
 
     /**
      *  文章标签
      */
-    public static String ARTICLE_LABEL_FLAG = "articleLabelFlag";
+    public static final String ARTICLE_LABEL_FLAG = "articleLabelFlag";
 
     /**
      *  文章对应的标签的KEy
      */
-    public static String ARTICLE_TO_LABEL_FLAG = "articleToLabelFlag";
+    public static final String ARTICLE_TO_LABEL_FLAG = "articleToLabelFlag";
 
     /**
      *  获取图片文件路径正则
      */
-    public static Pattern IMAGE_PATTERN = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}[\\s\\S]{1,}");
+    public static final Pattern IMAGE_PATTERN = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}[\\s\\S]{1,}");
 
 
     /**
      *  博客相应配置的Key
      */
-    public static String WEB_BLOG_CONFIG = "webBlogConfig";
+    public static final String WEB_BLOG_CONFIG = "webBlogConfig";
 
 
     /**
      *  博客相应句子的Key
      */
-    public static String WEB_BLOG_SENTENCE = "webBlogSentence";
+    public static final String WEB_BLOG_SENTENCE = "webBlogSentence";
 
+    /**
+     *  博客博文访问量的Key
+     */
+    public static final String WEB_BLOG_ARTICLE_ACCESS_COUNT = "webBlogArticleAccessCount";
 
 
 

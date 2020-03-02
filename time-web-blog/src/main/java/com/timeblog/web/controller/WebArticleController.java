@@ -9,6 +9,7 @@ import com.timeblog.framework.mapper.ArticleMapper;
 import com.timeblog.framework.mapper.ArticleTypeMapper;
 import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.RedisUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,6 +56,31 @@ public class WebArticleController {
         return modelAndView;
     }
 
+
+    @RequestMapping("/toArticleDetails")
+    public ModelAndView toArticleDetails(String articleId){
+        if (StringUtils.isEmpty(articleId)){
+           new Exception("articleId is empty");
+        }
+        Article article = articleMapper.queryById(Integer.parseInt(articleId));
+        if (article == null){
+            new Exception("Page is not  find");
+        }
+
+        Integer accessCount  = (Integer) redisUtils.hmGet(SystemConstant.WEB_BLOG_ARTICLE_ACCESS_COUNT,articleId);
+        if (accessCount == null){
+            accessCount = 0;
+        }
+        redisUtils.hmSet(SystemConstant.WEB_BLOG_ARTICLE_ACCESS_COUNT,articleId,++accessCount);
+        BlogWebConfig blogWebConfig = (BlogWebConfig)redisUtils.get(SystemConstant.WEB_BLOG_CONFIG);
+        ModelAndView modelAndView = new ModelAndView("web/read");
+        modelAndView.addObject("article",article)
+                    .addObject("blogWebConfig",blogWebConfig)
+                    .addObject("accessCount",accessCount);
+        return modelAndView;
+    }
+
+
     @RequestMapping("/showArticleList")
     @ResponseBody
     public Result showArticleListWithPage(@RequestBody PageDomain pageDomain){
@@ -62,6 +88,13 @@ public class WebArticleController {
         List<Article> articleTypeList =  articleMapper.queryAllFormal(pageDomain);
         return Result.success(articleTypeList);
     }
+
+
+
+
+
+
+
 
 
 }

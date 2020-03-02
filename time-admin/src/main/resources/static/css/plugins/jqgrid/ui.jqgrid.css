@@ -518,7 +518,7 @@ div.tablediv > .table-bordered {
 .EditTable td input,
 .EditTable td select,
 .EditTable td textarea {
-	width: 98%;
+	width: 96%;
 	display: inline-block;
 }
 .EditTable td textarea {

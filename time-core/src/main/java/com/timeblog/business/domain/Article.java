@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -54,6 +55,9 @@ public class Article extends BaseDomain  {
     /** 简述 */
     private String articleIntroduction;
 
+
+    /** 改文章的标签 */
+    private List<Label> labelList;
 
 
 
