@@ -1,5 +1,6 @@
 package com.timeblog.admin.config.aop;
 
+import com.timeblog.framework.config.WebExceptionAspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;

@@ -9,8 +9,8 @@
  * http://www.codrops.com
  */
 ;(function(window) {
-
 	'use strict';
+	let likeStatus = $("#articleId").attr("like-status");
 
 	// taken from mo.js demos
 	function isIOSSafari() {
@@ -44,7 +44,12 @@
 		this.options = extend( {}, this.options );
 		extend( this.options, options );
 
-		this.checked = false;
+
+		if (likeStatus == 0){
+			this.checked = false;
+		}else {
+			this.checked = true;
+		}
 
 		this.timeline = new mojs.Timeline();
 
@@ -79,10 +84,30 @@
 	// grid items:
 	var items = [].slice.call(document.querySelectorAll('.grid__item'));
 
+
+	function like(status) {
+		let articleId = $("#articleId").val();
+		let jsonContent = {"articleId":articleId,"status":status};
+		$.ajax({
+			url: ctx + "web/article/articleLike",
+			type: 'post',
+			data: JSON.stringify(jsonContent),
+			processData: false,
+			dataType: 'json',
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			}
+		});
+
+	}
+
 	function init() {
 		/* Icon 9 */
 		/* Icon 14 */
 		var el14 = items[0].querySelector('button.icobutton'), el14span = el14.querySelector('span'), el14counter = el14.querySelector('span.icobutton__text');
+		if(likeStatus == 1){
+			el14.style.color = '#F35186';
+		}
 		new Animocon(el14, {
 			tweens : [
 				// ring animation
@@ -219,12 +244,15 @@
 			],
 			onCheck : function() {
 				el14.style.color = '#F35186';
+				var current = Number(el14counter.innerHTML);
 				el14counter.innerHTML = Number(el14counter.innerHTML) + 1;
+				like();
 			},
 			onUnCheck : function() {
 				el14.style.color = '#C0C1C3';
 				var current = Number(el14counter.innerHTML);
-				el14counter.innerHTML = current > 1 ? Number(el14counter.innerHTML) - 1 : '';
+				el14counter.innerHTML = current >= 1 ? Number(el14counter.innerHTML) - 1 : '';
+				like();
 			}
 		});
 	}

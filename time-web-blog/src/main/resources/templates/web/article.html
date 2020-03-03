@@ -22,26 +22,7 @@
 <body>
     <div class="header">
     </div>
-    <header class="gird-header">
-        <div class="header-fixed">
-            <div class="header-inner">
-                <a href="javascript:void(0)" class="header-logo" id="logo" th:text="${blogWebConfig.blogName}"></a>
-                <nav class="nav" id="nav">
-                    <ul>
-                        <li><a href="index.html">首页</a></li>
-                        <li><a href="article.html">博客</a></li>
-                        <li><a href="message.html">留言</a></li>
-                        <li><a href="link.html">友链</a></li>
-                    </ul>
-                </nav>
-                <a class="phone-menu">
-                    <i></i>
-                    <i></i>
-                    <i></i>
-                </a>
-            </div>
-        </div>
-    </header>
+	<div th:replace="/web/hader :: header"></div>
     <div class="doc-container" id="doc-container">
         <div class="container-fixed">
 		    <div class="col-content">
@@ -165,23 +146,7 @@
 		</div>
     </div>
 
-    <footer class="grid-footer">
-        <div class="footer-fixed">
-            <div class="copyright">
-                <div class="info">
-                    <div class="contact">
-                        <a href="javascript:void(0)" class="github" target="_blank"><i class="fa fa-github article-icon"></i></a>
-                        <a href="https://wpa.qq.com/msgrd?v=3&uin=930054439&site=qq&menu=yes" class="qq" target="_blank" title="930054439"><i class="fa fa-qq article-icon"></i></a>
-                        <a href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=gbiysbG0tbWyuMHw8K-i7uw" class="email" target="_blank" title="930054439@qq.com"><i class="fa fa-envelope article-icon"></i></a>
-                        <a href="javascript:void(0)" class="weixin"><i class="fa fa-weixin article-icon"></i></a>
-                    </div>
-                    <p class="mt05">
-                        Copyright &copy; 2018-2018 燕十三 All Rights Reserved V.1.0.0 蜀ICP备18008600号
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
+	<div th:replace="/web/hader :: float"></div>
 
     <script  th:src="@{/layui/layui.js}"></script>
     <script  th:src="@{/js/yss/gloable.js}"></script>

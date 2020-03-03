@@ -27,6 +27,7 @@ body,html{background-color:rgba(255,255,255,.5);font:14px/1.5 "Helvetica neue",H
 .copyright .info{position:relative;text-align:center}
 .copyright p{color:#565755;font-size:13px}
 .copyright .contact a{display:inline-block;width:30px;height:30px;background-color:rgba(255,255,255,.2);text-align:center;line-height:30px;text-shadow:1px 1px 1px rgba(0,0,0,.5);font-size:14px;margin-left:15px;margin-right:0;border-radius:100%;text-decoration:none;color:rgba(255,255,255,.5);-webkit-transition:all .3s;transition:all .3s}
+.copyright .contact a i{padding-top: 9px}
 .copyright .contact a:hover{color:#fff}
 .copyright .contact .github:hover{background-color:#b952c5}
 .copyright .contact .qq:hover{background-color:#d25744}

@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -58,7 +60,7 @@ public class WebArticleController {
 
 
     @RequestMapping("/toArticleDetails")
-    public ModelAndView toArticleDetails(String articleId){
+    public ModelAndView toArticleDetails(String articleId,HttpServletRequest request){
         if (StringUtils.isEmpty(articleId)){
            new Exception("articleId is empty");
         }
@@ -66,17 +68,27 @@ public class WebArticleController {
         if (article == null){
             new Exception("Page is not  find");
         }
-
-        Integer accessCount  = (Integer) redisUtils.hmGet(SystemConstant.WEB_BLOG_ARTICLE_ACCESS_COUNT,articleId);
-        if (accessCount == null){
-            accessCount = 0;
+        //浏览数
+        Long accessCount = redisUtils.hmIncrement(SystemConstant.WEB_BLOG_ARTICLE_ACCESS_COUNT,articleId,1L);
+        //点赞数
+        Integer likeCount  = (Integer) redisUtils.hmGet(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT,articleId);
+        if (likeCount == null){
+            likeCount = 0;
         }
-        redisUtils.hmSet(SystemConstant.WEB_BLOG_ARTICLE_ACCESS_COUNT,articleId,++accessCount);
+        //是否点赞
+        int likeStatus = 0;
+        Set<Object> likeUsers =  redisUtils.setMembers(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT+articleId);
+        String userIpAddr = request.getRemoteAddr();
+        if (likeUsers.contains(userIpAddr)){
+            likeStatus = 1;
+        }
         BlogWebConfig blogWebConfig = (BlogWebConfig)redisUtils.get(SystemConstant.WEB_BLOG_CONFIG);
         ModelAndView modelAndView = new ModelAndView("web/read");
         modelAndView.addObject("article",article)
                     .addObject("blogWebConfig",blogWebConfig)
-                    .addObject("accessCount",accessCount);
+                    .addObject("accessCount",accessCount)
+                    .addObject("likeCount",likeCount)
+                    .addObject("likeStatus",likeStatus);
         return modelAndView;
     }
 
@@ -90,8 +102,30 @@ public class WebArticleController {
     }
 
 
+    @RequestMapping("/articleLike")
+    @ResponseBody
+    public Result articleLike(@RequestBody Article article, HttpServletRequest request){
+        String articleId = article.getArticleId().toString();
+        Long likeCount = 1L;
+        //如果没有登录获取游客Ip
+        String userIpAddr = request.getRemoteAddr();
+        Set<Object> likeUsers =  redisUtils.setMembers(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT+articleId);
+        if (likeUsers != null){
+            //如果包含则为取消点赞
+            if(likeUsers.contains(userIpAddr)){
+                redisUtils.remove(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT+article.getArticleId().toString(),userIpAddr);
+                likeCount = -1L;
+            }else {
+                redisUtils.add(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT+articleId,userIpAddr);
+            }
+        }else {
+            redisUtils.add(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT+articleId,userIpAddr);
+        }
 
+        redisUtils.hmIncrement(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT,articleId,likeCount);
 
+        return Result.success();
+    }
 
 
 

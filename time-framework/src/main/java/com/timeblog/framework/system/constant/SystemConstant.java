@@ -67,6 +67,10 @@ public class SystemConstant {
      */
     public static final String WEB_BLOG_ARTICLE_ACCESS_COUNT = "webBlogArticleAccessCount";
 
+    /**
+     *  博客博文访问量的Key
+     */
+    public static final String WEB_BLOG_ARTICLE_LIKE_COUNT = "webBlogArticleLikeCount";
 
 
     //todo  更换主题设计   一个Key对应一个主题

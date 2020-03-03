@@ -3,6 +3,7 @@ package com.timeblog.framework.system.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
 import java.io.Serializable;
 import java.util.List;
@@ -113,6 +114,7 @@ public class RedisUtils {
         HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
         hash.put(key,hashKey,value);
     }
+
     /**
      * 哈希获取数据
      * @param key
@@ -123,6 +125,20 @@ public class RedisUtils {
         HashOperations<String, Object, Object>  hash = redisTemplate.opsForHash();
         return hash.get(key,hashKey);
     }
+
+
+    /**
+     * 哈希获数据自增
+     * @param key
+     * @param hashKey
+     * @return
+     */
+    public Long hmIncrement(String key,String hashKey, Long value){
+        HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
+        Long count =  hash.increment(key,hashKey,value);
+        return count;
+    }
+
     /**
      * 列表添加
      * @param k
@@ -161,6 +177,21 @@ public class RedisUtils {
         SetOperations<String, Object> set = redisTemplate.opsForSet();
         return set.members(key);
     }
+
+
+    /**
+     * 集合删除
+     * @param key
+     * @param value
+     */
+    public void setRemove(String key,Object value){
+        SetOperations<String, Object> set = redisTemplate.opsForSet();
+        set.remove(key,value);
+    }
+
+
+
+
     /**
      * 有序集合添加
      * @param key
