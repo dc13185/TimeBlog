@@ -34,9 +34,6 @@ import java.util.stream.Collectors;
 public class WebArticleController {
 
     @Autowired
-    private ArticleTypeMapper articleTypeMapper;
-
-    @Autowired
     private RedisUtils redisUtils;
 
 
@@ -51,10 +48,11 @@ public class WebArticleController {
         //查找首级分类
         List<ArticleType> articleTypeList =  (List<ArticleType>) redisUtils.get(SystemConstant.TEMP_ARTICLE_TYPES);
         articleTypeList =  articleTypeList.stream().filter(l -> "-1".equals(l.getParentId())).collect(Collectors.toList());
+        Integer articleCount = articleMapper.queryCount();
         BlogWebConfig blogWebConfig = (BlogWebConfig)redisUtils.get(SystemConstant.WEB_BLOG_CONFIG);
-
         modelAndView.addObject("articleTypeList",articleTypeList)
-                    .addObject("blogWebConfig",blogWebConfig);
+                    .addObject("blogWebConfig",blogWebConfig)
+                    .addObject("articleCount",articleCount);
         return modelAndView;
     }
 
@@ -98,6 +96,15 @@ public class WebArticleController {
     public Result showArticleListWithPage(@RequestBody PageDomain pageDomain){
         //查询所有已经发布了的
         List<Article> articleTypeList =  articleMapper.queryAllFormal(pageDomain);
+        //点赞浏览的
+        List<String> articleIds = articleTypeList.stream().map(article -> article.getArticleId().toString()).collect(Collectors.toList());
+        //批量顺序不会乱
+        List<Integer> accessCount = redisUtils.batchHmGet(SystemConstant.WEB_BLOG_ARTICLE_ACCESS_COUNT,articleIds);
+        List<Integer>  likeCount = redisUtils.batchHmGet(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT,articleIds);
+        for (int i = 0; i < articleTypeList.size(); i++) {
+            articleTypeList.get(i).setLikeCount(likeCount.get(i));
+            articleTypeList.get(i).setAccessCount(accessCount.get(i));
+        }
         return Result.success(articleTypeList);
     }
 
@@ -123,7 +130,6 @@ public class WebArticleController {
         }
 
         redisUtils.hmIncrement(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT,articleId,likeCount);
-
         return Result.success();
     }
 

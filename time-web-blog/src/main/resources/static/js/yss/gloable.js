@@ -5,7 +5,6 @@
     util.fixbar({
         click: function(type){
             if(type === 'top'){
-                alert($("html,body").scrollTop())
                 $(document).scrollTop(0);
             }
         }

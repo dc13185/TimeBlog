@@ -38,9 +38,9 @@ body,html{background-color:rgba(255,255,255,.5);font:14px/1.5 "Helvetica neue",H
 .lo input{margin-left:15px;border:1px solid #e8e9e7}
 .lo button{margin-top:10px;padding:5px 15px;cursor:pointer}
 .lo .waiting{padding:5px 15px;font-family:FontAwesome;font-style:normal;text-rendering:auto;font-size:20px;display:none}
-.lo .waiting:before{content:"\f110";-webkit-animation:spin 2s infinite linear;animation:spin 2s infinite linear}
-.artcle{transition:animation .3s linear}
-.zoomIn{animation:zoomIn 1s both}
+.lo .waiting:before{content:"\f110";-webkit-animation:spin 0.2s infinite linear;animation:spin 0.2s infinite linear}
+.artcle{transition:animation 0.2s linear}
+.zoomIn{animation:zoomIn 0.2s both}
 @keyframes zoomIn{0%{opacity:0;-webkit-transform:scale3d(.3,.3,.3);transform:scale3d(.3,.3,.3)}
 50%{opacity:1}
 }

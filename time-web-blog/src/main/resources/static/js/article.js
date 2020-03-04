@@ -1,5 +1,6 @@
 function initArticleData(pageNumber,pageSize,ctx) {
-    debugger;
+    $("#pager").hide();
+    $("#bloglist").empty();
     let jsonContent = {"pageNumber": pageNumber, "pageSize": pageSize}
     $.ajax({
         url: ctx + "web/article/showArticleList",
@@ -25,11 +26,11 @@ function initArticleData(pageNumber,pageSize,ctx) {
                     let span;
                     //1为原创 0为转载
                     if(article.isOriginal == 1){
-                       span = "<span class=\"fc-blue\">【原创】</span>";
+                       span = "<span class=\"fc-original\">【原创】</span>";
                     }else{
-                        span = "<span class=\"fc-red\">【转载】</span>";
+                        span = "<span class=\"fc-reproduced\">【转载】</span>";
                     }
-                    articleModel.find(".title"). prepend(span);
+                    articleModel.find(".title").prepend(span);
 
                     if(rows !== null){
                         for (let labelIndex in labels) {
@@ -39,14 +40,37 @@ function initArticleData(pageNumber,pageSize,ctx) {
                             articleModel.find(".label-content").append(labelModel);
                         }
                     }
+                    //浏览
+                    let accessCount = article.accessCount;
+                    let likeCount = article.likeCount;
+                    if (article.accessCount == null){
+                        accessCount = 0;
+                    }
+                    if (article.likeCount == null){
+                        likeCount = 0;
+                    }
+                    //置顶
+                    let isTop = article.isTop;
+                    if(isTop == 1){
+                         let topDiv = "<div class=\"fc-flag\">置顶</div>";
+                        articleModel.prepend(topDiv)
+                    }
 
+                    //图片
+                    if(article.coverImage.indexOf("img-blank") == -1){
+                        articleModel.find(".article-img").attr("src",article.coverImage);
+                    }else{
+                        articleModel.find(".article-img").remove();
+                    }
                     articleModel.removeClass("articleModel");
                     articleModel.find(".article-title").text(article.articleTitle).attr("href",ctx+"web/article/toArticleDetails?articleId="+article.articleId);
                     articleModel.find(".day").text(day);
                     articleModel.find(".month").text(month);
                     articleModel.find(".year").text(year);
-                    articleModel.find(".article-img").attr("src",article.coverImage);
+                    articleModel.find(".accessCount").text(accessCount);
+                    articleModel.find(".likeCount").text(likeCount);
                     $("#bloglist").append(articleModel);
+                    $("#pager").show();
                 }
             }
         }
@@ -56,10 +80,18 @@ function initArticleData(pageNumber,pageSize,ctx) {
 
 
 function currentPage(currentPage){
-    console.log("当前页码数：" + currentPage);
+        initArticleData(currentPage,5,ctx);
+         $(".layui-fixbar-top").trigger("click");
 }
 
-
+function initPage(total){
+    $("#pager").zPager({
+        totalData: total,
+        htmlBox: $('#wraper'),
+        btnShow: true,
+        ajaxSetData: false
+    });
+}
 
 
 Date.prototype.format = function(fmt) {

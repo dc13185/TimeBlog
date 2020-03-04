@@ -59,8 +59,11 @@ public class Article extends BaseDomain  {
     /** 改文章的标签 */
     private List<Label> labelList;
 
+    /** 浏览量 */
+    private Integer accessCount;
 
-
+    /** 点赞量 */
+    private Integer likeCount;
 
 
 

@@ -73,8 +73,8 @@
 
 			dialogLang.error += dialogLang.label + " 1-" + lineCount;
 
-			if (editor.find("." + dialogName).length < 1) 
-			{			
+			if (editor.find("." + dialogName).length < 1)
+			{
 				var dialogContent = [
 					"<div class=\"editormd-form\" style=\"padding: 10px 0;\">",
 					"<p style=\"margin: 0;\">" + dialogLang.label + " 1-" + lineCount +"&nbsp;&nbsp;&nbsp;<input type=\"number\" class=\"number-input\" style=\"width: 60px;\" value=\"1\" max=\"" + lineCount + "\" min=\"1\" data-line-number /></p>",
@@ -99,8 +99,6 @@
 							var line   = parseInt(this.find("[data-line-number]").val());
 
 							if (line < 1 || line > lineCount) {
-								alert(dialogLang.error);
-
 								return false;
 							}
 
@@ -111,7 +109,7 @@
                             return false;
                         }],
 
-                        cancel : [lang.buttons.cancel, function() {                                   
+                        cancel : [lang.buttons.cancel, function() {
                             this.hide().lockScreen(false).hideMask();
 
                             return false;
@@ -128,10 +126,10 @@
 		};
 
 	};
-    
+
 	// CommonJS/Node.js
 	if (typeof require === "function" && typeof exports === "object" && typeof module === "object")
-    { 
+    {
         module.exports = factory;
     }
 	else if (typeof define === "function")  // AMD/CMD/Sea.js
@@ -148,7 +146,7 @@
                 factory(editormd);
             });
 		}
-	} 
+	}
 	else
 	{
         factory(window.editormd);

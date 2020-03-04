@@ -41,6 +41,10 @@
 
 
 
+    <!-- 声明sql片段 -->
+    <sql id="articleFields">
+	      ta.article_id ,article_title,  ta.cover_image,  ta.isOriginal, ta.isTop ,ta.update_time
+    </sql>
 
 
 
@@ -86,14 +90,16 @@
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAllFormal" resultMap="TimeArticleLabelMap">
-        SELECT ta.*,tl.* FROM time_article ta JOIN time_article_label tal ON ta.article_id  = tal.article_id
+        SELECT <include refid="articleFields"></include>,tl.* FROM time_article ta JOIN time_article_label tal ON ta.article_id  = tal.article_id
         JOIN time_label tl ON tal.label_id = tl.label_id
         where ta.status = 1
         <if test="retrieve != null and retrieve != '' ">
             and ta.article_title  like CONCAT('%',#{retrieve},'%')
         </if>
-        order by isTop desc , status asc , update_time desc
+        order by isTop desc  , update_time desc
     </select>
+
+
 
 
     <!--新增所有列-->
@@ -151,6 +157,11 @@
         delete from timeblog.time_article where article_id = #{articleId}
     </delete>
 
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryCount"  resultType="java.lang.Integer">
+        select count(1) from  timeblog.time_article
+    </select>
 
 
 

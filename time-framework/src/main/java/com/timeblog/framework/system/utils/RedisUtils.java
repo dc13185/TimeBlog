@@ -1,11 +1,16 @@
 package com.timeblog.framework.system.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Service;
 import sun.rmi.runtime.Log;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -212,6 +217,30 @@ public class RedisUtils {
     public Set<Object> rangeByScore(String key,double scoure,double scoure1) {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
         return zset.rangeByScore(key, scoure, scoure1);
+    }
+
+
+    /**
+     * @author: dongchao
+     * @create: 2020/3/4-18:09
+     * @description: 批量获取hash的值
+     * @param:
+     * @return:
+     */
+    public List batchHmGet(String hashKey,List<String> keys) {
+        List<Integer> redisResult = redisTemplate.executePipelined(
+                new RedisCallback<Integer>() {
+                    // 自定义序列化
+                    RedisSerializer keyS = redisTemplate.getKeySerializer();
+                    @Override
+                    public Integer doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                        for (String key : keys) {
+                             redisConnection.hGet(keyS.serialize(hashKey),keyS.serialize(key));
+                        }
+                        return null;
+                    }
+                },redisTemplate.getValueSerializer());
+        return redisResult;
     }
 
 
