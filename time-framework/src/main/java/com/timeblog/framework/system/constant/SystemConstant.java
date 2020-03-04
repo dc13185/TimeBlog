@@ -14,6 +14,8 @@ public class SystemConstant {
 
     public static final String SOURCE_IMG = "http";
 
+    public static final String BLANK_IMG = "img-blank";
+
     /**
      * 不启用CSRL的URL
      */

@@ -50,7 +50,6 @@ public class LoginController extends BaseController {
     @ResponseBody
     public String login(SysUser paramSysUser){
         Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         return "";
     }
 

@@ -182,13 +182,6 @@ public class ArticleController {
         String ip = IpUtils.getProjectPath(request);
         String url = ip + imageUrl.replace("**","")+urlPath;
         //加添图片路径到redis
-        List<String> tempList = (List<String>) redisUtils.get(SystemConstant.TEMP_ARTICLE_IMAGES_FLAG);
-        if (null == tempList){
-            tempList = Lists.newArrayList(url);
-        }else {
-            tempList.add(url);
-        }
-        redisUtils.set(SystemConstant.TEMP_ARTICLE_IMAGES_FLAG, tempList);
         return   Result.success().add("success",1).add("message","上传成功").add("url",url).add("title",file.getOriginalFilename());
     }
 
@@ -204,13 +197,12 @@ public class ArticleController {
     @ResponseBody
     public Result saveTempArticle(@RequestBody Article article) throws Exception{
         //先设默认值
-        article = article.toBuilder().status(0).isComment(1).isOriginal(1).isTop(0).build();
         article.setUpdateTime(new Date());
         if (null != article.getArticleId()){
-            //将草稿存入redis
-            redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId(),article);
+            //如果是修改，取临时存储的article(原数据),这里只是修改了标题和文本内容
             articleMapper.update(article);
         }else {
+            article = article.toBuilder().status(0).isComment(1).isOriginal(1).isTop(0).build();
             article.setCreateTime(new Date());
             if (StringUtils.isEmpty(article.getArticleTitle())){
                 //如果没有设置标题，可认为存临时草稿
@@ -219,33 +211,8 @@ public class ArticleController {
             }else{
                 //如果有标题，则可设置为草稿 ,设置默认值
                 articleMapper.insert(article);
-                //草稿存入redis
-                String articleContext = article.getArticleContextMd();
-                redisUtils.set(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId(),article);
-                List<String> tempList = (List<String>) redisUtils.get(SystemConstant.TEMP_ARTICLE_IMAGES_FLAG);
-                if (null != tempList){
-                    //如果临时图片内容不为空
-                    tempList.forEach(image ->{
-                        if (!articleContext.contains(image)){
-                            //如果不含包的话，获取文件名，将此文件删除
-                            Matcher m = SystemConstant.IMAGE_PATTERN.matcher(image);
-                            if(m.find()){
-                                String imagePath = m.group(0);
-                                Path path = Paths.get(imageFilePath + imagePath);
-                                try {
-                                    Files.delete(path);
-                                } catch (IOException e) {
-                                    //lambda无法抛出受查异常，只能抛出运行异常
-                                    throw new RuntimeException(e);
-                                }
-                            }
-                        }
-                    });
-                    redisUtils.remove(SystemConstant.TEMP_ARTICLE_IMAGES_FLAG);
-                }
             }
         }
-
         return  Result.success().add("articleId",article.getArticleId());
     }
 
@@ -260,6 +227,8 @@ public class ArticleController {
     @RequestMapping("completeArticle")
     @ResponseBody
     public Result completeArticle(@RequestBody Article article,HttpServletRequest request) throws Exception{
+        //原文章
+        Article srcArticle = articleMapper.queryById(article.getArticleId());
         //上传封面
         if (!StringUtils.contains(article.getCoverImage(),SystemConstant.SOURCE_IMG)){
             String nowDate = LocalDate.now().toString();
@@ -269,13 +238,8 @@ public class ArticleController {
             String url = ip + imageUrl.replace("**","")+nowDate+"/"+imageFileName;
             //修改URL 路径
             article = article.toBuilder().coverImage(url).build();
-            //判断其原来的值是否
-            Article srcArticle =  (Article)redisUtils.get(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId());
-            if (srcArticle == null){
-                srcArticle = articleMapper.queryById(article.getArticleId());
-            }
             //如果原来的封面是上传的，就删除
-            if (srcArticle.getCoverImage() != null && !srcArticle.getCoverImage().contains(SystemConstant.SOURCE_IMG)){
+            if (srcArticle.getCoverImage() != null && !srcArticle.getCoverImage().contains(SystemConstant.BLANK_IMG)){
                 Matcher m = SystemConstant.IMAGE_PATTERN.matcher(srcArticle.getCoverImage());
                 if(m.find()){
                     String imagePath = m.group(0);
@@ -339,8 +303,6 @@ public class ArticleController {
              articleToLabelMap.put(article.getArticleId()+"",articleToLabels);
             redisUtils.set(SystemConstant.ARTICLE_TO_LABEL_FLAG,articleToLabelMap);
         }
-        //修改文章中redis配置
-        redisUtils.remove(SystemConstant.TEMP_ARTICLE_FLAG+article.getArticleId());
         //数据库中修改
         articleMapper.update(article);
         return  Result.success();

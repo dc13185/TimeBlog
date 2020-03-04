@@ -41,6 +41,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${security.csrfCloseUrl}")
     private String csrfCloseUrl;
 
+    @Value("${security.redirectUrl}")
+    private String redirectUrl;
+
 
    /** 通过authorizeRequests()定义哪些URL需要被保护、
        哪些不需要被保护。
@@ -63,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
             .formLogin()
                 // 定义登录的页面"/login"，允许访问
-            .loginPage("/login/toLoginView")
+            .loginPage(redirectUrl)
                 //登录请求拦截的url,也就是form表单提交时指定的action
             .loginProcessingUrl("/login/from")
             .successHandler(myAuthenticationSuccessHandler)

@@ -129,6 +129,8 @@
         $($image).cropper({
             aspectRatio: 1.618,
             preview: ".img-preview",
+            maxWidth: 300,
+            maxHeight: 180,
             done: function (data) {
                 // 输出结果
             }
@@ -245,10 +247,9 @@
             toastr.warning("请选择文章类型");
         }
         let fileDate = $("#article-img")[0].currentSrc;
-        if (!fileDate.indexOf("img-blank")){
-            let data = $("#article-img").cropper('getCroppedCanvas');
-            let base64 = data.toDataURL('base64'); // 转换为base64
-            fileDate = encodeURIComponent(base64)
+        if (fileDate.indexOf("img-blank") == -1){
+            let data = $("#article-img").cropper('getCroppedCanvas', { width:300, height:180 });
+            fileDate = data.toDataURL('base64'); // 转换为base64
         }
         let jsonContent ={"articleId":articleId,"articleTypeId":articleType,"labelIds":labelSelect,"coverImage":fileDate,"status":status}
         let url = ctx+"article/completeArticle";

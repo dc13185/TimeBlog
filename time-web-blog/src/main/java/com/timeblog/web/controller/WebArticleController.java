@@ -136,5 +136,8 @@ public class WebArticleController {
 
 
 
+    //https://r.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=1318533144
+    //http://q1.qlogo.cn/g?b=qq&nk=1318533144&s=100&t=  s为尺寸
+
 
 }
