@@ -225,7 +225,7 @@
 .separateline span {
     position: relative;
     top: -14px;
-    padding: 2px 4px;
+    padding-left: 10px;
     background-color: #ffffff;
     color: #6bc30d !important;
 }
@@ -339,3 +339,17 @@ to{opacity:0}
 .article-item .content .cover{width:100%;height:auto;float:none;margin-bottom:10px}
 }
 
+/*文章详情页*/
+.read-article-title{
+    font-size: 35px;
+    padding-left: 10px;
+    font-weight: bold;
+}
+
+#comment-box ul.collection li {
+    margin: 1em;
+}
+
+.prefix{
+    padding-top: 1.5%!important;
+}

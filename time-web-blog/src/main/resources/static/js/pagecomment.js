@@ -1,37 +1,31 @@
-﻿layui.use(['element', 'jquery', 'form', 'layedit', 'flow'], function () {
+﻿var area;
+layui.use(['element', 'jquery', 'form', 'layedit', 'flow'], function () {
     var element = layui.element;
     var form = layui.form;
     var $ = layui.jquery;
     var layedit = layui.layedit;
     var flow = layui.flow;
-    //评论和留言的编辑器的验证
-    form.verify({
-        content: function (value) {
-            value = $.trim(layedit.getContent(editIndex));
-            if (value == "") return "请输入内容";
-            layedit.sync(editIndex);
-        },
-        replyContent: function (value) {
-            if (value == "") return "请输入内容";
-        }
+    //留言的编辑器
+    var editIndex = layedit.build('remarkEditor', {
+        height: 100,
+        tool: ['face'],
     });
-     
-    //回复按钮点击事件
-    $('#blog-comment').on('click', '.btn-reply', function () {
-        var targetId = $(this).data('targetid')
-            , targetName = $(this).data('targetname')
-            , $container = $(this).parent('p').parent().siblings('.replycontainer');
-        if ($(this).text() == '回复') {
-            $container.find('textarea').attr('placeholder', '回复【' + targetName + '】');
-            $container.removeClass('layui-hide');
-            $container.find('input[name="targetUserId"]').val(targetId);
-            $(this).parents('.blog-comment li').find('.btn-reply').text('回复');
-            $(this).text('收起');
-        } else {
-            $container.addClass('layui-hide');
-            $container.find('input[name="targetUserId"]').val(0);
-            $(this).text('回复');
-        }
-    });
+    //留言的编辑器的验证
+    $("#submit-comment").click(function(){
+
+        layer.open({
+            type: 1,
+            content: $('#comment-box'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            area: ['300px', '250px'],
+
+            title: ['评论信息', 'font-size:18px;'],
+            offset:'200px',
+            skin: 'layui-layer-molv'
+        });
+
+      /*  layer.msg('你啥都没输入！', {icon: 5,offset:'280px'});*/
+    })
+
+
 });
- 
+

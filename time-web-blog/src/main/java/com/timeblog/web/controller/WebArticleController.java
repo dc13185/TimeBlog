@@ -116,28 +116,37 @@ public class WebArticleController {
         Long likeCount = 1L;
         //如果没有登录获取游客Ip
         String userIpAddr = request.getRemoteAddr();
-        Set<Object> likeUsers =  redisUtils.setMembers(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT+articleId);
-        if (likeUsers != null){
-            //如果包含则为取消点赞
-            if(likeUsers.contains(userIpAddr)){
-                redisUtils.remove(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT+article.getArticleId().toString(),userIpAddr);
-                likeCount = -1L;
+        //对IP加悲观锁，不导致-1情况
+        synchronized (userIpAddr){
+            Set<Object> likeUsers =  redisUtils.setMembers(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT+articleId);
+            if (likeUsers != null){
+                //如果包含则为取消点赞
+                if(likeUsers.contains(userIpAddr)){
+                    redisUtils.remove(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT+article.getArticleId().toString(),userIpAddr);
+                    likeCount = -1L;
+                }else {
+                    redisUtils.add(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT+articleId,userIpAddr);
+                }
             }else {
                 redisUtils.add(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT+articleId,userIpAddr);
             }
-        }else {
-            redisUtils.add(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT+articleId,userIpAddr);
-        }
 
-        redisUtils.hmIncrement(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT,articleId,likeCount);
+            redisUtils.hmIncrement(SystemConstant.WEB_BLOG_ARTICLE_LIKE_COUNT,articleId,likeCount);
+        }
         return Result.success();
     }
 
-
+    @RequestMapping("/toFrom")
+    public String toFrom(){
+        return "web/input";
+    }
 
 
     //https://r.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=1318533144
     //http://q1.qlogo.cn/g?b=qq&nk=1318533144&s=100&t=  s为尺寸
-
-
+/*
+<div class="layui-input-inline">
+                            <i class="layui-icon layui-icon-search" style="position: absolute;top:8px;right: 8px;"></i>
+                            <input type="search" name="keyword" autocomplete="off" class="layui-input" placeholder="管理员账号/id"/>
+                        </div>*/
 }

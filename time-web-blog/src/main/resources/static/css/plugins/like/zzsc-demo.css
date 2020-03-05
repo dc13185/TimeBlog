@@ -136,6 +136,7 @@ a:focus {
 	align-items: center;
 	-webkit-align-content: center;
 	align-content: center;
+	padding-left: 25px;
 }
 
 /*nav*/

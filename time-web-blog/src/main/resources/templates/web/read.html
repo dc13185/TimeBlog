@@ -13,6 +13,7 @@
     <link rel="stylesheet" th:href="@{/css/plugins/editormd/editormd.preview.min.css}" />
     <link rel="stylesheet" type="text/css"th:href="@{/css/plugins/like/zzsc-demo.css}" />
     <link rel="stylesheet" type="text/css"th:href="@{/css/plugins/like/icons.css}" />
+   <link rel="stylesheet" type="text/css"th:href="@{/css/plugins/ppfInput/minippfix.css}" />
     <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
 </head>
 <body>
@@ -27,7 +28,7 @@
                         <input type="hidden" th:value="${article.articleId}" th:like-status="${likeStatus}" id="articleId" />
                         <section class="article-item">
                             <aside class="title" style="line-height:1.5;">
-                                <h4 class="article-title" th:text="${article.articleTitle}"></h4>
+                                <h4 class="read-article-title" th:text="${article.articleTitle}"></h4>
                                 <p class="fc-grey fs-14">
                                     <small class="ml10">浏览量：<i class="readcount" th:text="${accessCount}"></i></small>
                                     <small class="ml10">更新于：<label th:text="${#dates.format(article.updateTime,'yyyy年MM月dd日HH时mm分')}"></label> </small>
@@ -60,29 +61,37 @@
                                 <p class="f-toe">本文网址：<a href="#">https://www.yanshisan.cn/Blog/Read/7</a></p>
                             </div>
 
-                            <ul class="blog-comment" id="blog-comment"></ul>
+
                         </section>
                     </article>
 
                     <div id="like-message" style="background-color: #ffffff">
-                        <fieldset class="layui-elem-field layui-field-title">
-                            <legend>发表评论</legend>
+                        <blockquote class="layui-elem-quote" style="font-size: 18px">评论</blockquote>
                             <div class="layui-field-box">
-                                <div class="leavemessage" style="text-align:initial">
-                                    <form class="layui-form blog-editor" action="">
+                                <div class="leavemessage" id="textarea-wrap" style="text-align:initial">
+                                    <div class="blog-editor">
                                         <div class="layui-form-item">
                                             <textarea name="editorContent" lay-verify="content" id="remarkEditor" placeholder="请输入内容" class="layui-textarea "></textarea>
                                         </div>
                                         <div class="layui-form-item">
-                                            <button class="layui-btn" lay-submit="formLeaveMessage" lay-filter="formLeaveMessage">提交留言</button>
+                                            <button class="layui-btn" id="submit-comment" >提交留言</button>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </fieldset>
                     </div>
+                    <div id="comment-box" style="background-color: #ffffff;width: 90%;margin: 0 auto;display: none" >
+                        <ul class="collection" data-for="coloured" style="padding:0 15px">
+                            <li> <input type="text" placeholder="输入你的邮箱(选填)" class="ppfix pre email orange" /> </li>
+                            <li> <input type="text" placeholder="匿名(不填默认匿名)" class="ppfix pre user dark-grey" /> </li>
+                            <li> <input type="text" placeholder="输入你的QQ(选填)" class="ppfix pre qq blue" /> </li>
+                        </ul>
+                        <button class="layui-btn layui-btn-xs" id="" style="margin-left: 80%" >提交留言</button>
+                    </div>
                 </div>
             </div>
+
             <div class="blog-sidebar" >
                 <div class="sidebar-module sidebar-sentence">
                     <h5 class="sidebar-title"><i class="fa fa-hand-peace-o icon icon-diy"></i><strong>说给你听</strong></h5>
@@ -97,6 +106,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
     <div th:replace="/web/hader :: float"></div>
@@ -114,7 +125,10 @@
     <script th:src="@{/js/plugins/nprogress.js}"></script>
     <script th:src="@{/js/pagecomment.js}"></script>
     <script th:src="@{/js/plugins/like/mo.min.js}"></script>
+    <script th:src="@{/js/plugins/ppfinput/modernizr.js}"></script>
+    <script th:src="@{/js/plugins/ppfinput/minippfix.js}"></script>
     <script th:src="@{/js/plugins/like/demo.js}"></script>
+
     <script th:inline="javascript">
     $(function(){
         NProgress.done();
