@@ -22,7 +22,7 @@ body,html{background-color:rgba(255,255,255,.5);font:14px/1.5 "Helvetica neue",H
 .phone-menu i:nth-of-type(1){top:18px}
 .phone-menu i:nth-of-type(2){top:25px}
 .phone-menu i:nth-of-type(3){top:32px}
-.grid-footer{background-color:#212220;color:#919290;font-size:14px;padding:20px 0 0 0;position:relative;zoom:1;clear:both;line-height:20px;margin-top:40px;overflow:hidden}
+.grid-footer{background-color:#212220;color:#919290;font-size:14px;padding:5px 0 0 0;position:absolute;width: 100%;zoom:1;clear:both;line-height:20px;margin-top:40px;overflow:hidden}
 .copyright{padding:10px 0 10px 0}
 .copyright .info{position:relative;text-align:center}
 .copyright p{color:#565755;font-size:13px}

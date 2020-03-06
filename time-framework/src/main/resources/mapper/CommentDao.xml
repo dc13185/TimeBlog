@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timeblog.framework.mapper.CommentDao">
+
+    <resultMap type="com.timeblog.business.domain.Comment" id="TimeCommentMap">
+        <result property="commentId" column="comment_id" jdbcType="INTEGER"/>
+        <result property="commentPicture" column="comment_picture" jdbcType="VARCHAR"/>
+        <result property="commentContent" column="comment_content" jdbcType="VARCHAR"/>
+        <result property="commentNickname" column="comment_nickname" jdbcType="VARCHAR"/>
+        <result property="commentIp" column="comment_ip" jdbcType="VARCHAR"/>
+        <result property="commentAddress" column="comment_address" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TimeCommentMap">
+        select
+          comment_id, comment_picture, comment_content, comment_nickname, comment_ip, comment_address, create_time
+        from timeblog.time_comment
+        where comment_id = #{commentId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TimeCommentMap">
+        select
+          comment_id, comment_picture, comment_content, comment_nickname, comment_ip, comment_address, create_time
+        from timeblog.time_comment
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TimeCommentMap">
+        select
+          comment_id, comment_picture, comment_content, comment_nickname, comment_ip, comment_address, create_time
+        from timeblog.time_comment
+        <where>
+            <if test="commentId != null">
+                and comment_id = #{commentId}
+            </if>
+            <if test="commentPicture != null and commentPicture != ''">
+                and comment_picture = #{commentPicture}
+            </if>
+            <if test="commentContent != null and commentContent != ''">
+                and comment_content = #{commentContent}
+            </if>
+            <if test="commentNickname != null and commentNickname != ''">
+                and comment_nickname = #{commentNickname}
+            </if>
+            <if test="commentIp != null and commentIp != ''">
+                and comment_ip = #{commentIp}
+            </if>
+            <if test="commentAddress != null and commentAddress != ''">
+                and comment_address = #{commentAddress}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="commentId" useGeneratedKeys="true">
+        insert into timeblog.time_comment(comment_picture, comment_content, comment_nickname, comment_ip, comment_address, create_time)
+        values (#{commentPicture}, #{commentContent}, #{commentNickname}, #{commentIp}, #{commentAddress}, #{createTime})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update timeblog.time_comment
+        <set>
+            <if test="commentPicture != null and commentPicture != ''">
+                comment_picture = #{commentPicture},
+            </if>
+            <if test="commentContent != null and commentContent != ''">
+                comment_content = #{commentContent},
+            </if>
+            <if test="commentNickname != null and commentNickname != ''">
+                comment_nickname = #{commentNickname},
+            </if>
+            <if test="commentIp != null and commentIp != ''">
+                comment_ip = #{commentIp},
+            </if>
+            <if test="commentAddress != null and commentAddress != ''">
+                comment_address = #{commentAddress},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </set>
+        where comment_id = #{commentId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from timeblog.time_comment where comment_id = #{commentId}
+    </delete>
+
+</mapper>
