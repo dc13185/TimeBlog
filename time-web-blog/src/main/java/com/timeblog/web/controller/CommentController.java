@@ -105,7 +105,7 @@ public class CommentController {
         if (StringUtils.isNotEmpty(resultStr)){
             String jsonContent = StringUtils.substringBetween(resultStr,"portraitCallBack(",")");
             JSONObject jsonObject = JSONObject.parseObject(jsonContent);
-            JSONArray jsonArray =  jsonObject.getJSONArray("1318533144");
+            JSONArray jsonArray =  jsonObject.getJSONArray(Qq);
             String nikNameStr =  jsonArray.getString(6);
             if (StringUtils.isNotBlank(nikNameStr)){
                 //获取昵称
