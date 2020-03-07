@@ -75,9 +75,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryCommentByArticleId" resultMap="TimeCommentMap">
         SELECT t1.*,t2.comment_nickname AS reply_name FROM time_comment t1 LEFT JOIN time_comment t2 ON t1.comment_id = t2.reply_id
-        from timeblog.time_comment
-        where  comment_article_id = #{articleId}
-        order by create_time desc
+         WHERE  t1.comment_article_id = #{articleId} ORDER BY create_time DESC
     </select>
 
 
