@@ -55,8 +55,8 @@ public class Comment implements Serializable {
     private String commentMail;
 
 
-    /**回复ID*/
-    private Integer replyName;
+    /**回复昵称*/
+    private String replyName;
 
 
 
