@@ -23,6 +23,16 @@ public class Comment implements Serializable {
     private static final long serialVersionUID = -62697648647800009L;
 
     private Integer commentId;
+
+    /**对应评论文章，如果为空，则为留言*/
+    private Integer commentArticleId;
+
+    /**父亲节点ID*/
+    private Integer parentCommentId;
+
+    /**回复ID*/
+    private Integer replyId;
+
     /**头像*/
     private String commentPicture;
     /**评论内容*/
@@ -36,11 +46,17 @@ public class Comment implements Serializable {
     /**评论时间*/
     private Date createTime;
 
-    private int status;
+
+    /**评论状态*/
+    private Integer commentStatus;
 
     private String commentQQ;
 
     private String commentMail;
+
+
+    /**回复ID*/
+    private Integer replyName;
 
 
 

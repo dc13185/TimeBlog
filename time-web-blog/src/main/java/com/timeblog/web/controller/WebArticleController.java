@@ -1,12 +1,10 @@
 package com.timeblog.web.controller;
 
 import com.timeblog.business.base.Result;
-import com.timeblog.business.domain.Article;
-import com.timeblog.business.domain.ArticleType;
-import com.timeblog.business.domain.BlogWebConfig;
-import com.timeblog.business.domain.PageDomain;
+import com.timeblog.business.domain.*;
 import com.timeblog.framework.mapper.ArticleMapper;
 import com.timeblog.framework.mapper.ArticleTypeMapper;
+import com.timeblog.framework.mapper.CommentDao;
 import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +37,9 @@ public class WebArticleController {
 
     @Autowired
     private ArticleMapper articleMapper;
+
+    @Autowired
+    private CommentDao commentDao;
 
 
 
@@ -80,13 +81,18 @@ public class WebArticleController {
         if (likeUsers.contains(userIpAddr)){
             likeStatus = 1;
         }
+        //评论
+        List<Comment> comments = commentDao.queryCommentByArticleId(Integer.parseInt(articleId));
+
+
         BlogWebConfig blogWebConfig = (BlogWebConfig)redisUtils.get(SystemConstant.WEB_BLOG_CONFIG);
         ModelAndView modelAndView = new ModelAndView("web/read");
         modelAndView.addObject("article",article)
                     .addObject("blogWebConfig",blogWebConfig)
                     .addObject("accessCount",accessCount)
                     .addObject("likeCount",likeCount)
-                    .addObject("likeStatus",likeStatus);
+                    .addObject("likeStatus",likeStatus)
+                    .addObject("comments",comments);
         return modelAndView;
     }
 
@@ -141,12 +147,4 @@ public class WebArticleController {
         return "web/input";
     }
 
-
-    //https://r.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=1318533144
-    //http://q1.qlogo.cn/g?b=qq&nk=1318533144&s=100&t=  s为尺寸
-/*
-<div class="layui-input-inline">
-                            <i class="layui-icon layui-icon-search" style="position: absolute;top:8px;right: 8px;"></i>
-                            <input type="search" name="keyword" autocomplete="off" class="layui-input" placeholder="管理员账号/id"/>
-                        </div>*/
 }

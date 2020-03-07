@@ -4,24 +4,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.timeblog.business.base.Result;
-import com.timeblog.business.domain.BlogUser;
 import com.timeblog.business.domain.Comment;
 import com.timeblog.framework.mapper.CommentDao;
 import com.timeblog.framework.system.constant.InterfaceConstant;
-import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.HttpClientUtils;
 import com.timeblog.framework.system.utils.Md5Utils;
-import nl.bitwalker.useragentutils.Browser;
-import nl.bitwalker.useragentutils.OperatingSystem;
-import nl.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,9 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  * @author Dong.Chao
@@ -95,19 +81,6 @@ public class CommentController {
             address = nation + province + city;
         }
 
-        //获取客户端操作系统 浏览器
-        //获取浏览器信息
-        String ua = request.getHeader("User-Agent");
-        //转成UserAgent对象
-        UserAgent userAgent = UserAgent.parseUserAgentString(ua);
-        //获取浏览器信息
-        Browser browser = userAgent.getBrowser();
-        //获取系统信息
-        OperatingSystem os = userAgent.getOperatingSystem();
-        //系统名称
-        String system = os.getName();
-        //浏览器名称
-        String browserName = browser.getName();
 
         //留言
         Comment comment = reqComment.toBuilder().createTime(new Date())
@@ -115,7 +88,7 @@ public class CommentController {
                             .commentNickname(nickName)
                             .commentPicture(picture)
                             .commentAddress(address)
-                            .status(0)
+                            .commentStatus(0)
                             .build();
 
         commentDao.insert(comment);

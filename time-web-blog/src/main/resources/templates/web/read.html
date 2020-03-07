@@ -15,10 +15,10 @@
     <link rel="stylesheet" type="text/css"th:href="@{/css/plugins/like/icons.css}" />
     <link rel="stylesheet" type="text/css"th:href="@{/css/plugins/ppfInput/minippfix.css}" />
     <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
-    <link rel="stylesheet" type="text/css"th:href="@{/css/global.css}" />
+    <link rel="stylesheet" th:href="@{/css/message.css}" />
 </head>
 <body>
-    <div class="header">
+    <div class="header" th:style="'background:url(' + ${blogWebConfig.indexBackground} + ');'">
     </div>
     <div th:replace="/web/hader :: header"></div>
     <div class="doc-container" id="doc-container">
@@ -61,103 +61,107 @@
                                 </p>
                                 <p class="f-toe">本文网址：<a href="#">https://www.yanshisan.cn/Blog/Read/7</a></p>
                             </div>
-
-
                         </section>
                     </article>
 
                     <div id="like-message" style="background-color: #ffffff">
                         <blockquote class="layui-elem-quote" style="font-size: 18px">评论</blockquote>
-                        <ul class="jieda" id="jieda">
-                            <li data-id="111" class="jieda-daan">
-                                <a name="item-1111111111"></a>
-                                <div class="detail-about detail-about-reply">
-                                    <a class="fly-avatar" href="">
-                                        <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" alt=" ">
-                                    </a>
-                                    <div class="fly-detail-user">
-                                        <a href="" class="fly-link">
-                                            <cite>贤心</cite>
-                                            <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                                            <i class="layui-badge fly-badge-vip">VIP3</i>
-                                        </a>
-                                        <span>(楼主)</span>
+                        <ul class="message-list" id="">
+                            <li class=" article">
+                                <div class="comment-parent">
+                                    <a name="remark-1"></a>
+                                    <img src="https://thirdqq.qlogo.cn/qqapp/101465933/7627F745B95BFAC18C6C481FE72B4EB1/100" />
+                                    <div class="info">
+                                        <span class="username">燕十三</span>
                                     </div>
-
-                                    <div class="detail-hits">
-                                        <span>2017-11-30</span>
+                                    <div class="comment-content">
+                                        剑气纵横三万里
                                     </div>
-
+                                    <p class="info info-footer">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        <span>四川</span>
+                                        <span class="comment-time">2018-01-01</span>
+                                        <a href="javascript:;" class="btn-reply" data-targetid="1" data-targetname="燕十三"> 回复<i class="fa fa-commenting-o"></i></a>
+                                    </p>
                                 </div>
-                                <div class="detail-body jieda-body photos">
-                                    <p>香菇那个蓝瘦，这是一条被采纳的回帖</p>
-                                </div>
-                                <div class="jieda-reply">
-                               <span type="reply">
-                                    <i class="layui-icon">&#xe611;</i>
-                                 回复
-                                </span>
-                                    <div class="jieda-admin">
-                                        <span type="edit">编辑</span>
-                                        <span type="del">删除</span>
-                                        <!-- <span class="jieda-accept" type="accept">采纳</span> -->
+                                <hr />
+                                <div class="comment-child">
+                                    <a name="reply-1"></a>
+                                    <img src="https://thirdqq.qlogo.cn/qqapp/101465933/7627F745B95BFAC18C6C481FE72B4EB1/100">
+                                    <div class="info">
+                                        <span class="username">燕十四</span>
+                                        <span style="padding-right:0;margin-left:-5px;">回复</span>
+                                        <span class="username">燕十三</span>
+                                        <span>一剑光寒十九洲</span>
                                     </div>
+                                    <p class="info">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        <span>四川</span>
+                                        <span class="comment-time">2018-01-01</span>
+                                        <a href="javascript:;" class="btn-reply" data-targetid="2" data-targetname="燕十四">回复<i class="fa fa-commenting-o"></i></a>
+                                    </p>
+                                </div>
+                                <hr />
+                                <div class="comment-child">
+                                    <a name="reply-1"></a>
+                                    <img src="https://thirdqq.qlogo.cn/qqapp/101465933/7627F745B95BFAC18C6C481FE72B4EB1/100">
+                                    <div class="info">
+                                        <span class="username">燕十四</span>
+                                        <span style="padding-right:0;margin-left:-5px;">回复</span>
+                                        <span class="username">燕十三</span>
+                                        <span>一剑光寒十九洲</span>
+                                    </div>
+                                    <p class="info">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        <span>四川</span>
+                                        <span class="comment-time">2018-01-01</span>
+                                        <a href="javascript:;" class="btn-reply" data-targetid="2" data-targetname="燕十四">回复<i class="fa fa-commenting-o"></i></a>
+                                    </p>
+                                </div>
+
+                            </li>
+                            <li class="article" th:each="comment,commentStat : ${comments}">
+                                <div class="comment-parent">
+                                    <a name="remark-1"></a>
+                                    <img th:src="${comment.commentPicture}" />
+                                    <div class="info" th:switch = "${ comment.commentNickname != null && comment.commentNickname != '' }">
+                                        <span class="username" th:case="true"  th:text="${comment.commentNickname}"></span>
+                                        <span class="username" th:case="false"  th:text="匿名"></span>
+                                    </div>
+                                    <div class="comment-content" th:utext="${comment.commentContent}"> </div>
+                                    <p class="info info-footer" th:switch = "${ comment.commentAddress != null && comment.commentAddress != '' }">
+                                        <i class="fa fa-map-marker"  aria-hidden="true"></i>
+                                        <span th:text="${comment.commentAddress}"  th:case="true"></span>
+                                        <span th:text="火星" th:case="false"></span>
+                                        <span class="comment-time"  th:text="${#dates.format(comment.createTime,'yyyy/MM/dd HH:mm')}"></span>
+                                        <a href="javascript:;" class="btn-reply" th:data-parentid="${comment.commentId}"  th:data-replyid="${comment.commentId}" th:data-targetname="${comment.commentNickname}">回复<i class="fa fa-commenting-o"></i></a>
+                                    </p>
                                 </div>
                             </li>
 
-                            <li data-id="111">
-                                <a name="item-1111111111"></a>
-                                <div class="detail-about detail-about-reply">
-                                    <a class="fly-avatar" href="">
-                                        <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" alt=" ">
-                                    </a>
-                                    <div class="fly-detail-user">
-                                        <a href="" class="fly-link">
-                                            <cite>贤心</cite>
-                                        </a>
-                                    </div>
-                                    <div class="detail-hits">
-                                        <span>2017-11-30</span>
-                                    </div>
-                                </div>
-                                <div class="detail-body jieda-body photos">
-                                    <p>蓝瘦那个香菇，这是一条没被采纳的回帖</p>
-                                </div>
-                                <div class="jieda-reply">
-              <span class="jieda-zan" type="zan">
-                <i class="iconfont icon-zan"></i>
-                <em>0</em>
-              </span>
-                                    <span type="reply">
-                <i class="iconfont icon-svgmoban53"></i>
-                回复
-              </span>
-                                </div>
-                            </li>
 
-                            <!-- 无数据时 -->
-                            <li class="fly-none">消灭零回复</li>
                         </ul>
 
 
-                            <div class="layui-field-box">
-                                <div class="leavemessage" id="textarea-wrap" style="text-align:initial">
-                                    <div class="blog-editor">
-                                        <div class="layui-form-item">
-                                            <textarea name="editorContent" lay-verify="content" id="remarkEditor" placeholder="请输入内容" class="layui-textarea "></textarea>
-                                        </div>
-                                        <div class="layui-form-item">
-                                            <button class="layui-btn" id="submit-comment" >提交留言</button>
-                                        </div>
+                        <div class="layui-field-box">
+                            <div class="leavemessage" id="textarea-wrap" style="text-align:initial">
+                                <div class="blog-editor">
+                                    <input type="hidden" id="parent-id">
+                                    <input type="hidden" id="reply-id">
+                                    <div class="layui-form-item">
+                                        <textarea name="editorContent" lay-verify="content" id="remarkEditor" placeholder="请输入内容" class="layui-textarea "></textarea>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <button class="layui-btn" id="submit-comment" >提交留言</button>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                         </fieldset>
                     </div>
 
 
-
-
+                    <!--提交留言-->
                     <div id="comment-box" style="background-color: #ffffff;width: 90%;margin: 0 auto;display: none" >
                         <ul class="collection" data-for="coloured" style="padding:0 15px">
                             <li> <input type="text" placeholder="输入你的QQ(选填)" class="ppfix pre qq blue" id="qq-input" /> </li>
@@ -166,6 +170,8 @@
                         </ul>
                         <button class="layui-btn layui-btn-xs" id="sub-comment" style="margin-left: 80%" >提交留言</button>
                     </div>
+
+
                 </div>
             </div>
 
@@ -177,14 +183,12 @@
                         <p id="hitokoto" style="margin-left: 15px;">原来，天上的星，都是曾被人惦念而又遗忘的梦啊。</p>
                     </div>
                 </div>
-                <div class="sidebar-module article-module">
+                <div class="sidebar-module article-module" style="display: none">
                     <h5 class="sidebar-title"><i class="fa fa-book icon icon-diy"></i><strong>本文目录</strong> </h5>
                     <div id="article-menu" style="display: block;">
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
     <div th:replace="/web/hader :: float"></div>
@@ -209,8 +213,8 @@
     <script th:inline="javascript">
     $(function(){
         NProgress.done();
-        let backgroundUrl  =  [[${blogWebConfig.indexBackground}]];
-        $(".header").css("background-image","url("+backgroundUrl+")");
+/*        let backgroundUrl  =  [[${blogWebConfig.indexBackground}]];
+        $(".header").css("background-image","url("+backgroundUrl+")");*/
         //转换开始,第一个参数是上面的div的id
         editormd.markdownToHTML("mdContent", {
             htmlDecode: "style,script,iframe", //可以过滤标签解码
@@ -224,8 +228,8 @@
         });
 
         let articleLi = $(".markdown-toc-list").find("li");
-        if (articleLi.length == 0){
-            $(".article-module").hide();
+        if (articleLi.length != 0){
+            $(".article-module").show();
         }
 
         $(window).scroll(function (event) {

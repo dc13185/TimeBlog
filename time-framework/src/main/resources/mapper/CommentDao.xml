@@ -9,13 +9,19 @@
         <result property="commentNickname" column="comment_nickname" jdbcType="VARCHAR"/>
         <result property="commentIp" column="comment_ip" jdbcType="VARCHAR"/>
         <result property="commentAddress" column="comment_address" jdbcType="VARCHAR"/>
+        <result property="commentArticleId" column="comment_article_id" jdbcType="INTEGER"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="commentStatus" column="comment_status" jdbcType="INTEGER"/>
+        <result property="parentCommentId" column="parent_comment_id" jdbcType="INTEGER"/>
+        <result property="replyId" column="reply_id" jdbcType="INTEGER"/>
+        <result property="replyName" column="reply_name" jdbcType="VARCHAR"/>
+
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="TimeCommentMap">
         select
-          comment_id, comment_picture, comment_content, comment_nickname, comment_ip, comment_address, create_time
+          comment_id, comment_picture, comment_content, comment_nickname, comment_ip, comment_address, create_time,comment_status
         from timeblog.time_comment
         where comment_id = #{commentId}
     </select>
@@ -23,7 +29,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="TimeCommentMap">
         select
-          comment_id, comment_picture, comment_content, comment_nickname, comment_ip, comment_address, create_time
+          comment_id, comment_picture, comment_content, comment_nickname, comment_ip, comment_address, create_time,comment_status
         from timeblog.time_comment
         limit #{offset}, #{limit}
     </select>
@@ -31,7 +37,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TimeCommentMap">
         select
-          comment_id, comment_picture, comment_content, comment_nickname, comment_ip, comment_address, create_time
+          comment_id, comment_picture, comment_content, comment_nickname, comment_ip, comment_address, create_time,comment_status
         from timeblog.time_comment
         <where>
             <if test="commentId != null">
@@ -52,16 +58,33 @@
             <if test="commentAddress != null and commentAddress != ''">
                 and comment_address = #{commentAddress}
             </if>
+            <if test="commentArticleId != null and commentArticleId != ''">
+                and comment_article_id = #{commentArticleId}
+            </if>
+            <if test="commentStatus != null and commentStatus != ''">
+                and comment_status = #{commentStatus}
+            </if>
             <if test="createTime != null">
                 and create_time = #{createTime}
             </if>
         </where>
+        order by create_time desc
     </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryCommentByArticleId" resultMap="TimeCommentMap">
+        SELECT t1.*,t2.comment_nickname AS reply_name FROM time_comment t1 LEFT JOIN time_comment t2 ON t1.comment_id = t2.reply_id
+        from timeblog.time_comment
+        where  comment_article_id = #{articleId}
+        order by create_time desc
+    </select>
+
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="commentId" useGeneratedKeys="true">
-        insert into timeblog.time_comment(comment_picture, comment_content, comment_nickname, comment_ip, comment_address, create_time)
-        values (#{commentPicture}, #{commentContent}, #{commentNickname}, #{commentIp}, #{commentAddress}, #{createTime})
+        insert into timeblog.time_comment(comment_picture,comment_article_id, comment_content, comment_nickname, comment_ip, comment_address, create_time,comment_status,parent_comment_id,reply_id)
+        values (#{commentPicture},#{commentArticleId}, #{commentContent}, #{commentNickname}, #{commentIp}, #{commentAddress}, #{createTime},#{commentStatus},#{parentCommentId},#{replyId})
     </insert>
 
     <!--通过主键修改数据-->
@@ -85,6 +108,9 @@
             </if>
             <if test="createTime != null">
                 create_time = #{createTime},
+            </if>
+            <if test="comment_status != null">
+                comment_status = #{commentStatus},
             </if>
         </set>
         where comment_id = #{commentId}

@@ -90,8 +90,9 @@
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAllFormal" resultMap="TimeArticleLabelMap">
-        SELECT <include refid="articleFields"></include>,tl.* FROM time_article ta JOIN time_article_label tal ON ta.article_id  = tal.article_id
-        JOIN time_label tl ON tal.label_id = tl.label_id
+        SELECT <include refid="articleFields"></include>,tl.* FROM time_article ta
+        left JOIN time_article_label tal ON ta.article_id  = tal.article_id
+        left JOIN time_label tl ON tal.label_id = tl.label_id
         where ta.status = 1
         <if test="retrieve != null and retrieve != '' ">
             and ta.article_title  like CONCAT('%',#{retrieve},'%')
