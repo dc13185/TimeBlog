@@ -67,59 +67,6 @@
                     <div id="like-message" style="background-color: #ffffff">
                         <blockquote class="layui-elem-quote" style="font-size: 18px">评论</blockquote>
                         <ul class="message-list" id="">
-                            <li class=" article">
-                                <div class="comment-parent">
-                                    <a name="remark-1"></a>
-                                    <img src="https://thirdqq.qlogo.cn/qqapp/101465933/7627F745B95BFAC18C6C481FE72B4EB1/100" />
-                                    <div class="info">
-                                        <span class="username">燕十三</span>
-                                    </div>
-                                    <div class="comment-content">
-                                        剑气纵横三万里
-                                    </div>
-                                    <p class="info info-footer">
-                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        <span>四川</span>
-                                        <span class="comment-time">2018-01-01</span>
-                                        <a href="javascript:;" class="btn-reply" data-targetid="1" data-targetname="燕十三"> 回复<i class="fa fa-commenting-o"></i></a>
-                                    </p>
-                                </div>
-                                <hr />
-                                <div class="comment-child">
-                                    <a name="reply-1"></a>
-                                    <img src="https://thirdqq.qlogo.cn/qqapp/101465933/7627F745B95BFAC18C6C481FE72B4EB1/100">
-                                    <div class="info">
-                                        <span class="username">燕十四</span>
-                                        <span style="padding-right:0;margin-left:-5px;">回复</span>
-                                        <span class="username">燕十三</span>
-                                        <span>一剑光寒十九洲</span>
-                                    </div>
-                                    <p class="info">
-                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        <span>四川</span>
-                                        <span class="comment-time">2018-01-01</span>
-                                        <a href="javascript:;" class="btn-reply" data-targetid="2" data-targetname="燕十四">回复<i class="fa fa-commenting-o"></i></a>
-                                    </p>
-                                </div>
-                                <hr />
-                                <div class="comment-child">
-                                    <a name="reply-1"></a>
-                                    <img src="https://thirdqq.qlogo.cn/qqapp/101465933/7627F745B95BFAC18C6C481FE72B4EB1/100">
-                                    <div class="info">
-                                        <span class="username">燕十四</span>
-                                        <span style="padding-right:0;margin-left:-5px;">回复</span>
-                                        <span class="username">燕十三</span>
-                                        <span>一剑光寒十九洲</span>
-                                    </div>
-                                    <p class="info">
-                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        <span>四川</span>
-                                        <span class="comment-time">2018-01-01</span>
-                                        <a href="javascript:;" class="btn-reply" data-targetid="2" data-targetname="燕十四">回复<i class="fa fa-commenting-o"></i></a>
-                                    </p>
-                                </div>
-
-                            </li>
                             <li class="article" th:each="comment,commentStat : ${comments}">
                                 <div class="comment-parent">
                                     <a name="remark-1"></a>
@@ -137,9 +84,27 @@
                                         <a href="javascript:;" class="btn-reply" th:data-parentid="${comment.commentId}"  th:data-replyid="${comment.commentId}" th:data-targetname="${comment.commentNickname}">回复<i class="fa fa-commenting-o"></i></a>
                                     </p>
                                 </div>
+
+                                <div class="comment-child" th:each="sonComment,sonCommentStat : ${comment.sonComments}">
+                                    <hr/>
+                                    <a name="reply-1"></a>
+                                    <img th:src="${sonComment.commentPicture}" />
+                                    <div class="info">
+                                        <span class="username" th:text="${sonComment.commentNickname}"></span>
+                                        <span style="padding-right:0;margin-left:-5px;">回复</span>
+                                        <span class="username" th:text="${sonComment.replyName}"></span>
+                                        <div class="reply-comment-content" th:utext="${sonComment.commentContent}"> </div>
+                                    </div>
+                                    <p class="info" th:switch = "${ sonComment.commentAddress != null && sonComment.commentAddress != '' }">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        <span th:text="${sonComment.commentAddress}"  th:case="true"></span>
+                                        <span th:text="火星" th:case="false"></span>
+                                        <span class="comment-time"  th:text="${#dates.format(sonComment.createTime,'yyyy/MM/dd HH:mm')}"></span>
+                                        <a href="javascript:;" class="btn-reply" th:data-parentid="${comment.commentId}"  th:data-replyid="${sonComment.commentId}" th:data-targetname="${sonComment.commentNickname}">回复<i class="fa fa-commenting-o"></i></a>
+                                    </p>
+                                </div>
+
                             </li>
-
-
                         </ul>
 
 

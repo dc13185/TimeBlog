@@ -16,6 +16,9 @@
 .message-list .info .username{color:#01AAED}
 .message-list .info .btn-reply{color:#009688}
 .message-list .comment-content{    padding: 10px 10px 10px 15px;min-height: 30px;font-size: 15px;word-break: break-all;}
+.message-list .reply-comment-content{    padding: 10px 10px 10px 10px;min-height: 30px;font-size: 15px;word-break: break-all;}
+
+
 .message-list hr{margin-left:53px}
 .comment-parent>img{width:45px;height:45px;margin:5px 5px 5px 0;position:absolute;border-radius:50px}
 .comment-child>img{width:40px;height:40px;margin:5px 5px 5px 0;position:absolute;border-radius:50px}

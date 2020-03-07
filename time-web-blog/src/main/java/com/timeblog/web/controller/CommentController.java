@@ -93,7 +93,7 @@ public class CommentController {
 
         commentDao.insert(comment);
 
-        return null;
+        return Result.success();
     }
 
 
