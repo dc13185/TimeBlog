@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * (TimeComment)实体类
@@ -57,6 +58,8 @@ public class Comment implements Serializable {
 
     /**回复昵称*/
     private String replyName;
+
+    private List<Comment> sonComments;
 
 
 

@@ -20,13 +20,13 @@ layui.use(['element', 'jquery', 'form', 'layedit', 'flow'], function () {
         let parentId =  $("#parent-id").val();
         if(parentId == ""){
             if (content == ""){
-                layer.msg('你啥都没输入！', {icon: 5,offset:'280px'});
+                layer.msg('你啥都没输入！', {icon: 5,time:1000,offset:'280px'});
                 return;
             }
         }else{
              let replyText = $("#LAY_layedit_1").contents().find(".reply-text").html();
              if (!replyText || replyText == "&nbsp;"){
-                 layer.msg('你啥都没输入！', {icon: 5,offset:'280px'});
+                 layer.msg('你啥都没输入！', {icon: 5,time:1000,offset:'280px'});
                  return;
              }
         }
@@ -76,6 +76,13 @@ layui.use(['element', 'jquery', 'form', 'layedit', 'flow'], function () {
             dataType: 'json',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            },
+            success: function (msg) {
+                debugger;
+                if (msg.code == 200){
+                    layer.closeAll();
+                    layer.msg('评论成功！', {icon: 1,time:1000,offset:'280px'});
+                }
             }
         });
     })
@@ -99,13 +106,13 @@ debugger;
         if (flag == "qq"){
             let reg= /[1-9][0-9]{4,10}/;
             if(!reg.test(value)){
-                layer.msg('QQ格式错啦！', {icon: 5,offset:'280px'});
+                layer.msg('QQ格式错啦！', {icon: 5,time:1000,offset:'280px'});
                 return false;
             }
         }else if(flag == "email"){
             let reg= /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
             if(!reg.test(value)){
-                layer.msg('邮箱格式错啦！', {icon: 5,offset:'280px'});
+                layer.msg('邮箱格式错啦！', {icon: 5,time:1000,offset:'280px'});
                 return false;
             }
         }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -82,7 +83,14 @@ public class WebArticleController {
             likeStatus = 1;
         }
         //评论
-        List<Comment> comments = commentDao.queryCommentByArticleId(Integer.parseInt(articleId));
+        List<Comment> srcComments = commentDao.queryCommentByArticleId(Integer.parseInt(articleId));
+        List<Comment> comments = srcComments.stream().filter(comment -> comment.getParentCommentId() == null).collect(Collectors.toList());
+        comments.forEach(comment -> {
+            List sonComment = srcComments.stream().filter(c -> c.getParentCommentId() != null && (c.getParentCommentId().equals(comment.getCommentId())))
+                    .sorted(Comparator.comparing(Comment::getCreateTime)).collect(Collectors.toList());
+            comment.setSonComments(sonComment);
+        });
+
 
 
         BlogWebConfig blogWebConfig = (BlogWebConfig)redisUtils.get(SystemConstant.WEB_BLOG_CONFIG);
@@ -146,5 +154,6 @@ public class WebArticleController {
     public String toFrom(){
         return "web/input";
     }
+
 
 }
