@@ -47,6 +47,13 @@ public interface CommentDao {
     List<Comment> queryCommentByArticleId(Integer articleId);
 
 
+    /**
+     * 获取留言板
+     * @param
+     * @return 对象列表
+     */
+    List<Comment> queryCommentByMessage();
+
 
     /**
      * 新增数据

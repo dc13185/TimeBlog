@@ -40,5 +40,6 @@ public class CacheLoadConfig {
         redisUtils.set(SystemConstant.TEMP_ARTICLE_TYPES,articleTypes);
         BlogWebConfig blogWebConfig = blogWebConfigDao.queryAll();
         redisUtils.set(SystemConstant.WEB_BLOG_CONFIG,blogWebConfig);
+        SystemConstant.BLOGWEBCONFIG = blogWebConfig;
     }
 }

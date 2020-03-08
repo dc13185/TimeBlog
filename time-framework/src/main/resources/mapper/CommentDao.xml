@@ -74,15 +74,20 @@
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryCommentByArticleId" resultMap="TimeCommentMap">
-        SELECT t1.*,t2.comment_nickname AS reply_name FROM time_comment t1 LEFT JOIN time_comment t2 ON t1.reply_id = t2.comment_id
-         WHERE  t1.comment_article_id = #{articleId} ORDER BY create_time DESC
+        SELECT *  FROM time_comment WHERE  comment_article_id = #{articleId} ORDER BY create_time DESC
+    </select>
+
+
+    <!--获取留言板-->
+    <select id="queryCommentByMessage" resultMap="TimeCommentMap">
+         SELECT *  FROM time_comment WHERE  comment_article_id  is null ORDER BY create_time DESC
     </select>
 
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="commentId" useGeneratedKeys="true">
-        insert into timeblog.time_comment(comment_picture,comment_article_id, comment_content, comment_nickname, comment_ip, comment_address, create_time,comment_status,parent_comment_id,reply_id)
-        values (#{commentPicture},#{commentArticleId}, #{commentContent}, #{commentNickname}, #{commentIp}, #{commentAddress}, #{createTime},#{commentStatus},#{parentCommentId},#{replyId})
+        insert into timeblog.time_comment(comment_picture,comment_article_id, comment_content, comment_nickname, comment_ip, comment_address, create_time,comment_status,parent_comment_id,reply_id,reply_name)
+        values (#{commentPicture},#{commentArticleId}, #{commentContent}, #{commentNickname}, #{commentIp}, #{commentAddress}, #{createTime},#{commentStatus},#{parentCommentId},#{replyId},#{replyName})
     </insert>
 
     <!--通过主键修改数据-->

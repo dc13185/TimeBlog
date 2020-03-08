@@ -1,8 +1,6 @@
-﻿.msg-remark{background:#FFF;padding:15px;margin-top:1rem;text-align:center}
-.msg-remark h1{font-weight:700;font-size:2rem}
-.msg-remark p{font-size:1.25rem;margin:1rem 0}
+﻿
 .textarea-wrap.message{background-color:#fff;padding:15px}
-.message-list{position:relative;margin-bottom:10px}
+.message-list{position:relative;margin-bottom:10px;padding: 5px}
 .message-list img{width:22px;height:22px}
 .message-list li:first-child{border-top:0}
 .message-list li{background:#fff;padding:15px;border-top:1px dotted grey}
@@ -27,3 +25,41 @@
 .areaImg{width:12px!important;height:13px!important}
 .fa-map-marker{margin: 0 5px;font-size: 15px;}
 
+
+#comment-box ul.collection li {
+    margin: 1em;
+}
+
+.prefix{
+    padding-top: 1.5%!important;
+}
+
+.detail-box {
+    padding: 20px;
+}
+.btn-reply .fa-commenting-o{
+    font-size: 12px!important;
+    padding-left: 3px;
+}
+
+#like-message{background-color: #ffffff}
+#like-message .article {
+    background: #fff;
+    border-top: 1px dotted grey;
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #fafafa;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+    width: 98%;
+    margin: 10px auto;
+    box-sizing:border-box;
+}
+
+
+.msg-title{background:#FFF;padding:15px;margin-top:1rem;text-align:center}
+.msg-title h1{font-weight:700;font-size:2rem}
+.msg-title p{font-size:1.25rem;margin:1rem 0}

@@ -53,6 +53,7 @@
       -moz-border-radius-bottomleft: 2px;
       -webkit-border-top-left-radius: 2px;
       -webkit-border-bottom-left-radius: 2px;
+      box-sizing: border-box;
     }
 
   .post {

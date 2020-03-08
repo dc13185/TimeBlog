@@ -1,10 +1,8 @@
-﻿var area;
-layui.use(['element', 'jquery', 'form', 'layedit', 'flow'], function () {
-    var element = layui.element;
-    var form = layui.form;
+﻿layui.use(['element', 'jquery', 'form', 'layedit', 'flow'], function () {
     var $ = layui.jquery;
     var layedit = layui.layedit;
-    var flow = layui.flow;
+
+
 
     //留言的编辑器
     var editIndex = layedit.build('remarkEditor', {
@@ -63,6 +61,7 @@ layui.use(['element', 'jquery', 'form', 'layedit', 'flow'], function () {
         let articleId = $("#articleId").val();
         let parentId =  $("#parent-id").val();
         let replyId =  $("#reply-id").val();
+        let replyName = $(".btn-reply[data-replyid = '"+replyId+"']").attr("data-targetname");
         let content;
         let replyText = $("#LAY_layedit_1").contents().find(".reply-text").html();
         if (replyText && replyText != "&nbsp;"){
@@ -70,7 +69,7 @@ layui.use(['element', 'jquery', 'form', 'layedit', 'flow'], function () {
         }else{
             content = layedit.getContent(editIndex)
         }
-        let jsonContent = {"commentMail":email,"commentQQ":qq,"commentContent":content,"commentNickname":nickName,"commentArticleId":articleId,"parentCommentId":parentId,"replyId":replyId}
+        let jsonContent = {"commentMail":email,"commentQQ":qq,"commentContent":content,"commentNickname":nickName,"commentArticleId":articleId,"parentCommentId":parentId,"replyId":replyId,"replyName":replyName}
         $.ajax({
             url: ctx + "web/comment/submitComment",
             type: 'post',
@@ -86,6 +85,7 @@ layui.use(['element', 'jquery', 'form', 'layedit', 'flow'], function () {
                     fillingComment(comment);
                     layer.closeAll();
                     layer.msg('评论成功！', {icon: 1,time:1000,offset:'280px'});
+                    layui.layedit.setContent(editIndex,"");
                 }
             }
         });
@@ -131,7 +131,11 @@ layui.use(['element', 'jquery', 'form', 'layedit', 'flow'], function () {
     function fillingComment(comment){
         if (comment.parentCommentId == null){
             let commentModel = $(".comment-model").clone(true);
-            commentModel.find(".picture").attr("src",comment.commentPicture);
+            if (comment.commentPicture != "" && comment.commentPicture != null){
+                commentModel.find(".picture").attr("src",comment.commentPicture);
+            }else {
+                commentModel.find(".picture").remove();
+            }
             commentModel.find(".username").text(comment.commentNickname);
             commentModel.find(".address").text(comment.commentAddress);
             let createTime = new Date(comment.createTime);
@@ -146,7 +150,11 @@ layui.use(['element', 'jquery', 'form', 'layedit', 'flow'], function () {
             $(window).scrollTop($(".layui-elem-quote").offset().top);
         }else{
             let commentChild = $(".comment-child-model").clone(true);
-            commentChild.find(".picture").attr("src",comment.commentPicture);
+            if (comment.commentPicture != "" && comment.commentPicture != null){
+                commentChild.find(".picture").attr("src",comment.commentPicture);
+           }else {
+                commentChild.find(".picture").remove();
+            }
             commentChild.find(".username").text(comment.commentNickname);
             commentChild.find(".address").text(comment.commentAddress);
             let createTime = new Date(comment.createTime);
@@ -158,8 +166,7 @@ layui.use(['element', 'jquery', 'form', 'layedit', 'flow'], function () {
             commentChild.find(".reply-comment-content").html(comment.commentContent);
             let targetParent = $(".comment-parent").find("[data-replyid = '"+comment.parentCommentId+"']");
             let article = targetParent.parents(".comment-parent").parents(".article");
-            let replyName = targetParent.attr("data-targetname");
-            commentChild.find(".replyName").text(replyName);
+            commentChild.find(".replyName").text(comment.replyName);
             commentChild.show();
             article.append(commentChild);
             $(window).scrollTop(targetParent.offset().top);

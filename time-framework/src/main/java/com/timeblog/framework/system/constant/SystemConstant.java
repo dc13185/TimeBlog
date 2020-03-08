@@ -1,5 +1,7 @@
 package com.timeblog.framework.system.constant;
 
+import com.timeblog.business.domain.BlogWebConfig;
+
 import java.util.regex.Pattern;
 
 /**
@@ -74,6 +76,8 @@ public class SystemConstant {
      */
     public static final String WEB_BLOG_ARTICLE_LIKE_COUNT = "webBlogArticleLikeCount";
 
+
+    public static BlogWebConfig BLOGWEBCONFIG;
 
     //todo  更换主题设计   一个Key对应一个主题
 

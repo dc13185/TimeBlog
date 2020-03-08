@@ -4,23 +4,31 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.timeblog.business.base.Result;
+import com.timeblog.business.domain.BlogWebConfig;
 import com.timeblog.business.domain.Comment;
 import com.timeblog.framework.mapper.CommentDao;
 import com.timeblog.framework.system.constant.InterfaceConstant;
+import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.HttpClientUtils;
 import com.timeblog.framework.system.utils.Md5Utils;
+import com.timeblog.framework.system.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Dong.Chao
@@ -35,6 +43,9 @@ public class CommentController {
 
     @Resource
     private CommentDao commentDao;
+
+    @Autowired
+    private RedisUtils redisUtils;
 
     /**
      * @author: dongchao
@@ -79,11 +90,12 @@ public class CommentController {
             String city = addressInfo.getString("city");
             address = nation + province + city;
         }
-        if (StringUtils.isNotBlank(address)){
+
+        if (StringUtils.isBlank(address)){
             address = "火星";
         }
-        if (StringUtils.isNotBlank(nickName)){
-            address = "匿名";
+        if (StringUtils.isBlank(nickName)){
+            nickName = "匿名";
         }
 
         //评论内容入库
@@ -120,6 +132,24 @@ public class CommentController {
         hashMap.put("picture",picture);
 
         return hashMap;
+    }
+
+
+    @RequestMapping("toMessage")
+    public ModelAndView toMessage(){
+
+        //评论
+        List<Comment> srcComments = commentDao.queryCommentByMessage();
+        List<Comment> comments = srcComments.stream().filter(comment -> comment.getParentCommentId() == null).collect(Collectors.toList());
+        comments.forEach(comment -> {
+            List sonComment = srcComments.stream().filter(c -> c.getParentCommentId() != null && (c.getParentCommentId().equals(comment.getCommentId())))
+                    .sorted(Comparator.comparing(Comment::getCreateTime)).collect(Collectors.toList());
+            comment.setSonComments(sonComment);
+        });
+
+        ModelAndView modelAndView = new ModelAndView("web/message");
+        return modelAndView.addObject("blogWebConfig",SystemConstant.BLOGWEBCONFIG)
+                           .addObject("comments",comments);
     }
 
 

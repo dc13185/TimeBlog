@@ -41,8 +41,7 @@ public class WebIndexController {
     @RequestMapping("/toIndex")
     public ModelAndView toIndex(){
         //获取博客设置
-        BlogWebConfig blogWebConfig = (BlogWebConfig)redisUtils.get(SystemConstant.WEB_BLOG_CONFIG);
-        Integer topArticleTypeId = blogWebConfig.getIndexTopArticleType();
+        Integer topArticleTypeId = SystemConstant.BLOGWEBCONFIG.getIndexTopArticleType();
 
         ArticleType articleType = new ArticleType();
         List<Article> articles = Lists.newArrayList();
@@ -54,7 +53,7 @@ public class WebIndexController {
         String sentence = "“我们一路奋战，不是为了改变世界，而是为了不让世界改变我们。”";
         ModelAndView modelAndView = new ModelAndView("web/index");
         modelAndView
-                .addObject("blogWebConfig",blogWebConfig)
+                .addObject("blogWebConfig",SystemConstant.BLOGWEBCONFIG)
                 .addObject("sentence",sentence)
                 .addObject("articleType",articleType)
                 .addObject("articles",articles);

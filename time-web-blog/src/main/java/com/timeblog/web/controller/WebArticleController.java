@@ -51,9 +51,8 @@ public class WebArticleController {
         List<ArticleType> articleTypeList =  (List<ArticleType>) redisUtils.get(SystemConstant.TEMP_ARTICLE_TYPES);
         articleTypeList =  articleTypeList.stream().filter(l -> "-1".equals(l.getParentId())).collect(Collectors.toList());
         Integer articleCount = articleMapper.queryCount();
-        BlogWebConfig blogWebConfig = (BlogWebConfig)redisUtils.get(SystemConstant.WEB_BLOG_CONFIG);
         modelAndView.addObject("articleTypeList",articleTypeList)
-                    .addObject("blogWebConfig",blogWebConfig)
+                    .addObject("blogWebConfig",SystemConstant.BLOGWEBCONFIG)
                     .addObject("articleCount",articleCount);
         return modelAndView;
     }
@@ -91,12 +90,9 @@ public class WebArticleController {
             comment.setSonComments(sonComment);
         });
 
-
-
-        BlogWebConfig blogWebConfig = (BlogWebConfig)redisUtils.get(SystemConstant.WEB_BLOG_CONFIG);
         ModelAndView modelAndView = new ModelAndView("web/read");
         modelAndView.addObject("article",article)
-                    .addObject("blogWebConfig",blogWebConfig)
+                    .addObject("blogWebConfig",SystemConstant.BLOGWEBCONFIG)
                     .addObject("accessCount",accessCount)
                     .addObject("likeCount",likeCount)
                     .addObject("likeStatus",likeStatus)
