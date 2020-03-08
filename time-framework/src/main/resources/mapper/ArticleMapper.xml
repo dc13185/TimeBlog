@@ -164,6 +164,13 @@
         select count(1) from  timeblog.time_article
     </select>
 
+    <!--    批量删除-->
+    <delete id="deleteByArticleIds">
+        delete from timeblog.time_article where article_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 
 
 </mapper>

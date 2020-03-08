@@ -89,5 +89,7 @@ public interface ArticleMapper {
 
 
     int queryCount();
+
+    int deleteByArticleIds(List<String> articleIdList);
 }
 

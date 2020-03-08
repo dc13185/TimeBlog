@@ -34,10 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -332,7 +329,56 @@ public class ArticleController {
     }
 
 
+    @RequestMapping("deleteArticle")
+    @ResponseBody
+    public Result deleteArticle(@RequestBody HashMap<String,String> hashMap){
+        String articleIds = hashMap.get("articleIds");
+        List<String> articleIdList = Arrays.asList(articleIds.split(","));
+        for (int i=0;i<articleIdList.size();i++) {
+            Article article=articleMapper.queryById(Integer.parseInt(articleIdList.get(i)));
+            if (article.getCoverImage() != null && !article.getCoverImage().contains(SystemConstant.BLANK_IMG)){
+                Matcher m = SystemConstant.IMAGE_PATTERN.matcher(article.getCoverImage());
+                if(m.find()){
+                    String imagePath = m.group(0);
+                    Path path = Paths.get(imageFilePath + imagePath);
+                    try {
+                        Files.delete(path);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+//            删除文章中的图片
+//            Set<String> pics = new HashSet<>();
+//            String img = "";
+//
+//            Matcher m_image;
+//
+//            m_image = SystemConstant.IMAGE_PATTERN.matcher(article.getArticleContextMd());
+//            while (m_image.find()) {
+//                // 得到<img />数据
+//                img = m_image.group();
+//                // 匹配<img>中的src数据
+//                Matcher m = SystemConstant.IMAGE_PATTERN.matcher(img);
+//                while (m.find()) {
+//                    pics.add(m.group(0));
+//                }
+//                for (String imagePath: pics
+//                     ) {
+//                    Path path=Paths.get(imageFilePath + imagePath);
+//                    try {
+//                        Files.delete(path);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
 
+        }
+
+        articleMapper.deleteByArticleIds(articleIdList);
+        return Result.success();
+    }
 
 
     public static void main(String[] args) {

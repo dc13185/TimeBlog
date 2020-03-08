@@ -238,25 +238,23 @@
     //点击删除按钮
     $("#deleteButton").on("click",function () {
         let rows = $('#exampleTableEvents').bootstrapTable('getAllSelections');
-        let subRows = [];
-        if ($.SUB_TABLE){
-            subRows = $.SUB_TABLE.bootstrapTable('getAllSelections');
-        }
-        if(rows.length == 0  && (subRows.length == 0 || !Array.isArray(subRows))){
+        // let subRows = [];
+        // if ($.SUB_TABLE){
+        //     subRows = $.SUB_TABLE.bootstrapTable('getAllSelections');
+        // }
+        if(rows.length == 0 ){
             toastr.error("至少选择一项！");
             return false;
         }
         let ids = new Array();
         for (let i=0;i<rows.length;i++){
-            ids.push(rows[i].typeId);
+            ids.push(rows[i].articleId);
         }
-        for (let i=0;i<subRows.length;i++){
-            ids.push(subRows[i].typeId);
-        }
-        let data = {"typeIds":ids.toString()}
+
+        let data = {"articleIds":ids.toString()}
         $.ajax({
             type: 'post',
-            url: ctx+'articleType/deleteArticleType',
+            url: ctx+'article/deleteArticle',
             dataType:"json",
             data: JSON.stringify(data),
             cache: false,
