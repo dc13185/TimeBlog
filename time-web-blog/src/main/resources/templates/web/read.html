@@ -66,7 +66,7 @@
 
                     <div id="like-message" style="background-color: #ffffff">
                         <blockquote class="layui-elem-quote" style="font-size: 18px">评论</blockquote>
-                        <ul class="message-list" id="">
+                        <ul class="message-list" >
                             <li class="article" th:each="comment,commentStat : ${comments}">
                                 <div class="comment-parent">
                                     <a name="remark-1"></a>
@@ -135,6 +135,45 @@
                         </ul>
                         <button class="layui-btn layui-btn-xs" id="sub-comment" style="margin-left: 80%" >提交留言</button>
                     </div>
+
+
+
+                    <li class="article comment-model" style="display: none">
+                        <div class="comment-parent">
+                            <a name="remark-1"></a>
+                            <img  class="picture"/>
+                            <div class="info">
+                                <span class="username"></span>
+                            </div>
+                            <div class="comment-content"> </div>
+                            <p class="info info-footer">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                <span class="address"></span>
+                                <span class="comment-time"></span>
+                                <a href="javascript:;" class="btn-reply">回复<i class="fa fa-commenting-o"></i></a>
+                            </p>
+                        </div>
+                    </li>
+
+
+                    <div class="comment-child comment-child-model" style="display: none">
+                        <hr />
+                        <a name="reply-1"></a>
+                        <img class="picture" >
+                        <div class="info">
+                            <span class="username"></span>
+                            <span style="padding-right:0;margin-left:-5px;">回复</span>
+                            <span class="username replyName"></span>
+                            <div class="reply-comment-content"> </div>
+                        </div>
+                        <p class="info">
+                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            <span class="address"></span>
+                            <span class="comment-time"></span>
+                            <a href="javascript:;" class="btn-reply" data-targetid="2" data-targetname="燕十四">回复<i class="fa fa-commenting-o"></i></a>
+                        </p>
+                    </div>
+
 
 
                 </div>

@@ -55,7 +55,6 @@ public class CommentController {
             Map<String,String> infoMap = getPictureAndNickNameByQq(reqComment.getCommentQQ());
             picture = infoMap.get("picture");
             nickName = infoMap.get("nickName");
-
         }else{
             if(StringUtils.isNotBlank(reqComment.getCommentMail()) && reqComment.getCommentMail().contains("@qq")){
                 String qq = StringUtils.substringBefore(reqComment.getCommentMail(),"@");
@@ -80,9 +79,14 @@ public class CommentController {
             String city = addressInfo.getString("city");
             address = nation + province + city;
         }
+        if (StringUtils.isNotBlank(address)){
+            address = "火星";
+        }
+        if (StringUtils.isNotBlank(nickName)){
+            address = "匿名";
+        }
 
-
-        //留言
+        //评论内容入库
         Comment comment = reqComment.toBuilder().createTime(new Date())
                             .commentIp(userIpAddr)
                             .commentNickname(nickName)
@@ -90,10 +94,8 @@ public class CommentController {
                             .commentAddress(address)
                             .commentStatus(0)
                             .build();
-
         commentDao.insert(comment);
-
-        return Result.success();
+        return Result.success().add("comment",comment);
     }
 
 
