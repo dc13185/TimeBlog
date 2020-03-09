@@ -11,6 +11,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Date;
@@ -24,8 +25,7 @@ import java.util.Date;
  * @Version V1.0
  */
 
-@Controller
-@RequestMapping("/web/spider")
+@Component("sentenceSpiderController")
 public class SentenceSpiderController {
 
     @Autowired
@@ -40,7 +40,7 @@ public class SentenceSpiderController {
     private boolean flag = true;
 
 
-    @RequestMapping("/spider")
+
     public void spider(){
         hostUrl = "https://www.mingyantong.com/todayhot";
         spiderContent(hostUrl,1);
@@ -48,7 +48,6 @@ public class SentenceSpiderController {
         if (SpiderConstant.SENTENCES.size() > 0){
             sentenceDao.insertBatch(SpiderConstant.SENTENCES);
         }
-
     }
 
     public void spiderContent(String anchorUrl,int count){

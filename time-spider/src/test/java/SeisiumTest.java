@@ -1,14 +1,5 @@
 import com.baidu.aip.ocr.AipOcr;
-import config.Sample;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+import com.timeblog.spilder.config.Sample;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -16,16 +7,11 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import us.codecraft.webmagic.utils.HttpClientUtils;
-import utils.BASE64;
+import com.timeblog.spilder.utils.BASE64;
 
-import java.awt.image.SampleModel;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author: dong.chao

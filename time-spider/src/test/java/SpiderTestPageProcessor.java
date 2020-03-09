@@ -1,4 +1,4 @@
-import config.HttpClientDownloaderLocal;
+import com.timeblog.spilder.config.HttpClientDownloaderLocal;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import us.codecraft.webmagic.Page;
@@ -21,7 +21,7 @@ import java.util.List;
  **/
 public class SpiderTestPageProcessor implements PageProcessor {
 
-    private static String filePath = "G:\\抓取图片\\";
+    private static String filePath = "D:\\抓取图片\\";
 
     private static HashMap<String,String> fileNames = new HashMap(1 >> 6);
 
@@ -30,6 +30,7 @@ public class SpiderTestPageProcessor implements PageProcessor {
             .setRetryTimes(3)
             .setSleepTime(1000)
             .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36");
+
 
     @Override
     public void process(Page page) {
@@ -71,14 +72,14 @@ public class SpiderTestPageProcessor implements PageProcessor {
         return site;
     }
 
-    
-    /** 
+
+    /**
     * @Description: 下载图片
-    * @Param: [urlstr] 
-    * @return: void 
+    * @Param: [urlstr]
+    * @return: void
     * @Author: dong.chao
     * @Date: 2019/11/10
-    */ 
+    */
     private static   void downloadByUrl(String urlstr,String originalUrl){
         String fileName  = "未获取到文件名";
         for (String o : fileNames.keySet()) {
@@ -131,6 +132,6 @@ public class SpiderTestPageProcessor implements PageProcessor {
     public static void main(String[] args) {
         String a = "https://i5.meizitu.net/2019/11/06a01.jpg";
         String b = "test";
-        Spider.create(new SpiderTestPageProcessor()).setDownloader(new HttpClientDownloaderLocal()).addUrl("https://www.mzitu.com/").thread(5).run();
+        Spider.create(new SpiderTestPageProcessor()).setDownloader(new HttpClientDownloaderLocal()).addUrl("http://088ay.com/arttype/17.html").thread(5).run();
     }
 }
