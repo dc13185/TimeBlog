@@ -70,9 +70,9 @@ public class CommentsController {
     @RequestMapping("/deleteComment")
     @ResponseBody
     public Result delete(@RequestBody HashMap<String,String> map){
-        String typeIds = map.get("typeIds");
-        List<String> typeIdList = Arrays.asList(typeIds.split(","));
-        articleTypeMapper.deleteById(typeIdList);
+        String commentIds = map.get("commentIds");
+        List<String> commentIdsList = Arrays.asList(commentIds.split(","));
+        commentDao.deleteByIds(commentIdsList);
         return Result.success();
     }
 

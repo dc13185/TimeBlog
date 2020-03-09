@@ -80,4 +80,5 @@ public interface CommentDao {
      */
     int deleteById(Integer commentId);
 
+    int deleteByIds(List<String> commentIdList);
 }

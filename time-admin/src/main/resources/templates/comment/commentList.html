@@ -110,6 +110,20 @@
                         }
                     },
                     {title:'评论昵称',field: 'commentNickname',align:"center",sortable:true },
+
+                    {title:'头像',field: 'commentPicture',align:"center",sortable:true ,formatter:function (value, row, index) {
+                            let checkerStr;
+                            if(row.commentPicture === null || row.commentPicture.indexOf("img-blank") != -1 ){
+                                checkerStr = "暂无头像";
+                            }else{
+                                checkerStr = '<img style="width: 85%;" src='+row.commentPicture+'>';
+                            }
+                            return [
+                                checkerStr
+                            ].join("")
+
+                        }},
+
                     {title:'评论内容',field: 'commentContent',align:"center",sortable:true},
 
                     {title:'评论地址',field: 'commentAddress',align:"center",sortable:true},
@@ -128,30 +142,30 @@
 
 
                 ],
-                onLoadSuccess:function(data){
-                    let topSwitchery = [];
-                    let elems = document.querySelectorAll('.is-top');
-                    for (let i = 0; i < elems.length; i++) {
-                        topSwitchery[i] = new Switchery(elems[i]);
-                    }
-                    let commentSwitchery = [];
-                    let commentElems = document.querySelectorAll('.is-comment');
-                    for (let i = 0; i < elems.length; i++) {
-                        commentSwitchery[i] = new Switchery(commentElems[i]);
-                    }
-
-                    $(".is-top").on("change",function (e) {
-                        let articleId = $(this).attr("name");
-                        let value = $(this).is(':checked') ? 1 : 0;
-                        changeStatus("isTop",value,articleId);
-                    });
-
-                    $(".is-comment").on("change",function (e) {
-                        let articleId = $(this).attr("name");
-                        let value = $(this).is(':checked') ? 1 : 0;
-                        changeStatus("isComment",value,articleId);
-                    })
-                },
+                // onLoadSuccess:function(data){
+                //     let topSwitchery = [];
+                //     let elems = document.querySelectorAll('.is-top');
+                //     for (let i = 0; i < elems.length; i++) {
+                //         topSwitchery[i] = new Switchery(elems[i]);
+                //     }
+                //     let commentSwitchery = [];
+                //     let commentElems = document.querySelectorAll('.is-comment');
+                //     for (let i = 0; i < elems.length; i++) {
+                //         commentSwitchery[i] = new Switchery(commentElems[i]);
+                //     }
+                //
+                //     $(".is-top").on("change",function (e) {
+                //         let articleId = $(this).attr("name");
+                //         let value = $(this).is(':checked') ? 1 : 0;
+                //         changeStatus("isTop",value,articleId);
+                //     });
+                //
+                //     $(".is-comment").on("change",function (e) {
+                //         let articleId = $(this).attr("name");
+                //         let value = $(this).is(':checked') ? 1 : 0;
+                //         changeStatus("isComment",value,articleId);
+                //     })
+                // },
 
 
 
@@ -187,10 +201,10 @@
 
 
 
-    //点击新增按钮
-    $("#addButton").on("click", function () {
-        window.location.href = ctx+"article/toEditArticle";
-    })
+    // //点击新增按钮
+    // $("#addButton").on("click", function () {
+    //     window.location.href = ctx+"article/toEditArticle";
+    // })
 
     //点击删除按钮
     $("#deleteButton").on("click",function () {
@@ -205,13 +219,13 @@
         }
         let ids = new Array();
         for (let i=0;i<rows.length;i++){
-            ids.push(rows[i].articleId);
+            ids.push(rows[i].commentId);
         }
 
-        let data = {"articleIds":ids.toString()}
+        let data = {"commentIds":ids.toString()}
         $.ajax({
             type: 'post',
-            url: ctx+'article/deleteArticle',
+            url: ctx+'comment/deleteComment',
             dataType:"json",
             data: JSON.stringify(data),
             cache: false,

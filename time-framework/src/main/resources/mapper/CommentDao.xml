@@ -36,15 +36,10 @@
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TimeCommentMap">
-        select
-          *,a.article_title as commentArticleName
-        from timeblog.time_comment as c
-        left join time_article as a
-        on c.comment_article_id = a.article_id
-             <if test="retrieve != null and retrieve != '' ">
-                and comment_nickname = like CONCAT('%',#{retrieve},'%')
-            </if>
---         order by c.create_time desc
+                select  c.*,a.article_title as commentArticleName from timeblog.time_comment as c
+        left join time_article as a on c.comment_article_id = a.article_id
+         WHERE   c.comment_article_id IS NOT NULL and c.comment_status!=-1
+        order by c.create_time desc
     </select>
 
 
@@ -99,5 +94,17 @@
     <delete id="deleteById">
         delete from timeblog.time_comment where comment_id = #{commentId}
     </delete>
+
+    <!--通过主键批量删除-->
+    <update id="deleteByIds" >
+        update timeblog.time_comment
+        set comment_status=-1
+        where comment_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+
 
 </mapper>
