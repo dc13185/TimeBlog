@@ -1,6 +1,4 @@
-package config;
-
-import com.baidu.aip.ocr.AipOcr;
+package com.timeblog.spilder.config;
 
 /**
  * @author: dong.chao

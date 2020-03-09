@@ -1,4 +1,4 @@
-package config;
+package com.timeblog.spilder.config;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -11,7 +11,9 @@ import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Task;
-import us.codecraft.webmagic.downloader.*;
+import us.codecraft.webmagic.downloader.AbstractDownloader;
+import us.codecraft.webmagic.downloader.HttpClientRequestContext;
+import us.codecraft.webmagic.downloader.HttpUriRequestConverter;
 import us.codecraft.webmagic.proxy.Proxy;
 import us.codecraft.webmagic.proxy.ProxyProvider;
 import us.codecraft.webmagic.selector.PlainText;

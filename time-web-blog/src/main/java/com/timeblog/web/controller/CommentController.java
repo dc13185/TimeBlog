@@ -137,7 +137,6 @@ public class CommentController {
 
     @RequestMapping("toMessage")
     public ModelAndView toMessage(){
-
         //评论
         List<Comment> srcComments = commentDao.queryCommentByMessage();
         List<Comment> comments = srcComments.stream().filter(comment -> comment.getParentCommentId() == null).collect(Collectors.toList());
@@ -153,9 +152,4 @@ public class CommentController {
     }
 
 
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
-        String qq = StringUtils.substringBefore("1318533144@qq.com","@");
-        //测试提交代码 测试修改
-        System.out.println(qq);
-    }
 }

@@ -1,4 +1,4 @@
-package config;
+package com.timeblog.spilder.config;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;

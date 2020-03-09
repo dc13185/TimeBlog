@@ -1,6 +1,6 @@
-package controller;
+package com.timeblog.spilder.controller;
 
-import config.HttpClientDownloaderLocal;
+import com.timeblog.spilder.config.HttpClientDownloaderLocal;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;

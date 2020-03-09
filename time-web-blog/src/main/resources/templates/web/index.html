@@ -28,9 +28,13 @@
         <div class="fp-tablecell">
             <div class="page1">
                 <div class="nav wow zoomIn" data-wow-duration="2s">
-                    <h1 th:text="${blogWebConfig.blogName}"></h1>
+                    <h1 class="blog-name" th:text="${blogWebConfig.blogName}"></h1>
                     <div class="sentence">
-                        <p></p>
+                        <p th:text="'“'+${sentence.content}+'”'"></p>
+                        <div class="sentence-author">
+                            <span th:text="'——'+${sentence.author}"></span>
+                            <span th:if="${sentence.works != ''}" th:text="${sentence.works}"></span>
+                        </div>
                     </div>
                     <a class="layui-btn layui-btn-normal index-btn" style="margin-top: 300px" href="#">Enter Blog</a>
                 </div>
@@ -74,10 +78,7 @@
                 <div class="warp-box">
                     <div class="about">
                         <div class="inner">
-                            <h1 class="wow fadeInLeft">次元使者</h1>
-                            <p class="wow fadeInRight">
-                                爱好游戏，动漫。闲来无事喜欢在一些不健康的场所虚度光阴，撸起代码就会废寝忘食。
-                            </p>
+                            <p class="wow fadeInRight" th:text="${footerSentence}"></p>
                         </div>
                     </div>
                 </div>
@@ -159,7 +160,6 @@
             var $ = layui.jquery;
             var backgroundUrl  =  [[${blogWebConfig.indexBackground}]];
             $("#section1").css("background-image","url("+backgroundUrl+")");
-            $(".sentence").children(":first").html([[${sentence}]]);
         })
     </script>
 </body>

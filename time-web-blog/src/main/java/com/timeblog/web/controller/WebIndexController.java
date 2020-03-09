@@ -4,8 +4,10 @@ import com.google.common.collect.Lists;
 import com.timeblog.business.domain.Article;
 import com.timeblog.business.domain.ArticleType;
 import com.timeblog.business.domain.BlogWebConfig;
+import com.timeblog.business.domain.Sentence;
 import com.timeblog.framework.mapper.ArticleMapper;
 import com.timeblog.framework.mapper.ArticleTypeMapper;
+import com.timeblog.framework.system.constant.SpiderConstant;
 import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,13 +52,16 @@ public class WebIndexController {
             articleType = articleTypes.stream().filter(l -> l.getTypeId().equals(topArticleTypeId.toString())).findAny().orElse(new ArticleType());
             articles = articleMapper.queryAllByTypeAndLimit(topArticleTypeId,0,3);
         }
-        String sentence = "“我们一路奋战，不是为了改变世界，而是为了不让世界改变我们。”";
+        Sentence sentence = SpiderConstant.getRandomSentence();
+        String footerSentence = SpiderConstant.getRandomSentence().getContent();
+
         ModelAndView modelAndView = new ModelAndView("web/index");
         modelAndView
                 .addObject("blogWebConfig",SystemConstant.BLOGWEBCONFIG)
-                .addObject("sentence",sentence)
                 .addObject("articleType",articleType)
-                .addObject("articles",articles);
+                .addObject("articles",articles)
+                .addObject("sentence",sentence)
+                .addObject("footerSentence",footerSentence);;
         return modelAndView;
     }
 

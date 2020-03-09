@@ -5,6 +5,7 @@ import com.timeblog.business.domain.*;
 import com.timeblog.framework.mapper.ArticleMapper;
 import com.timeblog.framework.mapper.ArticleTypeMapper;
 import com.timeblog.framework.mapper.CommentDao;
+import com.timeblog.framework.system.constant.SpiderConstant;
 import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -90,13 +91,17 @@ public class WebArticleController {
             comment.setSonComments(sonComment);
         });
 
+        //句子
+        Sentence sentence = SpiderConstant.getRandomSentence();
+
         ModelAndView modelAndView = new ModelAndView("web/read");
         modelAndView.addObject("article",article)
                     .addObject("blogWebConfig",SystemConstant.BLOGWEBCONFIG)
                     .addObject("accessCount",accessCount)
                     .addObject("likeCount",likeCount)
                     .addObject("likeStatus",likeStatus)
-                    .addObject("comments",comments);
+                    .addObject("comments",comments)
+                    .addObject("sentence",sentence);
         return modelAndView;
     }
 

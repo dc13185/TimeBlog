@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timeblog.framework.mapper.SentenceDao">
+
+    <resultMap type="com.timeblog.business.domain.Sentence" id="TimeSentenceMap">
+        <result property="sentenceId" column="sentence_id" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="author" column="author" jdbcType="VARCHAR"/>
+        <result property="works" column="works" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="OTHER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TimeSentenceMap">
+        select
+          sentence_id, content, author, works, careate_date
+        from timeblog.time_sentence
+        where sentence_id = #{sentenceId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TimeSentenceMap">
+        select
+          sentence_id, content, author, works, careate_date
+        from timeblog.time_sentence
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryByDate" resultMap="TimeSentenceMap">
+        select
+          sentence_id, content, author, works, create_date
+        from timeblog.time_sentence where create_date = #{createDate}
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="sentenceId" useGeneratedKeys="true">
+        insert into timeblog.time_sentence(content, author, works, careate_date)
+        values (#{content}, #{author}, #{works}, #{careateDate})
+    </insert>
+
+
+    <insert id="insertBatch" >
+        insert into timeblog.time_sentence(sentence_id,content, author, works, create_date,status)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (null,#{item.content}, #{item.author}, #{item.works}, #{item.createDate},0)
+        </foreach>
+
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update timeblog.time_sentence
+        <set>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="author != null and author != ''">
+                author = #{author},
+            </if>
+            <if test="works != null and works != ''">
+                works = #{works},
+            </if>
+            <if test="careateDate != null">
+                careate_date = #{careateDate},
+            </if>
+        </set>
+        where sentence_id = #{sentenceId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from timeblog.time_sentence where sentence_id = #{sentenceId}
+    </delete>
+
+</mapper>

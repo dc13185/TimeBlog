@@ -105,6 +105,12 @@
       <artifactId>time-core</artifactId>
     </dependency>
 
+    <!-- spider -->
+    <dependency>
+      <groupId>com.timeblog</groupId>
+      <artifactId>time-spider</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>com.timeblog</groupId>
       <artifactId>time-web-blog</artifactId>

@@ -62,7 +62,6 @@ public class CommentsController {
     @ResponseBody
     public Result showCommentListWithPage(@RequestBody PageDomain pageDomain){
         List<Comment> commentList =  commentDao.queryAll(pageDomain);
-
         return Result.success(commentList);
     }
 

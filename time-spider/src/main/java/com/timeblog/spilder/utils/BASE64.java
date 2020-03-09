@@ -1,4 +1,4 @@
-package utils;
+package com.timeblog.spilder.utils;
 import sun.misc.BASE64Encoder;
 
 import java.io.File;

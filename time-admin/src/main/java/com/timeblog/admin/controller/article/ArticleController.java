@@ -12,7 +12,6 @@ import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.FileUtils;
 import com.timeblog.framework.system.utils.IpUtils;
 import com.timeblog.framework.system.utils.RedisUtils;
-import net.bytebuddy.description.field.FieldDescription;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
