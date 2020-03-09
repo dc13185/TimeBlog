@@ -1,0 +1,269 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include :: header"></head>
+<link th:href="@{/css/plugins/switchery/switchery.css}" rel="stylesheet"/>
+<link th:href="@{/css/style.css}" rel="stylesheet"/>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>文章列表</h5>
+        </div>
+        <div class="ibox-content">
+            <!-- 表格 -->
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <!-- Example Events -->
+                    <div class="example-wrap">
+                        <div class="example">
+                            <div class="btn-group hidden-xs" id="exampleTableEventsToolbar"
+                                 role="group">
+                                <button type="button" class="btn  btn-success" id="addButton">
+                                    <i class="glyphicon glyphicon-plus"  aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="btn  btn-warning" id="deleteButton">
+                                    <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <table id="exampleTableEvents">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 表格结束 -->
+    </div>
+</div>
+</div>
+
+<head th:include="include :: footer"></head>
+<script th:src="@{/js/plugins/switchery/switchery.js}"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#inconModeal").hide();
+        //初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+    });
+
+
+    let TableInit = function () {
+        let header = $("meta[name='_csrf_header']").attr("content");
+        let token =$("meta[name='_csrf']").attr("content");
+        let oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#exampleTableEvents').bootstrapTable({
+                url:ctx+'comment/showCommentList',//请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#exampleTableEventsToolbar',  //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortName:"id",
+                sortOrder: "desc",                   //排序方式
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                queryParamsType: 'limit',
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber:1,                       //初始化加载第一页，默认第一页
+                pageSize: 7,                       //每页的记录行数（*）
+                pageList: [10, 15, 20, 50],        //可供选择的每页的行数（*）
+                search: true,                       //是否显示表格搜索
+                strictSearch: true,
+                showColumns: false,                  //是否显示所有的列,即选择列查看
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: false,                //是否启用点击选中行
+                //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "commentId",                     //每一行的唯一标识，一般为主键列
+                showToggle:false,                   //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                iconSize: 'outline',
+                contentType: "application/json;charset=utf-8", //解决POST提交问题
+                showExport: false,                     //是否显示导出
+                buttonsAlign:"right",  //按钮位置
+                exportDataType: "selected",              //basic', 'all', 'selected'.
+                Icons:'glyphicon-export',
+                ajaxOptions:{
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token)
+                    }
+                },
+                responseHandler:function(res) {
+                    return {
+                        "total": res.total,//总页数
+                        "rows": res.rows   //数据
+                    };
+                },
+                columns: [
+                    {checkbox: true },
+                    {
+                        title: '序号',
+                        field: '',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            var pageSize = $('#exampleTableEvents').bootstrapTable('getOptions').pageSize;     //通过table的#id 得到每页多少条
+                            var pageNumber = $('#exampleTableEvents').bootstrapTable('getOptions').pageNumber; //通过table的#id 得到当前第几页
+                            return pageSize * (pageNumber - 1) + index + 1;    // 返回每条的序号： 每页条数 *（当前页 - 1 ）+ 序号
+                        }
+                    },
+                    {title:'评论昵称',field: 'commentNickname',align:"center",sortable:true },
+                    {title:'评论内容',field: 'commentContent',align:"center",sortable:true},
+
+                    {title:'评论地址',field: 'commentAddress',align:"center",sortable:true},
+
+                    {title:'评论时间',field: 'createTime',align:"center",sortable:true},
+
+                    {title:'对应文章',field: 'commentArticleName',align:"center",sortable:true},
+
+                    {title:'操作',field:"Button",align:"center",formatter:function (value, row, index) {
+                            return [
+                                '<i class="fa fa-edit editButton" style="cursor: pointer;" ></i>'
+                            ].join("")
+
+                        },events:operateEvents
+                    }
+
+
+                ],
+                onLoadSuccess:function(data){
+                    let topSwitchery = [];
+                    let elems = document.querySelectorAll('.is-top');
+                    for (let i = 0; i < elems.length; i++) {
+                        topSwitchery[i] = new Switchery(elems[i]);
+                    }
+                    let commentSwitchery = [];
+                    let commentElems = document.querySelectorAll('.is-comment');
+                    for (let i = 0; i < elems.length; i++) {
+                        commentSwitchery[i] = new Switchery(commentElems[i]);
+                    }
+
+                    $(".is-top").on("change",function (e) {
+                        let articleId = $(this).attr("name");
+                        let value = $(this).is(':checked') ? 1 : 0;
+                        changeStatus("isTop",value,articleId);
+                    });
+
+                    $(".is-comment").on("change",function (e) {
+                        let articleId = $(this).attr("name");
+                        let value = $(this).is(':checked') ? 1 : 0;
+                        changeStatus("isComment",value,articleId);
+                    })
+                },
+
+
+
+            });
+        };
+
+
+        //修改
+        window.operateEvents ={
+            "click .editButton":function(e,value,row,index){
+                window.location.href = ctx+"article/toEditArticle?articleId="+row.articleId;
+            },
+            "click .fb-status-sub":function(e,value,row,index){
+                changeStatus("status",1,row.articleId);
+            },
+            "click .cg-status-sub":function(e,value,row,index){
+                changeStatus("status",0,row.articleId);
+            }
+        }
+
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            let temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                pageSize: params.limit,   //页面大小
+                pageNumber:this.pageNumber, //页码
+                retrieve:params.search,//搜索框参数
+            };
+            return JSON.stringify(temp);
+        };
+        return oTableInit;
+    }
+
+
+
+
+    //点击新增按钮
+    $("#addButton").on("click", function () {
+        window.location.href = ctx+"article/toEditArticle";
+    })
+
+    //点击删除按钮
+    $("#deleteButton").on("click",function () {
+        let rows = $('#exampleTableEvents').bootstrapTable('getAllSelections');
+        // let subRows = [];
+        // if ($.SUB_TABLE){
+        //     subRows = $.SUB_TABLE.bootstrapTable('getAllSelections');
+        // }
+        if(rows.length == 0 ){
+            toastr.error("至少选择一项！");
+            return false;
+        }
+        let ids = new Array();
+        for (let i=0;i<rows.length;i++){
+            ids.push(rows[i].articleId);
+        }
+
+        let data = {"articleIds":ids.toString()}
+        $.ajax({
+            type: 'post',
+            url: ctx+'article/deleteArticle',
+            dataType:"json",
+            data: JSON.stringify(data),
+            cache: false,
+            async: true,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            },
+            success: function (data) {
+                $('#exampleTableEvents').bootstrapTable(('refresh'));
+            }
+        });
+
+    })
+
+
+    function changeStatus(statusKey,statusValue,articleId){
+        console.log(statusKey+","+statusValue+","+articleId);
+        let statusDate = {"statusKey":statusKey,"statusValue":statusValue,"articleId":articleId}
+        $.ajax({
+            type: 'post',
+            url: ctx+'article/editArticle',
+            dataType:"json",
+            data: JSON.stringify(statusDate),
+            cache: false,
+            async: true,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            },
+            success: function (msg) {
+                if (msg.code == 200){
+                    if (statusKey == "status"){
+                        $('#exampleTableEvents').bootstrapTable(('refresh'));
+                    }
+                }else{
+                    toastr.error("请求错误!")
+                }
+            }
+        });
+    }
+
+
+
+    $(window).resize(function () {
+        $('#exampleTableEvents').bootstrapTable('resetView');
+    });
+
+
+
+
+
+
+</script>
+</body>
+
+</html>
