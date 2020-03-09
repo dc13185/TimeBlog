@@ -15,7 +15,7 @@
         <result property="parentCommentId" column="parent_comment_id" jdbcType="INTEGER"/>
         <result property="replyId" column="reply_id" jdbcType="INTEGER"/>
         <result property="replyName" column="reply_name" jdbcType="VARCHAR"/>
-
+        <result property="commentArticleName" column="commentArticleName" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--查询单个-->
@@ -37,38 +37,14 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="TimeCommentMap">
         select
-          comment_id, comment_picture, comment_content, comment_nickname, comment_ip, comment_address, create_time,comment_status
-        from timeblog.time_comment
-        <where>
-            <if test="commentId != null">
-                and comment_id = #{commentId}
+          *,a.article_title as commentArticleName
+        from timeblog.time_comment as c
+        left join time_article as a
+        on c.comment_article_id = a.article_id
+             <if test="retrieve != null and retrieve != '' ">
+                and comment_nickname = like CONCAT('%',#{retrieve},'%')
             </if>
-            <if test="commentPicture != null and commentPicture != ''">
-                and comment_picture = #{commentPicture}
-            </if>
-            <if test="commentContent != null and commentContent != ''">
-                and comment_content = #{commentContent}
-            </if>
-            <if test="commentNickname != null and commentNickname != ''">
-                and comment_nickname = #{commentNickname}
-            </if>
-            <if test="commentIp != null and commentIp != ''">
-                and comment_ip = #{commentIp}
-            </if>
-            <if test="commentAddress != null and commentAddress != ''">
-                and comment_address = #{commentAddress}
-            </if>
-            <if test="commentArticleId != null and commentArticleId != ''">
-                and comment_article_id = #{commentArticleId}
-            </if>
-            <if test="commentStatus != null and commentStatus != ''">
-                and comment_status = #{commentStatus}
-            </if>
-            <if test="createTime != null">
-                and create_time = #{createTime}
-            </if>
-        </where>
-        order by create_time desc
+--         order by c.create_time desc
     </select>
 
 

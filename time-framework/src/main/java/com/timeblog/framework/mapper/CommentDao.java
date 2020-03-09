@@ -1,6 +1,7 @@
 package com.timeblog.framework.mapper;
 
 import com.timeblog.business.domain.Comment;
+import com.timeblog.business.domain.PageDomain;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
@@ -33,10 +34,10 @@ public interface CommentDao {
     /**
      * 通过实体作为筛选条件查询
      *
-     * @param Comment 实例对象
+     * @param pageDomain 实例对象
      * @return 对象列表
      */
-    List<Comment> queryAll(Comment Comment);
+    List<Comment> queryAll(PageDomain pageDomain);
 
     /**
      * 根据文章ID查评论

@@ -61,6 +61,7 @@ public class Comment implements Serializable {
 
     private List<Comment> sonComments;
 
-
+   /**评论文章*/
+    private String commentArticleName;
 
 }
