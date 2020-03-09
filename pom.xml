@@ -31,7 +31,8 @@
         <commons-logging.version>1.2</commons-logging.version>
         <redis.version>1.4.1.RELEASE</redis.version>
         <fastjson.version>1.2.62</fastjson.version>
-
+        <httpclient.version>4.5.11</httpclient.version>
+        <collections.version>3.2.2</collections.version>
     </properties>
 
     <dependencyManagement>
@@ -90,6 +91,25 @@
                 <artifactId>spring-boot-starter-redis</artifactId>
                 <version>${redis.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${collections.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
 
 
 
