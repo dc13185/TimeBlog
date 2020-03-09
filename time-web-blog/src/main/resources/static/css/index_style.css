@@ -142,3 +142,22 @@ a,img{text-decoration:none;border:none;}
 }
 @keyframes object_three {75% {transform:scale(0);-webkit-transform:scale(0);}
 }
+
+
+.sentence-author{
+    padding-top: 25px;
+    padding-left: 70%;
+}
+.blog-name{
+    font-size: 50px;
+    top: -40px;
+    position:relative;
+    font-family: BarbaraHand;
+}
+
+.fadeInRight{
+    color: #ffffff;
+    font-family: KaiTi;
+}
+
+@media screen and (max-width:1024px){.sentence-author{padding-left:40%}  }

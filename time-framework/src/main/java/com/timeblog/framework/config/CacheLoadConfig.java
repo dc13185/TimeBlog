@@ -51,8 +51,8 @@ public class CacheLoadConfig {
         redisUtils.set(SystemConstant.WEB_BLOG_CONFIG,blogWebConfig);
         SystemConstant.BLOGWEBCONFIG = blogWebConfig;
         //句子
-
-        List<Sentence> sentences = sentenceDao.queryByDate(LocalDate.now().toString());
+        /*LocalDate.now().toString()*/
+        List<Sentence> sentences = sentenceDao.queryByDate("2020/03/09");
         SpiderConstant.SENTENCES = sentences;
 
 
