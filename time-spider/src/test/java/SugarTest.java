@@ -18,13 +18,13 @@ import java.util.UUID;
 /**
  * @author Dong.Chao
  * @Classname SugarTest
- * @Description 保存图片
+ * @Description 新功能体验
  * @Date 2020/3/10 1:20
  * @Version V1.0
  */
 public class SugarTest  implements PageProcessor {
 
-
+    //文件地址
     private static String filePath = "D:\\images\\";
 
     private Site site = Site.me()
@@ -42,7 +42,6 @@ public class SugarTest  implements PageProcessor {
         }
         //到详情里面了
         if(page.getUrl().toString().contains("artdetail")){
-            //到具体图
             List<String> dowUrls = page.getHtml().regex("https://[\\s\\S]{1,100}.jpg").all();
             downloadByUrl(dowUrls);
         }
