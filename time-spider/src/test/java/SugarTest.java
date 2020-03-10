@@ -58,6 +58,9 @@ public class SugarTest  implements PageProcessor {
      */
     private static void downloadByUrl(List<String> urls){
         for (String urlStr : urls) {
+            if (urlStr.contains("sinaimg")){
+                continue;
+            }
             String fileName = UUID.randomUUID().toString().replaceAll("-","") +".jpg";
             try{
                 URL url  = new URL(urlStr);
