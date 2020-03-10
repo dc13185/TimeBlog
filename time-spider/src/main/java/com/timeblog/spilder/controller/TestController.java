@@ -28,6 +28,7 @@ public class TestController {
         task.run();
 
         //cronTaskRegistrar.addCronTask(task, "0/10 * * * * ?");
+        cronTaskRegistrar.removeCronTask(task);
 
         // 便于观察
         //Thread.sleep(3000000);

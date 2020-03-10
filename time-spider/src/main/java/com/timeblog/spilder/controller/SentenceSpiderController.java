@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -43,10 +45,15 @@ public class SentenceSpiderController {
 
     public void spider(){
         hostUrl = "https://www.mingyantong.com/todayhot";
+        //先清空
+        SpiderConstant.SENTENCES.clear();
         spiderContent(hostUrl,1);
         //插入数据
         if (SpiderConstant.SENTENCES.size() > 0){
+            //插入今天最火的句子
             sentenceDao.insertBatch(SpiderConstant.SENTENCES);
+            //删除昨天的句子
+            sentenceDao.deleteByCreateDate(LocalDate.now().minusDays(1L).toString());
         }
     }
 

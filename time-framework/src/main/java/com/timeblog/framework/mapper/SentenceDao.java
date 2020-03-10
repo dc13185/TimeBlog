@@ -65,4 +65,13 @@ public interface SentenceDao {
      */
     int deleteById(Integer sentenceId);
 
+
+    /**
+     * 根据时间删除
+     *
+     * @param date 时间字符串
+     * @return 影响行数
+     */
+    int deleteByCreateDate(String date);
+
 }

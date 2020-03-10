@@ -3,13 +3,14 @@ package com.timeblog.framework.config;
 import com.timeblog.business.domain.ArticleType;
 import com.timeblog.business.domain.BlogWebConfig;
 import com.timeblog.business.domain.Sentence;
-import com.timeblog.framework.mapper.ArticleTypeMapper;
-import com.timeblog.framework.mapper.BlogWebConfigDao;
-import com.timeblog.framework.mapper.SentenceDao;
-import com.timeblog.framework.mapper.WebBackgroundDao;
+import com.timeblog.framework.mapper.*;
 import com.timeblog.framework.system.constant.SpiderConstant;
 import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.RedisUtils;
+import com.timeblog.framework.task.ScheduledTask;
+import com.timeblog.framework.task.SchedulingRunnable;
+import com.timeblog.framework.task.config.CronTaskRegistrar;
+import com.timeblog.framework.task.entity.TimeTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +41,12 @@ public class CacheLoadConfig {
     @Autowired
     private SentenceDao sentenceDao;
 
+    @Autowired
+    private TimeTaskDao timeTaskDao;
+
+    @Autowired
+    private CronTaskRegistrar cronTaskRegistrar;
+
 
     @PostConstruct
     public void init() throws Exception {
@@ -51,10 +58,14 @@ public class CacheLoadConfig {
         redisUtils.set(SystemConstant.WEB_BLOG_CONFIG,blogWebConfig);
         SystemConstant.BLOGWEBCONFIG = blogWebConfig;
         //句子
-        /*LocalDate.now().toString()*/
-        List<Sentence> sentences = sentenceDao.queryByDate("2020/03/09");
+        List<Sentence> sentences = sentenceDao.queryByDate(LocalDate.now().toString());
         SpiderConstant.SENTENCES = sentences;
-
-
+        //定时调度任务
+        List<TimeTask> timeTasks =  timeTaskDao.queryAll(TimeTask.builder().status(1).build());
+        timeTasks.forEach(t ->{
+            SchedulingRunnable task = new SchedulingRunnable(t.getTaskBeanName(), t.getTaskMethod(), null);
+            //加入任务
+            cronTaskRegistrar.addCronTask(task, t.getTaskCron());
+        });
     }
 }

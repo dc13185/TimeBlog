@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Component
 public class CronTaskRegistrar implements DisposableBean {
-    private final Map<Runnable, ScheduledTask> scheduledTasks = new ConcurrentHashMap<>(16);
+    private final Map<Runnable, ScheduledTask> scheduledTasks = new ConcurrentHashMap<>();
 
     @Autowired
     private TaskScheduler taskScheduler;

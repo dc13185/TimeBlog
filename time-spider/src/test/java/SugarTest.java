@@ -25,7 +25,7 @@ import java.util.UUID;
 public class SugarTest  implements PageProcessor {
 
     //文件地址
-    private static String filePath = "D:\\images\\";
+    private static String filePath = "D:\\抓取图片\\";
 
     private Site site = Site.me()
             .setRetryTimes(3)
@@ -58,7 +58,7 @@ public class SugarTest  implements PageProcessor {
      */
     private static void downloadByUrl(List<String> urls){
         for (String urlStr : urls) {
-            if (urlStr.contains("sinaimg")){
+          if (urlStr.contains("sinaimg")){
                 continue;
             }
             String fileName = UUID.randomUUID().toString().replaceAll("-","") +".jpg";

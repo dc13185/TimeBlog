@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timeblog.framework.mapper.TimeTaskDao">
+
+    <resultMap type="com.timeblog.framework.task.entity.TimeTask" id="TimeTaskMap">
+        <result property="taskId" column="task_id" jdbcType="INTEGER"/>
+        <result property="taskName" column="task_name" jdbcType="VARCHAR"/>
+        <result property="taskCron" column="task_cron" jdbcType="VARCHAR"/>
+        <result property="taskBeanName" column="task_bean_name" jdbcType="VARCHAR"/>
+        <result property="taskMethod" column="task_method" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TimeTaskMap">
+        select
+          task_id, task_name, task_cron, status,task_bean_name,task_method
+        from timeblog.time_task
+        where task_id = #{taskId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TimeTaskMap">
+        select
+          task_id, task_name, task_cron, status,taskBeanName,taskMethod
+        from timeblog.time_task
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TimeTaskMap">
+        select
+          task_id, task_name, task_cron, status,task_bean_name,task_method
+        from timeblog.time_task
+        <where>
+            <if test="taskId != null">
+                and task_id = #{taskId}
+            </if>
+            <if test="taskName != null and taskName != ''">
+                and task_name = #{taskName}
+            </if>
+            <if test="taskCron != null and taskCron != ''">
+                and task_cron = #{taskCron}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="taskId" useGeneratedKeys="true">
+        insert into timeblog.time_task(task_name, task_cron, status,task_bean_name,task_method)
+        values (#{taskName}, #{taskCron}, #{status},#{taskBeanName},#{taskMethod})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update timeblog.time_task
+        <set>
+            <if test="taskName != null and taskName != ''">
+                task_name = #{taskName},
+            </if>
+            <if test="taskCron != null and taskCron != ''">
+                task_cron = #{taskCron},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="taskBeanName != null">
+                task_bean_name = #{taskBeanName},
+            </if>
+            <if test="taskMethod != null">
+                task_method = #{taskMethod},
+            </if>
+        </set>
+        where task_id = #{taskId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from timeblog.time_task where task_id = #{taskId}
+    </delete>
+
+</mapper>

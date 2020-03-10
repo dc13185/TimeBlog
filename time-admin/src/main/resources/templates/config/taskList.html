@@ -1,0 +1,368 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include :: header"></head>
+<link th:href="@{/css/plugins/switchery/switchery.css}" rel="stylesheet"/>
+<link th:href="@{/css/style.css}" rel="stylesheet"/>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>任务调度</h5>
+        </div>
+        <div class="ibox-content">
+            <!-- 表格 -->
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <!-- Example Events -->
+                    <div class="example-wrap">
+                        <div class="example">
+                            <div class="btn-group hidden-xs" id="exampleTableEventsToolbar"
+                                 role="group">
+                                <button type="button" class="btn  btn-success" id="addButton">
+                                    <i class="glyphicon glyphicon-plus"  aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="btn  btn-warning" id="deleteButton">
+                                    <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <table id="exampleTableEvents" style="word-break:break-all; word-wrap:break-all;" >
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 表格结束 -->
+    </div>
+
+
+    <div class="sk-spinner sk-spinner-three-bounce" style=" position: fixed;top: 30%; left: 50%;display: none">
+        <div class="sk-bounce1"></div>
+        <div class="sk-bounce2"></div>
+        <div class="sk-bounce3"></div>
+    </div>
+
+</div>
+
+
+
+<!--文章新增-->
+<div class="modal inmodal" id="taskModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                </button>
+                <h4 class="modal-title">新增调度任务</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <label>调度描述</label>
+                        <input type="text"  id="task_name" name="task_name" placeholder="请输入调度描述" class="form-control check_attr">
+                    </div>
+                    <div class="form-group">
+                        <label>Cron表达式</label>
+                        <input type="text" id="task_cron" name="task_cron" placeholder="请输入正确的Cron表达式" class="form-control check_attr">
+                    </div>
+                    <div class="form-group">
+                        <label>调度实体类</label>
+                        <input type="text" id="task_bean_name" name="task_bean_name" placeholder="请输入正确的调度实体类" class="form-control check_attr">
+                    </div>
+
+                    <div class="form-group">
+                        <label>调度方法</label>
+                        <input type="text" id="task_method" name="task_method" placeholder="请输入正确的调度方法" class="form-control check_attr">
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary saveSubmit">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--文章新增-->
+<div class="modal inmodal" id="cronModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                </button>
+                <h4 class="modal-title">修改Cron表达式</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <label>Cron表达式</label>
+                        <input type="hidden" id="taskId" name="taskId" >
+                        <input type="text" id="update_task_cron" name="task_cron" placeholder="请输入新的Cron表达式" class="form-control check_attr">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary updateSubmit">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+<head th:include="include :: footer"></head>
+<script th:src="@{/js/plugins/switchery/switchery.js}"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#inconModeal").hide();
+        //初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+
+        $("#addButton").click(function () {
+            $("#taskModal").modal();
+        })
+
+
+        $(".saveSubmit").click(function () {
+            let flag = check(taskModal);
+            if (!flag){return;}
+            let taskName = $("#task_name").val();
+            let taskCron = $("#task_cron").val();
+            let taskBeanName = $("#task_bean_name").val();
+            let taskMethod = $("#task_method").val();
+            let jsonContent = {"taskName":taskName,"taskCron":taskCron,"taskBeanName":taskBeanName,"taskMethod":taskMethod};
+            let url = ctx+"task/saveTask";
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: JSON.stringify(jsonContent),
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                },
+                success: function (msg) {
+                    if(msg.code == 200){
+                        $('#exampleTableEvents').bootstrapTable(('refresh'));
+                    }
+                }
+            });
+
+        })
+
+
+        $(".updateSubmit").click(function(){
+            let taskId = $("#taskId").val();
+            let taskCron = $("#update_task_cron").val();
+            let jsonContent = {"taskId":taskId,"taskCron":taskCron};
+            let url = ctx+"task/updateCron";
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: JSON.stringify(jsonContent),
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                },
+                success: function (msg) {
+                    if(msg.code == 200){
+                        $('#exampleTableEvents').bootstrapTable(('refresh'));
+                    }
+                }
+            });
+
+        })
+
+
+    });
+
+
+    let TableInit = function () {
+        let header = $("meta[name='_csrf_header']").attr("content");
+        let token =$("meta[name='_csrf']").attr("content");
+        let oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#exampleTableEvents').bootstrapTable({
+                url:ctx+'task/queryAllTasks',//请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#exampleTableEventsToolbar',  //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: false,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortName:"id",
+                sortOrder: "desc",                   //排序方式
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                queryParamsType: 'limit',
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber:1,                       //初始化加载第一页，默认第一页
+                pageSize: 7,                       //每页的记录行数（*）
+                pageList: [10, 15, 20, 50],        //可供选择的每页的行数（*）
+                search: true,                       //是否显示表格搜索
+                strictSearch: true,
+                showColumns: false,                  //是否显示所有的列,即选择列查看
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: false,                //是否启用点击选中行
+                //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "commentId",                     //每一行的唯一标识，一般为主键列
+                showToggle:false,                   //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                iconSize: 'outline',
+                contentType: "application/json;charset=utf-8", //解决POST提交问题
+                showExport: false,                     //是否显示导出
+                buttonsAlign:"right",  //按钮位置
+                exportDataType: "selected",              //basic', 'all', 'selected'.
+                Icons:'glyphicon-export',
+                ajaxOptions:{
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token)
+                    }
+                },
+                responseHandler:function(res) {
+                    return {
+                        "total": res.total,//总页数
+                        "rows": res.rows   //数据
+                    };
+                },
+                columns: [
+                    {checkbox: true },
+                    {
+                        title: '序号',
+                        field: '',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            var pageSize = $('#exampleTableEvents').bootstrapTable('getOptions').pageSize;     //通过table的#id 得到每页多少条
+                            var pageNumber = $('#exampleTableEvents').bootstrapTable('getOptions').pageNumber; //通过table的#id 得到当前第几页
+                            return pageSize * (pageNumber - 1) + index + 1;    // 返回每条的序号： 每页条数 *（当前页 - 1 ）+ 序号
+                        }
+                    },
+                    {title:'调度任务描述',field: 'taskName',align:"center",sortable:true },
+
+                    {title:'Cron表达式',field: 'taskCron',align:"center",sortable:true },
+
+                    {title:'调度实体类',field: 'taskBeanName',align:"center",sortable:true},
+
+                    {title:'调度方法',field: 'taskMethod',align:"center",sortable:true},
+
+                    {title:'状态',field: 'status',align:"center",sortable:true,formatter:function (value, row, index) {
+                            let checkerStr;
+                            if(row.status === 1){
+                                checkerStr = "<span class=\"label label-success\">已开启</span>";
+                            }else{
+                                checkerStr = "<span class=\"label label-danger\">未开启</span>";
+                            }
+                            return [
+                                checkerStr
+                            ].join("")
+                        }},
+                    {title:'操作',field:"Button",align:"center",formatter:function (value, row, index) {
+                            let checkerStr;
+                            if(row.status === 1){
+                                checkerStr = "<button class=\"btn btn-danger btn-xs updateStatusBtn\" type=\"button\"><i class=\"fa fa-toggle-off\"></i>&nbsp;关闭任务</button>";
+                            }else{
+                                checkerStr = "<button class=\"btn btn-success btn-xs updateStatusBtn\" type=\"button\"><i class=\"fa fa-toggle-on\"></i>&nbsp;开启任务</button>";
+                            }
+                            checkerStr = checkerStr + "<br><button class=\"btn btn-info btn-xs executeBtn \" type=\"button\"><i class=\"fa fa-pause\"></i>&nbsp;执行一次</button>"+
+                                                      "<br><button class=\"btn btn-default btn-xs editBtn \" type=\"button\"><i class=\"fa fa-edit\"></i>&nbsp;修改Cron表达式</button>";
+                            return [
+                                checkerStr
+                            ].join("")
+                        },events:operateEvents
+                    }
+
+
+                ],
+
+            });
+        };
+
+
+
+
+        window.operateEvents ={
+            "click .updateStatusBtn":function(e,value,row,index){
+                debugger;
+                 let  taskId = row.taskId;
+                 startTask('update',taskId);
+            },
+            "click .executeBtn":function(e,value,row,index){
+                debugger;
+                let  taskId = row.taskId;
+                startTask('execute',taskId);
+            },
+            "click .editBtn":function (e,value,row,index) {
+                $("#taskId").val(row.taskId);
+                $("#cronModal").modal();
+            }
+        }
+
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            let temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                pageSize: params.limit,   //页面大小
+                pageNumber:this.pageNumber, //页码
+                retrieve:params.search,//搜索框参数
+            };
+            return JSON.stringify(temp);
+        };
+        return oTableInit;
+
+
+
+    }
+
+
+
+
+    function startTask(flag,taskId){
+        debugger;
+        let url = ctx+"task/updateStatus";
+        if (flag == 'execute'){ url = ctx+"task/executeTaks";$(".sk-spinner-three-bounce").show();}
+        let jsonContent = {"taskId":taskId}
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: JSON.stringify(jsonContent),
+            processData: false,
+            contentType: false,
+            async: false,
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            },
+            success: function (msg) {
+                if(msg.code == 200){
+                    if(flag == 'execute'){
+                        let mills =msg.mills;
+                        toastr.success("执行成功，用时"+mills+"毫秒");
+                        $(".sk-spinner-three-bounce").hide();
+                    }else{
+                        $('#exampleTableEvents').bootstrapTable(('refresh'));
+                    }
+                }
+            }
+        });
+    }
+
+
+
+
+
+
+</script>
+</body>
+
+</html>

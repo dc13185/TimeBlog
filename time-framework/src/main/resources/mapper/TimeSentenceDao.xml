@@ -74,4 +74,11 @@
         delete from timeblog.time_sentence where sentence_id = #{sentenceId}
     </delete>
 
+
+    <!--通过主键删除-->
+    <delete id="deleteByCreateDate">
+        delete from timeblog.time_sentence where create_date = #{createDate}
+    </delete>
+
+
 </mapper>
