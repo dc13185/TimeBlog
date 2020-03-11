@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Comparator;
 import java.util.List;
@@ -37,24 +38,32 @@ public class WebArticleController {
     private RedisUtils redisUtils;
 
 
-    @Autowired
+    @Resource
     private ArticleMapper articleMapper;
 
-    @Autowired
+    @Resource
     private CommentDao commentDao;
 
 
 
     @RequestMapping("/toArticles")
-    public ModelAndView toArticles(){
+    public ModelAndView toArticles(String typeId){
         ModelAndView modelAndView = new ModelAndView("web/article");
+        List<ArticleType> parentArticleTypeList = null;
         //查找首级分类
-        List<ArticleType> articleTypeList =  (List<ArticleType>) redisUtils.get(SystemConstant.TEMP_ARTICLE_TYPES);
-        articleTypeList =  articleTypeList.stream().filter(l -> "-1".equals(l.getParentId())).collect(Collectors.toList());
+        List<ArticleType> allArticleTypeList =  (List<ArticleType>) redisUtils.get(SystemConstant.TEMP_ARTICLE_TYPES);
+        if (typeId == null){
+            parentArticleTypeList =  allArticleTypeList.stream().filter(l -> "-1".equals(l.getParentId())).collect(Collectors.toList());
+            parentArticleTypeList.forEach(pa -> {
+                pa.setSonArticleTypes(allArticleTypeList.stream().filter(l -> l.getParentId().equals(pa.getTypeId())).collect(Collectors.toList()));
+            });
+        }
+
         Integer articleCount = articleMapper.queryCount();
-        modelAndView.addObject("articleTypeList",articleTypeList)
+        modelAndView.addObject("parentArticleTypeList",parentArticleTypeList)
                     .addObject("blogWebConfig",SystemConstant.BLOGWEBCONFIG)
-                    .addObject("articleCount",articleCount);
+                    .addObject("articleCount",articleCount)
+                    .addObject("typeId",typeId);
         return modelAndView;
     }
 
@@ -108,9 +117,9 @@ public class WebArticleController {
 
     @RequestMapping("/showArticleList")
     @ResponseBody
-    public Result showArticleListWithPage(@RequestBody PageDomain pageDomain){
+    public Result showArticleListWithPage(@RequestBody QueryArticleEntity queryArticleEntity){
         //查询所有已经发布了的
-        List<Article> articleTypeList =  articleMapper.queryAllFormal(pageDomain);
+        List<Article> articleTypeList =  articleMapper.queryAllFormal(queryArticleEntity);
         //点赞浏览的
         List<String> articleIds = articleTypeList.stream().map(article -> article.getArticleId().toString()).collect(Collectors.toList());
         //批量顺序不会乱

@@ -97,6 +97,10 @@
         <if test="retrieve != null and retrieve != '' ">
             and ta.article_title  like CONCAT('%',#{retrieve},'%')
         </if>
+        <if test="articleTypeId != null and articleTypeId != '' ">
+            and  article_type_id = #{articleTypeId}
+        </if>
+
         order by isTop desc  , update_time desc
     </select>
 

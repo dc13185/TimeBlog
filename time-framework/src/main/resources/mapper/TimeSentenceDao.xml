@@ -7,6 +7,7 @@
         <result property="content" column="content" jdbcType="VARCHAR"/>
         <result property="author" column="author" jdbcType="VARCHAR"/>
         <result property="works" column="works" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
         <result property="createDate" column="create_date" jdbcType="OTHER"/>
     </resultMap>
 
@@ -77,7 +78,7 @@
 
     <!--通过主键删除-->
     <delete id="deleteByCreateDate">
-        delete from timeblog.time_sentence where create_date = #{createDate}
+        delete from timeblog.time_sentence where create_date = #{createDate} and status = 0
     </delete>
 
 

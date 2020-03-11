@@ -31,7 +31,11 @@ public class SpiderConstant {
      * 随机获取一条句子
      * */
     public static Sentence getRandomSentence(){
-        return  SENTENCES.get(new Random().nextInt(SENTENCES.size()));
+        if (SENTENCES.size() > 0){
+            return  SENTENCES.get(new Random().nextInt(SENTENCES.size()));
+        }else{
+            return Sentence.builder().author("孔枝泳").content("我们一路奋战，不是为了改变世界，而是为了不让世界改变我们。").works("熔炉").build();
+        }
     }
 
 

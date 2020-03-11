@@ -2,6 +2,7 @@ package com.timeblog.framework.mapper;
 
 import com.timeblog.business.domain.Article;
 import com.timeblog.business.domain.PageDomain;
+import com.timeblog.business.domain.QueryArticleEntity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public interface ArticleMapper {
      * @param pageDomain 查询所有已经发布了的
      * @return 对象列表
      */
-    List<Article> queryAllFormal(PageDomain pageDomain);
+    List<Article> queryAllFormal(QueryArticleEntity queryArticleEntity);
 
     /**
      * 新增数据

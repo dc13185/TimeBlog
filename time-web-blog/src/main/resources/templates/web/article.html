@@ -10,7 +10,6 @@
     <meta name="robots" content="all" />
     <title>博客</title>
 	<link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
-    <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}" />
     <link rel="stylesheet" th:href="@{/css/master.css}" />
     <link rel="stylesheet" th:href="@{/css/gloable.css}" />
@@ -35,19 +34,21 @@
 		    <div class="col-other">
 		        <div class="inner">
 					<div class="other-item" id="categoryandsearch">
-			    		<div class="search">
-					        <label class="search-wrap">
-					            <input type="text" id="searchtxt" placeholder="输入关键字搜索" />
-					            <span class="search-icon">
-					                <i class="fa fa-search"></i>
-					            </span>
-					        </label>
-			        		<ul class="search-result"></ul>
-			    		</div>
-			    		<ul class="category mt20" id="category">
-							<li data-index="0" class="slider"></li>
-							<li th:each="articlType,articleTypeStat : ${articleTypeList}" th:data-index="${articleTypeStat.index+1}"><a href="/Blog/Article/" th:text="${articlType.typeName}"></a></li>
+						<h5 class="other-item-title">文章分类</h5>
+			    		<ul class="category " id="category">
+							<!--<li data-index="0" class="slider"></li>-->
+							<li class="parent-list"  th:if="${parentArticleTypeList != null}"  th:each="articleType,articleTypeStat : ${parentArticleTypeList}" th:data-index="${articleTypeStat.index+1}" >
+								<div class="article-type"> <i class="fa fa-caret-right"></i> <a href="#" th:text="${articleType.typeName}"></a></div>
+
+								<ul class="son-article-list" th:if="${articleType.sonArticleTypes != null}" th:each="sonArticleType,sonArticleTypeStat : ${articleType.sonArticleTypes}"  style="display: none">
+									<li>
+										<div class="son-article-type" th:data-articleTypeId="${sonArticleType.typeId}"> <i th:class="${sonArticleType.icon}"></i> <a href="#" th:text="${sonArticleType.typeName}"></a></div>
+									</li>
+								</ul>
+							</li>
 			    		</ul>
+
+
 					</div>
 					<!--右边悬浮 平板或手机设备显示-->
 					<div class="category-toggle"><i class="layui-icon">&#xe603;</i></div>
@@ -174,7 +175,13 @@
 			let articleCount = [[${articleCount}]];
 			initPage(articleCount);
 
+			$(".son-article-type").click(function () {
+				$.ARTICLE_TYPE_ID =  $(this).attr("data-articleTypeId");
+				initArticleData(1,5);
+			})
 		})
+
+
 	</script>
 </body>
 </html>

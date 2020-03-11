@@ -33,7 +33,7 @@ body,html{background-color:rgba(255,255,255,.5);font:14px/1.5 "Helvetica neue",H
 .copyright .contact .qq:hover{background-color:#d25744}
 .copyright .contact .email:hover{background-color:#668f20}
 .copyright .contact .weixin:hover{background-color:#06a2c9}
-.doc-container{position:relative;padding-top:60px;-webkit-transition:all .2s;transition:all .2s;min-height:100vh}
+.doc-container{position:relative;padding-top:60px;-webkit-transition:all .2s;transition:all .2s;min-height:100vh;overflow: hidden;}
 .lo{width:250px;height:60px;padding:10px 15px;clear:both;border-radius:4px}
 .lo input{margin-left:15px;border:1px solid #e8e9e7}
 .lo button{margin-top:10px;padding:5px 15px;cursor:pointer}

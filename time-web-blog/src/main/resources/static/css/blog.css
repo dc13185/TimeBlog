@@ -43,12 +43,32 @@
 .search-result li a{padding:10px}
 .search-result li a:hover{background:#eaeaea}
 .col-other .other-item .category{position:relative;padding-bottom:20px}
-.col-other .other-item .category li{display:block;height:40px;line-height:39px;position:relative;z-index:1}
-.other-item .category li.slider{border-right:6px solid #484947;height:40px;background-color:#f8f9f7;position:absolute;top:0;left:0;right:0;z-index:0;transition:top .3s}
+.col-other .other-item .category li{display:block;/*height:40px;*/line-height:39px;position:relative;z-index:1}
+.slider{border-right:6px solid #484947;height:40px;background-color:#f8f9f7;/*position:absolute;*/top:0;left:0;right:0;z-index:0;transition:top .3s}
+
+.son-article-list{
+    display: block;
+    padding: 0 20px;
+    border-bottom: 1px solid #f8f9f7;
+    transition: none;
+    text-decoration: none;
+    color: #787977;
+    cursor: pointer;
+}
 .other-item .category li.child a{padding:0 50px;font-size:12px}
-.other-item .category li a{display:block;margin:0 30px;padding:0 20px;height:39px;border-bottom:1px solid #f8f9f7;transition:none;text-decoration:none;color:#787977}
+/*.other-item .category li a{display:block;margin:0 30px;padding:0 20px;height:39px;border-bottom:1px solid #f8f9f7;transition:none;text-decoration:none;color:#787977}*/
+
+.article-type{display:block;padding:0 20px;height:39px;border-bottom:1px solid #f8f9f7;transition:none;text-decoration:none;color:#787977;cursor: pointer}
+.article-type i{position: absolute;left: 25px;top: 13px}
+.article-type a{position: absolute;left: 45px;}
+.son-article-type{display:block;padding:0 20px;height:39px;border-bottom:1px solid #f8f9f7;transition:none;text-decoration:none;color:#787977;cursor: pointer;}
+.son-article-type a{padding-left: 5px}
+/*.son-article-type i{position: absolute;left: 20px;top: 13px}
+.son-article-type a{position: absolute;left: 20px;top: 13px}*/
+
+
 #categoryandsearch.fixed{position:fixed;top:auto;width:300px;margin-top:0;-webkit-animation-duration:1s;animation-duration:1s;-webkit-animation-fill-mode:both;animation-fill-mode:both;-webkit-animation-name:bounceInDown;animation-name:bounceInDown}
-.other-item-title{margin:10px 20px;padding:5px;line-height:30px;font-weight:400;border-bottom:1px solid #e8e9e7;color:#383937;position:relative;font-size:18px}
+.other-item-title{margin:10px 20px;padding:5px;line-height:30px;font-weight:400;border-bottom:1px solid #e8e9e7;color:#383937;position:relative;font-size:18px;cursor: default}
 .other-item .tags{margin:10px 15px}
 .other-item .tags a{display:inline-block;margin:5px 5px}
 .other-item .inner{margin:0 20px;padding-bottom:10px}

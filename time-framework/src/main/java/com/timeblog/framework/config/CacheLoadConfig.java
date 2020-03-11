@@ -29,7 +29,7 @@ import java.util.List;
 @Component
 public class CacheLoadConfig {
 
-    @Autowired
+    @Resource
     private RedisUtils redisUtils;
 
     @Resource
@@ -38,13 +38,13 @@ public class CacheLoadConfig {
     @Resource
     private BlogWebConfigDao blogWebConfigDao;
 
-    @Autowired
+    @Resource
     private SentenceDao sentenceDao;
 
-    @Autowired
+    @Resource
     private TimeTaskDao timeTaskDao;
 
-    @Autowired
+    @Resource
     private CronTaskRegistrar cronTaskRegistrar;
 
 
