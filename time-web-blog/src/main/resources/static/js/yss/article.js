@@ -66,6 +66,11 @@ article.Init = function ($) {
 
         $(".article-type").click(function () {
             if(!$(this).hasClass("isOpen")){
+                $(".article-type").removeClass('current');
+                $(".article-type").removeClass('slider');
+                $(".article-type").removeClass('isOpen');
+                $(".article-type").parent().find(".son-article-list").slideUp();
+
                 $(this).addClass('current');
                 $(this).addClass('slider');
                 $(this).addClass('isOpen');

@@ -47,23 +47,22 @@ public class WebArticleController {
 
 
     @RequestMapping("/toArticles")
-    public ModelAndView toArticles(String typeId){
+    public ModelAndView toArticles(){
         ModelAndView modelAndView = new ModelAndView("web/article");
         List<ArticleType> parentArticleTypeList = null;
+        Integer articleCount = 0;
         //查找首级分类
         List<ArticleType> allArticleTypeList =  (List<ArticleType>) redisUtils.get(SystemConstant.TEMP_ARTICLE_TYPES);
-        if (typeId == null){
-            parentArticleTypeList =  allArticleTypeList.stream().filter(l -> "-1".equals(l.getParentId())).collect(Collectors.toList());
-            parentArticleTypeList.forEach(pa -> {
-                pa.setSonArticleTypes(allArticleTypeList.stream().filter(l -> l.getParentId().equals(pa.getTypeId())).collect(Collectors.toList()));
-            });
-        }
+        //查出总文章数
+        articleCount = allArticleTypeList.stream().mapToInt(ArticleType::getArticleNum).sum();
+        parentArticleTypeList =  allArticleTypeList.stream().filter(l -> "-1".equals(l.getParentId())).collect(Collectors.toList());
+        parentArticleTypeList.forEach(pa -> {
+            pa.setSonArticleTypes(allArticleTypeList.stream().filter(l -> l.getParentId().equals(pa.getTypeId())).collect(Collectors.toList()));
+        });
 
-        Integer articleCount = articleMapper.queryCount();
         modelAndView.addObject("parentArticleTypeList",parentArticleTypeList)
                     .addObject("blogWebConfig",SystemConstant.BLOGWEBCONFIG)
-                    .addObject("articleCount",articleCount)
-                    .addObject("typeId",typeId);
+                    .addObject("articleCount",articleCount);
         return modelAndView;
     }
 

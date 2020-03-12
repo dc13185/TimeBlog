@@ -13,8 +13,6 @@ import com.timeblog.framework.system.utils.FileUtils;
 import com.timeblog.framework.system.utils.IpUtils;
 import com.timeblog.framework.system.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -48,7 +45,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/article")
 public class ArticleController {
 
-    private final static Logger logger =LoggerFactory.getLogger(ArticleController.class);
 
     @Value("${imageFile.path}")
     private String imageFilePath;
@@ -201,6 +197,7 @@ public class ArticleController {
         }else {
             article = article.toBuilder().status(0).isComment(1).isOriginal(1).isTop(0).build();
             article.setCreateTime(new Date());
+            article.setUpdateTime(new Date());
             if (StringUtils.isEmpty(article.getArticleTitle())){
                 //如果没有设置标题，可认为存临时草稿
                 String mdContext = article.getArticleContextMd();

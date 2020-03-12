@@ -90,12 +90,16 @@ function currentPage(currentPage){
 }
 
 function initPage(total){
-    $("#pager").zPager({
-        totalData: total,
-        htmlBox: $('#wraper'),
-        btnShow: true,
-        ajaxSetData: false
-    });
+    if (total <= 5){
+        initArticleData(1,5);
+    }else{
+        $("#pager").zPager({
+            totalData: total,
+            htmlBox: $('#wraper'),
+            btnShow: true,
+            ajaxSetData: false
+        });
+    }
 }
 
 

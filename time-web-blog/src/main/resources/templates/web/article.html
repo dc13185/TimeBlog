@@ -36,13 +36,12 @@
 					<div class="other-item" id="categoryandsearch">
 						<h5 class="other-item-title">文章分类</h5>
 			    		<ul class="category " id="category">
-							<!--<li data-index="0" class="slider"></li>-->
+							<li data-index="0"><div class="article-type all-articles" th:data-articleNum="${articleCount}" >  <a href="#">全部文章</a> <span class="layui-badge layui-bg-black" style="position: absolute;top: 10px;left: 240px;" th:text="${articleCount}"></span></div></li>
 							<li class="parent-list"  th:if="${parentArticleTypeList != null}"  th:each="articleType,articleTypeStat : ${parentArticleTypeList}" th:data-index="${articleTypeStat.index+1}" >
 								<div class="article-type"> <i class="fa fa-caret-right"></i> <a href="#" th:text="${articleType.typeName}"></a></div>
-
 								<ul class="son-article-list" th:if="${articleType.sonArticleTypes != null}" th:each="sonArticleType,sonArticleTypeStat : ${articleType.sonArticleTypes}"  style="display: none">
 									<li>
-										<div class="son-article-type" th:data-articleTypeId="${sonArticleType.typeId}"> <i th:class="${sonArticleType.icon}"></i>
+										<div class="son-article-type" th:data-articleTypeId="${sonArticleType.typeId}" th:data-articleNum="${sonArticleType.articleNum}" > <i th:class="${sonArticleType.icon}"></i>
 											<a href="#" th:text="${sonArticleType.typeName}"></a>
 											<span class="layui-badge layui-bg-black" style="position: absolute;top: 10px;left: 240px;" th:text="${sonArticleType.articleNum}"></span>
 										</div>
@@ -138,15 +137,15 @@
 				<span class="fa fa-tags fs-16"></span>
 			</div>
 			<div class="f-fr counts">
-									<span class="read">
+									<span class="span-counts">
 										<i class="fa fa-eye fs-16"></i>
 										<i class="num accessCount"></i>
 									</span>
+									<span class="span-counts">
 										<i class="fa fa-comments fs-16"></i>
 										<i class="num likeCount"></i>
 									</span>
-
-				<span class="ml20">
+									<span class="span-counts">
 										<i class="fa fa-heart fs-16"></i>
 										<i class="num likeCount"></i>
 									</span>
@@ -165,25 +164,27 @@
 	<script  th:src="@{/js/plugins/page/jquery.z-pager.js}"></script>
 	<script th:src="@{/js/article.js}"></script>
     <script th:inline="javascript">
-		var ctx = [[@{/}]];
         window.onload = function () {
             NProgress.done();
         };
-
 		layui.use(['jquery', 'util'], function () {
 			var $ = layui.jquery;
 			var backgroundUrl  =  [[${blogWebConfig.indexBackground}]];
 			$(".header").css("background-image","url("+backgroundUrl+")");
 			let articleCount = [[${articleCount}]];
 			initPage(articleCount);
-
 			$(".son-article-type").click(function () {
 				$.ARTICLE_TYPE_ID =  $(this).attr("data-articleTypeId");
-				initArticleData(1,5);
+				let articleNums =  $(this).attr("data-articleNum");
+				initPage(articleNums);
 			})
-		})
 
-
+			$(".all-articles").click(function () {
+				$.ARTICLE_TYPE_ID = false;
+				let articleNums =  $(this).attr("data-articleNum");
+				initPage(articleNums);
+			})
+		});
 	</script>
 </body>
 </html>
