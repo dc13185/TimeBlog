@@ -45,7 +45,7 @@ public class Comment implements Serializable {
     /**评论地址*/
     private String commentAddress;
     /**评论时间*/
-    private String createTime;
+    private  Date createTime;
 
 
     /**评论状态*/

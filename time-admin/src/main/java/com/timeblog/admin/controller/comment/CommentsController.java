@@ -77,16 +77,16 @@ public class CommentsController {
         commentDao.deleteByIds(commentIdsList);
         return Result.success();
     }
-    @RequestMapping("/commentRepaly")
+    @RequestMapping("/commentReplay")
     @ResponseBody
     public Result commentRepaly(@RequestBody HashMap<String,String> map){
         String replayId = map.get("replayId");
+        Integer articleId=commentDao.queryById(Integer.parseInt(replayId)).getCommentArticleId();
         String picture=null;
+        Article article=articleMapper.queryById(articleId);
         String nickName=null;
         String commentContent=map.get("commentContent");
         String commentQQ=SystemConstant.BLOGWEBCONFIG.getBlogAuthorQq();
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date date=new Date(System.currentTimeMillis());
         Comment comment=new Comment();
         if (StringUtils.isNotEmpty(commentQQ)){
             //QQ不为空获取其头像，昵称
@@ -106,17 +106,25 @@ public class CommentsController {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+
+        if ((adress=="") || (adress==null)){
+            adress = "火星";
+        }
         if (StringUtils.isBlank(nickName)){
             nickName = "匿名";
         }
         comment.setCommentAddress(adress);
+//        comment.setCommentArticleId(articleId);
         comment.setCommentIp(ip);
         comment.setCommentQQ(commentQQ);
         comment.setParentCommentId(Integer.parseInt(replayId));
+//        comment.setCommentArticleName(article.getArticleTitle());
         comment.setCommentContent(commentContent);
-        comment.setCreateTime(simpleDateFormat.format(date));
+        comment.setCreateTime(new Date());
         comment.setCommentNickname(nickName);
         comment.setCommentPicture(picture);
+        comment.setReplyId(Integer.parseInt(replayId));
+        comment.setCommentStatus(0);
         commentDao.insert(comment);
         return Result.success();
     }
