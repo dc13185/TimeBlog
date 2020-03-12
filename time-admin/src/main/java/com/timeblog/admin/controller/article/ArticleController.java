@@ -101,8 +101,9 @@ public class ArticleController {
         if (StringUtils.isNotEmpty(articleId)){
             Article article = articleMapper.queryById(Integer.parseInt(articleId));
             context = article.getArticleContextMd();
-            modelAndView.addObject("articleId",article.getArticleId());
-            modelAndView.addObject("articleTitle",article.getArticleTitle());
+            modelAndView.addObject("articleId",article.getArticleId())
+                        .addObject("articleTitle",article.getArticleTitle())
+                        .addObject("articleIntroduction",article.getArticleIntroduction());
         }
         if (null != context){
             modelAndView.addObject("tempArticle",context);
@@ -301,6 +302,12 @@ public class ArticleController {
         }
         //数据库中修改
         articleMapper.update(article);
+
+        if (article.getStatus() == 1){
+            //重新统计文章数据
+            List<ArticleType> articleTypes = articleTypeMapper.queryAllTimeArticleTypes();
+            redisUtils.set(SystemConstant.TEMP_ARTICLE_TYPES,articleTypes);
+        }
         return  Result.success();
     }
 
@@ -315,7 +322,13 @@ public class ArticleController {
         Article.ArticleBuilder articleBuilder =  Article.builder().articleId(articleId);
         switch (statusKey){
             case "status" :
-                articleBuilder.status(statusValue); break;
+                articleBuilder.status(statusValue);
+                if (statusValue == 1){
+                    //重新统计文章数据
+                    List<ArticleType> articleTypes = articleTypeMapper.queryAllTimeArticleTypes();
+                    redisUtils.set(SystemConstant.TEMP_ARTICLE_TYPES,articleTypes);
+                }
+                break;
             case "isTop" :
                 articleBuilder.isTop(statusValue); break;
             case "isComment" :
@@ -347,32 +360,6 @@ public class ArticleController {
                     }
                 }
             }
-//            删除文章中的图片
-//            Set<String> pics = new HashSet<>();
-//            String img = "";
-//
-//            Matcher m_image;
-//
-//            m_image = SystemConstant.IMAGE_PATTERN.matcher(article.getArticleContextMd());
-//            while (m_image.find()) {
-//                // 得到<img />数据
-//                img = m_image.group();
-//                // 匹配<img>中的src数据
-//                Matcher m = SystemConstant.IMAGE_PATTERN.matcher(img);
-//                while (m.find()) {
-//                    pics.add(m.group(0));
-//                }
-//                for (String imagePath: pics
-//                     ) {
-//                    Path path=Paths.get(imageFilePath + imagePath);
-//                    try {
-//                        Files.delete(path);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-
         }
 
         articleMapper.deleteByArticleIds(articleIdList);

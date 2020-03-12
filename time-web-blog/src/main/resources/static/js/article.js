@@ -1,7 +1,11 @@
-function initArticleData(pageNumber,pageSize,ctx) {
+
+function initArticleData(pageNumber,pageSize) {
     $("#pager").hide();
     $("#bloglist").empty();
-    let jsonContent = {"pageNumber": pageNumber, "pageSize": pageSize}
+    let jsonContent = {"pageNumber": pageNumber, "pageSize": pageSize};
+    if ($.ARTICLE_TYPE_ID && $.ARTICLE_TYPE_ID != ''){
+        jsonContent["articleTypeId"] = $.ARTICLE_TYPE_ID;
+    }
     $.ajax({
         url: ctx + "web/article/showArticleList",
         type: 'post',
@@ -64,6 +68,7 @@ function initArticleData(pageNumber,pageSize,ctx) {
                     }
                     articleModel.removeClass("articleModel");
                     articleModel.find(".article-title").text(article.articleTitle).attr("href",ctx+"web/article/toArticleDetails?articleId="+article.articleId);
+                    articleModel.find(".article-articleIntroduction").text(article.articleIntroduction);
                     articleModel.find(".day").text(day);
                     articleModel.find(".month").text(month);
                     articleModel.find(".year").text(year);
@@ -80,7 +85,7 @@ function initArticleData(pageNumber,pageSize,ctx) {
 
 
 function currentPage(currentPage){
-        initArticleData(currentPage,5,ctx);
+        initArticleData(currentPage,5);
          $(".layui-fixbar-top").trigger("click");
 }
 

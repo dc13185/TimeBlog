@@ -43,7 +43,7 @@
 
     <!-- 声明sql片段 -->
     <sql id="articleFields">
-	      ta.article_id ,article_title,  ta.cover_image,  ta.isOriginal, ta.isTop ,ta.update_time
+	      ta.article_id ,article_title,  ta.cover_image,  ta.isOriginal, ta.isTop ,ta.update_time,ta.article_introduction
     </sql>
 
 
@@ -109,8 +109,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="articleId" useGeneratedKeys="true" >
-        insert into timeblog.time_article(article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,create_time ,update_time,article_type_id)
-        values (#{articleTitle}, #{articleContextHtml}, #{articleContextMd}, #{coverImage}, #{isComment}, #{isOriginal}, #{isTop}, #{status},#{createTime},#{updateTime},#{articleTypeId})
+        insert into timeblog.time_article(article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,create_time ,update_time,article_type_id,article_introduction)
+        values (#{articleTitle}, #{articleContextHtml}, #{articleContextMd}, #{coverImage}, #{isComment}, #{isOriginal}, #{isTop}, #{status},#{createTime},#{updateTime},#{articleTypeId},#{articleIntroduction})
     </insert>
 
     <!--通过主键修改数据-->

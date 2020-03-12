@@ -6,6 +6,7 @@
 var article = {};
 article.Init = function ($) {
     //var $ = layui.jquery,
+    $.IS_OPEN = true;
     var slider = 0;
     blogtype();
     //类别导航开关点击事件
@@ -51,14 +52,40 @@ article.Init = function ($) {
         $('.article-category').removeClass('categoryIn').addClass('categoryOut');
     }
     function blogtype() {
-        $('#category li').hover(function () {
-            $(this).addClass('current');
-            var num = $(this).attr('data-index');
-            $('.slider').css({ 'top': ((parseInt(num) - 1) * 40) + 'px' });
+        $('.article-type').hover(function () {
+            if ($.IS_OPEN){
+                $(this).addClass('current');
+                $(this).addClass('slider');
+            }
         }, function () {
-            $(this).removeClass('current');
-            $('.slider').css({ 'top': slider });
+            if($.IS_OPEN) {
+                $(this).removeClass('current');
+                $(this).removeClass('slider');
+            }
         });
+
+        $(".article-type").click(function () {
+            if(!$(this).hasClass("isOpen")){
+                $(this).addClass('current');
+                $(this).addClass('slider');
+                $(this).addClass('isOpen');
+                $(this).parent().find(".son-article-list").slideDown();
+            }else {
+                $(this).removeClass('current');
+                $(this).removeClass('slider');
+                $(this).removeClass('isOpen');
+                $(this).parent().find(".son-article-list").slideUp();
+            }
+
+            if($(".article-type").hasClass("isOpen")){
+                $.IS_OPEN = false;
+            }else{
+                $.IS_OPEN = true;
+            }
+
+        })
+
+
         $(window).scroll(function (event) {
             var winPos = $(window).scrollTop();
             if (winPos > 750)
@@ -66,6 +93,12 @@ article.Init = function ($) {
             else
                 $('#categoryandsearch').removeClass('fixed');
         });
+
+
     };
+
+
+
+
 };
 

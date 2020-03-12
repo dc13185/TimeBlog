@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author: dong.chao
@@ -42,6 +43,19 @@ public class ArticleType extends BaseDomain  {
      * 描述
      */
     private String description;
+
+    /**
+     * 改类型对应文章数
+     */
+
+    private Integer articleNum;
+
+    /**
+     * 对应子类型
+     */
+    private List<ArticleType> sonArticleTypes;
+
+
 
 
 

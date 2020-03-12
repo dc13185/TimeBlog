@@ -46,4 +46,6 @@ public class Sentence {
 
     private Date createDate;
 
+    private Integer status;
+
 }

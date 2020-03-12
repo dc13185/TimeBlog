@@ -10,6 +10,7 @@
         <result property="icon" column="icon" jdbcType="VARCHAR"/>
         <result property="isAvailable" column="isAvailable" jdbcType="INTEGER"/>
         <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="articleNum" column="articleNum" jdbcType="INTEGER"/>
     </resultMap>
 
     <!--查询单个-->
@@ -42,9 +43,12 @@
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAllTimeArticleTypes" resultMap="TimeArticleTypeMap">
-        select  type_id, parent_id, type_name, sort, icon, isAvailable, description
-        from timeblog.time_article_type
+            SELECT *,( SELECT COUNT(1) FROM time_article tm WHERE tm.article_type_id = tmy.type_id and tm.status = 1 ) as articleNum FROM time_article_type tmy
     </select>
+
+
+
+
 
 
     <!--新增所有列-->

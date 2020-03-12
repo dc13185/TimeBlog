@@ -42,7 +42,10 @@
 
 								<ul class="son-article-list" th:if="${articleType.sonArticleTypes != null}" th:each="sonArticleType,sonArticleTypeStat : ${articleType.sonArticleTypes}"  style="display: none">
 									<li>
-										<div class="son-article-type" th:data-articleTypeId="${sonArticleType.typeId}"> <i th:class="${sonArticleType.icon}"></i> <a href="#" th:text="${sonArticleType.typeName}"></a></div>
+										<div class="son-article-type" th:data-articleTypeId="${sonArticleType.typeId}"> <i th:class="${sonArticleType.icon}"></i>
+											<a href="#" th:text="${sonArticleType.typeName}"></a>
+											<span class="layui-badge layui-bg-black" style="position: absolute;top: 10px;left: 240px;" th:text="${sonArticleType.articleNum}"></span>
+										</div>
 									</li>
 								</ul>
 							</li>
@@ -125,7 +128,7 @@
 			<a href="read.html" class="cover img-light">
 				<img class="article-img" src="">
 			</a>
-			Spire.Doc for .NET是一款由E-iceblue公司开发的专业的Word .NET类库，使用该工具开发人员可以在任意.NET平台（C#，VB.NET，ASP.NET）上快速创建，读取，写入，转换，打印Word文档。作为一个独立的Word 组件，Spire.Doc的运行无需安装Microsoft Word。而且，它可以将Microsoft Word文档创建功能集成到开发者的任何.NET应用程序。
+			<div class="article-articleIntroduction">Spire.Doc for .NET是一款由E-iceblue公司开发的专业的Word .NET类库，使用该工具开发人员可以在任意.NET平台（C#，VB.NET，ASP.NET）上快速创建，读取，写入，转换，打印Word文档。作为一个独立的Word 组件，Spire.Doc的运行无需安装Microsoft Word。而且，它可以将Microsoft Word文档创建功能集成到开发者的任何.NET应用程序。</div>
 		</div>
 		<div class="read-more">
 			<a href="read.html" class="fc-black f-fwb">点击阅读</a>
@@ -139,7 +142,6 @@
 										<i class="fa fa-eye fs-16"></i>
 										<i class="num accessCount"></i>
 									</span>
-				<span class="ml20">
 										<i class="fa fa-comments fs-16"></i>
 										<i class="num likeCount"></i>
 									</span>

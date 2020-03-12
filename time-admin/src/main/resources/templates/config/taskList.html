@@ -330,7 +330,10 @@
     function startTask(flag,taskId){
         debugger;
         let url = ctx+"task/updateStatus";
-        if (flag == 'execute'){ url = ctx+"task/executeTaks";$(".sk-spinner-three-bounce").show();}
+        if (flag == 'execute'){
+            url = ctx+"task/executeTaks";
+            $(".sk-spinner-three-bounce").show();
+        }
         let jsonContent = {"taskId":taskId}
         $.ajax({
             url: url,
