@@ -1,5 +1,4 @@
 package com.timeblog.admin.controller.comment;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
@@ -11,22 +10,16 @@ import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.HttpClientUtils;
 import com.timeblog.framework.system.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -41,19 +34,8 @@ import java.util.*;
 @RequestMapping("/comment")
 public class CommentsController {
 
-
-
-    @Autowired
-    private  RedisUtils redisUtils;
-
     @Resource
     private CommentDao commentDao;
-
-    @Resource
-    private ArticleLabelMapper articleLabelMapper;
-
-    @Resource
-    private ArticleMapper articleMapper;
 
     @RequestMapping("/toCommentList")
     public String toCommentList(){
@@ -79,15 +61,10 @@ public class CommentsController {
     }
     @RequestMapping("/commentReplay")
     @ResponseBody
-    public Result commentRepaly(@RequestBody HashMap<String,String> map){
-        String replayId = map.get("replayId");
-        Integer articleId=commentDao.queryById(Integer.parseInt(replayId)).getCommentArticleId();
-        String picture=null;
-        Article article=articleMapper.queryById(articleId);
-        String nickName=null;
-        String commentContent=map.get("commentContent");
+    public Result commentRepaly(@RequestBody Comment reqComment) throws UnknownHostException {
+        String picture = null;
+        String nickName = null;
         String commentQQ=SystemConstant.BLOGWEBCONFIG.getBlogAuthorQq();
-        Comment comment=new Comment();
         if (StringUtils.isNotEmpty(commentQQ)){
             //QQ不为空获取其头像，昵称
             Map<String,String> infoMap = null;
@@ -101,30 +78,21 @@ public class CommentsController {
         }
         String adress=null;
         String ip=null;
-        try {
-             ip= InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
+        ip= InetAddress.getLocalHost().getHostAddress();
         if ((adress=="") || (adress==null)){
             adress = "火星";
         }
         if (StringUtils.isBlank(nickName)){
             nickName = "匿名";
         }
-        comment.setCommentAddress(adress);
-//        comment.setCommentArticleId(articleId);
-        comment.setCommentIp(ip);
-        comment.setCommentQQ(commentQQ);
-        comment.setParentCommentId(Integer.parseInt(replayId));
-//        comment.setCommentArticleName(article.getArticleTitle());
-        comment.setCommentContent(commentContent);
-        comment.setCreateTime(new Date());
-        comment.setCommentNickname(nickName);
-        comment.setCommentPicture(picture);
-        comment.setReplyId(Integer.parseInt(replayId));
-        comment.setCommentStatus(0);
+        //comment入库
+        Comment comment = reqComment.toBuilder().commentAddress(adress)
+                .commentIp(ip)
+                .commentQQ(commentQQ)
+                .createTime(new Date())
+                .commentNickname(nickName)
+                .commentPicture(picture)
+                .commentStatus(0).build();
         commentDao.insert(comment);
         return Result.success();
     }

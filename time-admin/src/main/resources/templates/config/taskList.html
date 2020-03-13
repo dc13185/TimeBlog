@@ -1,7 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="include :: header"></head>
-<link th:href="@{/css/plugins/switchery/switchery.css}" rel="stylesheet"/>
 <link th:href="@{/css/style.css}" rel="stylesheet"/>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -118,7 +117,6 @@
 </div>
 
 <head th:include="include :: footer"></head>
-<script th:src="@{/js/plugins/switchery/switchery.js}"></script>
 <script type="text/javascript">
     $(function(){
         $("#inconModeal").hide();
@@ -328,11 +326,10 @@
 
 
     function startTask(flag,taskId){
-        debugger;
+        $(".sk-spinner-three-bounce").show();
         let url = ctx+"task/updateStatus";
         if (flag == 'execute'){
             url = ctx+"task/executeTaks";
-            $(".sk-spinner-three-bounce").show();
         }
         let jsonContent = {"taskId":taskId}
         $.ajax({
@@ -351,10 +348,10 @@
                     if(flag == 'execute'){
                         let mills =msg.mills;
                         toastr.success("执行成功，用时"+mills+"毫秒");
-                        $(".sk-spinner-three-bounce").hide();
                     }else{
                         $('#exampleTableEvents').bootstrapTable(('refresh'));
                     }
+                    $(".sk-spinner-three-bounce").hide();
                 }
             }
         });

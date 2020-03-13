@@ -10,3 +10,8 @@ spring:
     url: jdbc:mysql://123.207.146.122:3306/timeblog?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
     username: root
     password: Dc1318533144cg..
+
+# 文件上传目录设置
+imageFile:
+  path: /dcHome/blog/images/
+  url: /images/**

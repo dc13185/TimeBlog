@@ -9,14 +9,13 @@
     <meta name="author" content="www.yanshisan.cn" />
     <meta name="robots" content="all" />
     <title>博客</title>
-	<link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
-    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" />
+	<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui/css/layui.css" />
     <link rel="stylesheet" th:href="@{/css/master.css}" />
     <link rel="stylesheet" th:href="@{/css/gloable.css}" />
-    <link rel="stylesheet" th:href="@{/css/nprogress.css}" />
+	<link href="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/blog.css}" />
 	<link rel="stylesheet" th:href="@{/css/plugins/page/page.css}" />
-
 </head>
 <body>
     <div class="header">
@@ -36,14 +35,14 @@
 					<div class="other-item" id="categoryandsearch">
 						<h5 class="other-item-title">文章分类</h5>
 			    		<ul class="category " id="category">
-							<li data-index="0"><div class="article-type all-articles" th:data-articleNum="${articleCount}" >  <a href="#">全部文章</a> <span class="layui-badge layui-bg-black" style="position: absolute;top: 10px;left: 240px;" th:text="${articleCount}"></span></div></li>
+							<li data-index="0"><div class="article-type all-articles" th:data-articleNum="${articleCount}" >  <a href="#">全部文章</a> <span class="layui-badge article-num" style="position: absolute;top: 10px;left: 259px;" th:text="${articleCount}"></span></div></li>
 							<li class="parent-list"  th:if="${parentArticleTypeList != null}"  th:each="articleType,articleTypeStat : ${parentArticleTypeList}" th:data-index="${articleTypeStat.index+1}" >
 								<div class="article-type"> <i class="fa fa-caret-right"></i> <a href="#" th:text="${articleType.typeName}"></a></div>
 								<ul class="son-article-list" th:if="${articleType.sonArticleTypes != null}" th:each="sonArticleType,sonArticleTypeStat : ${articleType.sonArticleTypes}"  style="display: none">
 									<li>
 										<div class="son-article-type" th:data-articleTypeId="${sonArticleType.typeId}" th:data-articleNum="${sonArticleType.articleNum}" > <i th:class="${sonArticleType.icon}"></i>
 											<a href="#" th:text="${sonArticleType.typeName}"></a>
-											<span class="layui-badge layui-bg-black" style="position: absolute;top: 10px;left: 240px;" th:text="${sonArticleType.articleNum}"></span>
+											<span class="layui-badge article-num" style="position: absolute;top: 10px;left: 240px;" th:text="${sonArticleType.articleNum}"></span>
 										</div>
 									</li>
 								</ul>
@@ -155,12 +154,12 @@
 
 	<div th:replace="/web/hader :: float"></div>
 
-    <script  th:src="@{/layui/layui.js}"></script>
+	<script src="https://www.layuicdn.com/layui/layui.js"></script>
     <script  th:src="@{/js/yss/gloable.js}"></script>
-    <script  th:src="@{/js/plugins/nprogress.js}"></script>
+	<script src="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
     <script>NProgress.start();</script>
  	<script  th:src="@{/js/yss/article.js}"></script>
-	<script th:src="@{/js/jquery.min.js}"></script>
+	<script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
 	<script  th:src="@{/js/plugins/page/jquery.z-pager.js}"></script>
 	<script th:src="@{/js/article.js}"></script>
     <script th:inline="javascript">

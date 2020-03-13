@@ -56,10 +56,7 @@ security:
   #静态资源，不予拦截 ，以，分割
   staticUrl: /js/**,/css/**,/font-awesome/**,/layui/**,/img/**,/image/**,/images/**,/font/**,/fonts/**,/web/**,/**/*.png",/**/*.jpg,/login/toLoginView
   csrfCloseUrl: /article/uploadImage/**,/web/**
-# 文件上传目录设置
-imageFile:
-  path: D:/develop/TestFile/image/
-  url: /images/**
+
 
 # pagehelper
 pagehelper:

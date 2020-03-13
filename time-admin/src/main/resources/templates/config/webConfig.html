@@ -52,7 +52,7 @@
                 <div class="selectImgDiv" id="selectItemDiv">
                     <div class="item">
                         <div class="img_show">
-                            <img th:src="@{/image/background.jpg}"/>
+                            <img src="https://s1.ax1x.com/2020/03/13/8mLIfI.jpg"/>
                         </div>
                         <div class="img_title">
                             清新
@@ -63,7 +63,7 @@
                     </div>
                     <div class="item">
                         <div class="img_show">
-                            <img th:src="@{/image/background-style.jpg}"/>
+                            <img src="https://s1.ax1x.com/2020/03/13/8uBqPA.jpg"/>
                         </div>
                         <div class="img_title">
                             古风
@@ -72,8 +72,6 @@
                             <i class="iconfont icon-xuanzhong"></i>
                         </div>
                     </div>
-
-
                     <div class="item" th:each="webBackground,articleTypeStat : ${webBackgroundList}">
                         <div class="img_show">
                             <img th:src="${webBackground.backgroundUrl}"/>
@@ -83,8 +81,6 @@
                             <i class="iconfont icon-xuanzhong"></i>
                         </div>
                     </div>
-
-
 
                 </div>
             </div>

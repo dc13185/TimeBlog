@@ -45,7 +45,7 @@
 .col-other .other-item .category{position:relative;padding-bottom:20px}
 .col-other .other-item .category li{display:block;/*height:40px;*/line-height:39px;position:relative;z-index:1}
 .slider{border-right:6px solid #484947;height:40px;background-color:#f8f9f7;/*position:absolute;*/top:0;left:0;right:0;z-index:0;transition:top .3s}
-
+.article-num{background-color: #dfe1d5}
 .son-article-list{
     display: block;
     padding: 0 20px;

@@ -5,10 +5,10 @@
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width" />
     <title th:text="${blogWebConfig.blogTitle}"></title>
-    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
-    <link th:href="@{/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui/css/layui.css" />
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link th:href="@{/css/index_style.css}" rel="stylesheet"/>
-    <link th:href="@{/css/animate.min.css}" rel="stylesheet"/>
+    <link href="https://cdn.bootcss.com/animate.css/3.7.2/animate.min.css" rel="stylesheet">
 </head>
 <body>
     <div id="menu" class="hover_animation menu_open" data-mark="false">
@@ -36,7 +36,7 @@
                             <span th:if="${sentence.works != ''}" th:text="${sentence.works}"></span>
                         </div>
                     </div>
-                    <a class="layui-btn layui-btn-normal index-btn" style="margin-top: 300px" th:href="@{/web/article/toArticles}">START</a>
+                    <a class="layui-btn layui-btn-normal index-btn" style="margin-top: 120px" th:href="@{/web/article/toArticles}">START</a>
                 </div>
                 <a class="next wow fadeInUp" data-wow-duration="2s" id="next"></a>
             </div>
@@ -109,10 +109,10 @@
                 <div class="layui-row">
                     <div class="layui-col-xs12 layui-col-sm6 layui-col-md4">
                         <div class="single-widget about">
-                            <div class="footer-logo">
+                           <!-- <div class="footer-logo">
                                 <h2>燕十三</h2>
                             </div>
-                            <p>剑气纵横三万里，一剑光寒十九洲。</p>
+                            <p>剑气纵横三万里，一剑光寒十九洲。</p>-->
                             <div class="button">
                                 <a href="#" class="btn layui-btn layui-btn-normal">About Me</a>
                             </div>
@@ -152,8 +152,8 @@
             </div>
         </div>
     </footer>
-    <script th:src="@{/layui/layui.js}" ></script>
-    <script th:src="@{/js/wow.min.js}"></script>
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
+    <script src="https://cdn.bootcss.com/wow/1.0.1/wow.min.js"></script>
     <script th:src="@{/js/index.js}" ></script>
     <script th:inline="javascript">
         layui.use(['jquery', 'util'], function () {

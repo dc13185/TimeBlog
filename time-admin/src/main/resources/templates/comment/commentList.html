@@ -1,6 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="include :: header"></head>
-<link th:href="@{/css/plugins/switchery/switchery.css}" rel="stylesheet"/>
 <link th:href="@{/css/style.css}" rel="stylesheet"/>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -54,6 +53,9 @@
                     <h4>回复内容:</h4>
                     <textarea name="commentContent" id="commentContent" rows="6" cols="80"  onpropertychange="if(this.scrollHeight>80) this.style.posHeight=this.scrollHeight+5"></textarea>
                     <input type="hidden" id="replayId"  name="replayId"/>
+                    <input type="hidden" id="parentCommentId"  name="parentCommentId"/>
+                    <input type="hidden" id="commentArticleId"  name="commentArticleId"/>
+                    <input type="hidden" id="replyName"  name="replyName"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭
@@ -69,7 +71,6 @@
 
 
 <head th:include="include :: footer"></head>
-<script th:src="@{/js/plugins/switchery/switchery.js}"></script>
 <script type="text/javascript">
     $(function(){
         $("#inconModeal").hide();
@@ -147,7 +148,7 @@
                             if(row.commentPicture === null || row.commentPicture.indexOf("img-blank") != -1 ){
                                 checkerStr = "暂无头像";
                             }else{
-                                checkerStr = '<img style="width: 85%;" src='+row.commentPicture+'>';
+                                checkerStr = '<img style="width: 50%;" src='+row.commentPicture+'>';
                             }
                             return [
                                 checkerStr
@@ -160,14 +161,14 @@
                     {title:'评论地址',field: 'commentAddress',align:"center",sortable:true},
 
                     {title:'评论时间',field: 'createTime',align:"center",sortable:true, formatter: function (value, row, index) {
-                            return changeDateFormat(value)
+                            return new Date(value).format("yyyy/MM/dd hh:mm")
                         }},
 
                     {title:'对应文章',field: 'commentArticleName',align:"center",sortable:true},
 
                     {title:'操作',field:"Button",align:"center",formatter:function (value, row, index) {
                             return [
-                                '<button class="btn btn-primary btn-lg"  data-toggle="modal" data-target="#myModal">\n' +
+                                '<button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#myModal">\n' +
                                 '    回复\n' +
                                 '</button>'
                             ].join("")
@@ -177,48 +178,15 @@
 
 
                 ],
-                // onLoadSuccess:function(data){
-                //     let topSwitchery = [];
-                //     let elems = document.querySelectorAll('.is-top');
-                //     for (let i = 0; i < elems.length; i++) {
-                //         topSwitchery[i] = new Switchery(elems[i]);
-                //     }
-                //     let commentSwitchery = [];
-                //     let commentElems = document.querySelectorAll('.is-comment');
-                //     for (let i = 0; i < elems.length; i++) {
-                //         commentSwitchery[i] = new Switchery(commentElems[i]);
-                //     }
-                //
-                //     $(".is-top").on("change",function (e) {
-                //         let articleId = $(this).attr("name");
-                //         let value = $(this).is(':checked') ? 1 : 0;
-                //         changeStatus("isTop",value,articleId);
-                //     });
-                //
-                //     $(".is-comment").on("change",function (e) {
-                //         let articleId = $(this).attr("name");
-                //         let value = $(this).is(':checked') ? 1 : 0;
-                //         changeStatus("isComment",value,articleId);
-                //     })
-                // },
-
-
-
             });
         };
 
 
         //修改
         window.operateEvents ={
-            "click .btn-lg":function(e,value,row,index){
-                replay(row.commentId);
+            "click .btn-sm":function(e,value,row,index){
+                replay(row.commentId,row.parentCommentId,row.commentArticleId,row.commentNickname);
             },
-            "click .fb-status-sub":function(e,value,row,index){
-                changeStatus("status",1,row.articleId);
-            },
-            "click .cg-status-sub":function(e,value,row,index){
-                changeStatus("status",0,row.articleId);
-            }
         }
 
         //得到查询的参数
@@ -234,12 +202,6 @@
     }
 
 
-
-
-    // //点击新增按钮
-    // $("#addButton").on("click", function () {
-    //     window.location.href = ctx+"article/toEditArticle";
-    // })
 
 
 
@@ -278,40 +240,26 @@
     })
 
 
-    function changeStatus(statusKey,statusValue,articleId){
-        console.log(statusKey+","+statusValue+","+articleId);
-        let statusDate = {"statusKey":statusKey,"statusValue":statusValue,"articleId":articleId}
-        $.ajax({
-            type: 'post',
-            url: ctx+'article/editArticle',
-            dataType:"json",
-            data: JSON.stringify(statusDate),
-            cache: false,
-            async: true,
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            },
-            success: function (msg) {
-                if (msg.code == 200){
-                    if (statusKey == "status"){
-                        $('#exampleTableEvents').bootstrapTable(('refresh'));
-                    }
-                }else{
-                    toastr.error("请求错误!")
-                }
-            }
-        });
-    }
-
     //回复
-    function replay(replayId){
+    function replay(replayId,parentCommentId,commentArticleId,replyName){
+        $("#parentCommentId").val(parentCommentId)
         $('#replayId').val(replayId);
+        $("#commentArticleId").val(commentArticleId);
+        $("#replyName").val(replyName);
     }
     //回复表单提交
     $('#submit_replay').on("click",function () {
         let replayId=$('#replayId').val();
+        let parentCommentId=$('#parentCommentId').val();
+        let commentArticleId=$('#commentArticleId').val();
+        let replyName=$('#replyName').val();
+        debugger;
+        if (parentCommentId == ""){
+            parentCommentId = replayId;
+        }
+
         let commentContent=$('#commentContent').val();
-        let ajaxdata={"replayId":replayId,"commentContent":commentContent};
+        let ajaxdata={"replyId":replayId,"commentContent":commentContent,"parentCommentId":parentCommentId,"commentArticleId":commentArticleId,"replyName":replyName};
         $.ajax({
             type: 'post',
             url: ctx+'comment/commentReplay',
@@ -337,20 +285,25 @@
         $('#exampleTableEvents').bootstrapTable('resetView');
     });
 
-    //转换日期格式(时间戳转换为datetime格式)
-    function changeDateFormat(cellval) {
-        let dateVal = cellval + "";
-        if (cellval != null) {
-            let date = new Date(parseInt(dateVal.replace("/Date(", "").replace(")/", ""), 10));
-            let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-            let currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-
-            let hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-            let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-            let seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-
-            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hours + ":" + minutes + ":" + seconds;
+    Date.prototype.format = function(fmt) {
+        var o = {
+            "M+" : this.getMonth()+1,                 //月份
+            "d+" : this.getDate(),                    //日
+            "h+" : this.getHours(),                   //小时
+            "m+" : this.getMinutes(),                 //分
+            "s+" : this.getSeconds(),                 //秒
+            "q+" : Math.floor((this.getMonth()+3)/3), //季度
+            "S"  : this.getMilliseconds()             //毫秒
+        };
+        if(/(y+)/.test(fmt)) {
+            fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
         }
+        for(var k in o) {
+            if(new RegExp("("+ k +")").test(fmt)){
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+            }
+        }
+        return fmt;
     }
 
 

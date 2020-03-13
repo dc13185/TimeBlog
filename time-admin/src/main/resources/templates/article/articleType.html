@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="include :: header"></head>
-<link th:href="@{/css/plugins/chosen/chosen.css}" rel="stylesheet"/>
+<link href="https://cdn.bootcss.com/chosen/1.1.0/chosen.min.css" rel="stylesheet">
 <link th:href="@{/css/style.css}" rel="stylesheet"/>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -111,7 +111,7 @@
 </div>
 
 <head th:include="include :: footer"></head>
-<script th:src="@{/js/plugins/chosen/chosen.jquery.js}"></script>
+<script src="https://cdn.bootcss.com/chosen/1.1.0/chosen.jquery.min.js"></script>
 <script type="text/javascript">
     $(function(){
         $("#article-type-chosen").chosen({

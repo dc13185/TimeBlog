@@ -90,7 +90,7 @@ function currentPage(currentPage){
 }
 
 function initPage(total){
-    if (total <= 5){
+   if (total <= 5){
         initArticleData(1,5);
     }else{
         $("#pager").zPager({

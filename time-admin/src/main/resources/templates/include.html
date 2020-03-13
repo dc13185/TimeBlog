@@ -7,24 +7,24 @@
 	<meta name="_csrf" th:content="${_csrf.token}"/>
 	<meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
 	<!--<link rel="shortcut icon" href="favicon.ico">-->
-	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
-	<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
+	<link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
 	<!-- bootstrap-table 表格插件样式 -->
-	<link th:href="@{/css/plugins/bootstrap-table/bootstrap-table.min.css}" rel="stylesheet"/>
-	<link th:href="@{/css/animate.css}" rel="stylesheet"/>
+	<link href="https://cdn.bootcss.com/bootstrap-table/1.16.0/bootstrap-table.min.css" rel="stylesheet">
+	<link href="https://cdn.bootcss.com/animate.css/3.7.2/animate.min.css" rel="stylesheet">
 	<link th:href="@{/css/style.css}" rel="stylesheet"/>
-	<link th:href="@{/css/plugins/toastr/toastr.min.css}" rel="stylesheet"/>
+	<link href="https://cdn.bootcss.com/toastr.js/2.1.4/toastr.min.css" rel="stylesheet">
 </head>
 <div th:fragment="footer">
-	<script th:src="@{/js/jquery.min.js}"></script>
-	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 	<!-- bootstrap-table 表格插件 -->
-	<script th:src="@{/js/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
-	<script th:src="@{/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js}"></script>
-	<script th:src="@{/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js}"></script>
-	<script th:src="@{/js/plugins/bootstrap-table/bootstrap-table-toolbar.min.js}"></script>
-	<script th:src="@{/js/plugins/toastr/toastr.min.js}"></script>
+	<script src="https://cdn.bootcss.com/bootstrap-table/1.16.0/bootstrap-table.min.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap-table/1.16.0/locale/bootstrap-table-zh-CN.min.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap-table/1.16.0/extensions/mobile/bootstrap-table-mobile.min.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap-table/1.16.0/extensions/toolbar/bootstrap-table-toolbar.min.js"></script>
+	<script src="https://cdn.bootcss.com/toastr.js/2.1.4/toastr.min.js"></script>
 	<script th:inline="javascript">
 		//根路径
 		var ctx = [[@{/}]];

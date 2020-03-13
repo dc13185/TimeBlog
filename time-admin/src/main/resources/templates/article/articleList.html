@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="include :: header"></head>
-<link th:href="@{/css/plugins/switchery/switchery.css}" rel="stylesheet"/>
+<link href="https://cdn.bootcss.com/switchery/0.8.2/switchery.min.css" rel="stylesheet">
 <link th:href="@{/css/style.css}" rel="stylesheet"/>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -38,7 +38,7 @@
 </div>
 
 <head th:include="include :: footer"></head>
-<script th:src="@{/js/plugins/switchery/switchery.js}"></script>
+<script src="https://cdn.bootcss.com/switchery/0.8.2/switchery.min.js"></script>
 <script type="text/javascript">
     $(function(){
         $("#inconModeal").hide();

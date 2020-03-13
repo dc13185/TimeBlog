@@ -105,6 +105,7 @@ public class WebConfigController {
             blogWebConfigDao.update(blogWebConfig);
         }
         redisUtils.set(SystemConstant.WEB_BLOG_CONFIG,blogWebConfig);
+        SystemConstant.BLOGWEBCONFIG = blogWebConfig;
         return Result.success();
     }
 

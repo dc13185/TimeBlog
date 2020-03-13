@@ -5,16 +5,16 @@
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width" />
     <title>文章阅读</title>
-    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" />
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui/css/layui.css" />
     <link rel="stylesheet" th:href="@{/css/master.css}" />
     <link rel="stylesheet" th:href="@{/css/gloable.css}" />
-    <link rel="stylesheet" th:href="@{/css/nprogress.css}" />
+    <link href="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/blog.css}" />
     <link rel="stylesheet" th:href="@{/css/plugins/editormd/editormd.preview.min.css}" />
     <link rel="stylesheet" type="text/css"th:href="@{/css/plugins/like/zzsc-demo.css}" />
     <link rel="stylesheet" type="text/css"th:href="@{/css/plugins/like/icons.css}" />
     <link rel="stylesheet" type="text/css"th:href="@{/css/plugins/ppfInput/minippfix.css}" />
-    <link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/message.css}" />
 </head>
 <body>
@@ -196,21 +196,19 @@
         </div>
     </div>
     <div th:replace="/web/hader :: float"></div>
-    <script th:src="@{/js/jquery.min.js}"></script>
-    <script th:src="@{/js/plugins/editormd/lib/marked.min.js}"></script>
-    <script th:src="@{/js/plugins/editormd/lib/prettify.min.js}"></script>
-    <script th:src="@{/js/plugins/editormd/lib/raphael.min.js}"></script>
-    <script th:src="@{/js/plugins/editormd/lib/underscore.min.js}"></script>
-    <script th:src="@{/js/plugins/editormd/lib/sequence-diagram.min.js}"></script>
-    <script th:src="@{/js/plugins/editormd/lib/flowchart.min.js}"></script>
-    <script th:src="@{/js/plugins/editormd/lib/jquery.flowchart.min.js}"></script>
-    <script th:src="@{/js/plugins/editormd/editormd.min.js}"></script>
-    <script th:src="@{/layui/layui.js}"></script>
+    <script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/marked/0.3.4/marked.min.js"></script>
+    <script src="https://cdn.bootcss.com/prettify/188.0.0/prettify.min.js"></script>
+    <script src="https://cdn.bootcss.com/raphael/2.1.3/raphael-min.js"></script>
+    <script src="https://cdn.bootcss.com/underscore.js/1.8.3/underscore.js"></script>
+    <script src="https://cdn.bootcss.com/flowchart/1.1.0/flowchart.min.js"></script>
+    <script src="http://editor.md.ipandao.com/editormd.min.js"></script>
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
     <script th:src="@{/js/yss/gloable.js}"></script>
-    <script th:src="@{/js/plugins/nprogress.js}"></script>
+    <script src="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
     <script th:src="@{/js/pagecomment.js}"></script>
-    <script th:src="@{/js/plugins/like/mo.min.js}"></script>
-    <script th:src="@{/js/plugins/ppfinput/modernizr.js}"></script>
+    <script src="https://cdn.bootcss.com/mo-js/0.174.4/mo.min.js"></script>
+    <script src="https://cdn.bootcss.com/modernizr/2.5.2/modernizr.min.js"></script>
     <script th:src="@{/js/plugins/ppfinput/minippfix.js}"></script>
     <script th:src="@{/js/plugins/like/demo.js}"></script>
 
@@ -227,8 +225,8 @@
             tocm: true,
             tocContainer: "#article-menu",
             tex: true,               // 默认不解析
-            flowChart:true,         // 默认不解析
-            sequenceDiagram:true,  // 默认不解析
+            flowChart:false,         // 默认不解析
+            sequenceDiagram:false,  // 默认不解析
         });
 
         let articleLi = $(".markdown-toc-list").find("li");
