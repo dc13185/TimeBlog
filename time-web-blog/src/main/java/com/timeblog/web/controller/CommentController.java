@@ -44,8 +44,6 @@ public class CommentController {
     @Resource
     private CommentDao commentDao;
 
-    @Autowired
-    private RedisUtils redisUtils;
 
     /**
      * @author: dongchao
