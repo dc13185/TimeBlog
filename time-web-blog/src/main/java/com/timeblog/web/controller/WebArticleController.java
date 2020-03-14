@@ -1,10 +1,12 @@
 package com.timeblog.web.controller;
 
+import com.google.common.collect.Lists;
 import com.timeblog.business.base.Result;
 import com.timeblog.business.domain.*;
 import com.timeblog.framework.mapper.ArticleMapper;
 import com.timeblog.framework.mapper.ArticleTypeMapper;
 import com.timeblog.framework.mapper.CommentDao;
+import com.timeblog.framework.mapper.LabelMapper;
 import com.timeblog.framework.system.constant.SpiderConstant;
 import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.RedisUtils;
@@ -22,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Dong.Chao
@@ -37,12 +40,14 @@ public class WebArticleController {
     @Autowired
     private RedisUtils redisUtils;
 
-
     @Resource
     private ArticleMapper articleMapper;
 
     @Resource
     private CommentDao commentDao;
+
+    @Resource
+    private LabelMapper labelMapper;
 
 
 
@@ -72,7 +77,7 @@ public class WebArticleController {
         if (StringUtils.isEmpty(articleId)){
            new Exception("articleId is empty");
         }
-        Article article = articleMapper.queryById(Integer.parseInt(articleId));
+        Article article = articleMapper.queryArticleAndLabelsById(Integer.parseInt(articleId));
         if (article == null){
             new Exception("Page is not  find");
         }
@@ -98,10 +103,14 @@ public class WebArticleController {
                     .sorted(Comparator.comparing(Comment::getCreateTime)).collect(Collectors.toList());
             comment.setSonComments(sonComment);
         });
+         List<ArticleType> articleTypes = (List<ArticleType>)redisUtils.get(SystemConstant.TEMP_ARTICLE_TYPES);
+         ArticleType secondaryArticleType = articleTypes.stream().filter(articleType ->{
+            return article.getArticleTypeId().equals(Integer.parseInt(articleType.getTypeId()));
+         }).findAny().get();
+         ArticleType firstArticleType = articleTypes.stream().filter(articleType -> articleType.getTypeId().equals(secondaryArticleType.getParentId())).findAny().get();
 
-        //句子
+         //句子
         Sentence sentence = SpiderConstant.getRandomSentence();
-
         ModelAndView modelAndView = new ModelAndView("web/read");
         modelAndView.addObject("article",article)
                     .addObject("blogWebConfig",SystemConstant.BLOGWEBCONFIG)
@@ -109,7 +118,9 @@ public class WebArticleController {
                     .addObject("likeCount",likeCount)
                     .addObject("likeStatus",likeStatus)
                     .addObject("comments",comments)
-                    .addObject("sentence",sentence);
+                    .addObject("sentence",sentence)
+                    .addObject("firstArticleType",firstArticleType)
+                    .addObject("secondaryArticleType",secondaryArticleType);
         return modelAndView;
     }
 

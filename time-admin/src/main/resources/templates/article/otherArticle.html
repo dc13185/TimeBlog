@@ -2,15 +2,13 @@
 <head th:include="include :: header"></head>
 <link href="https://cdn.bootcss.com/switchery/0.8.2/switchery.min.css" rel="stylesheet">
 <link href="https://cdn.bootcss.com/cropper/0.7.6/cropper.min.css" rel="stylesheet">
-<link href="https://cdn.bootcss.com/chosen/1.1.0/chosen.min.css" rel="stylesheet">
+<link th:href="@{/css/plugins/chosen/chosen.css}" rel="stylesheet"/>
 <link th:href="@{/css/style.css}" rel="stylesheet"/>
 <style>
     .image-crop{
         height: 60% !important;
     }
-    .cropper-container{
-        top: 0px !important;
-    }
+
 </style>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -87,7 +85,7 @@
 
 <head th:include="include :: footer"></head>
 <script src="https://cdn.bootcss.com/switchery/0.8.2/switchery.min.js"></script>
-<script src="https://cdn.bootcss.com/cropper/0.7.6/cropper.min.js"></script>
+<script src="https://cdn.bootcss.com/cropper/4.1.0/cropper.min.js"></script>
 <script src="https://cdn.bootcss.com/chosen/1.1.0/chosen.jquery.min.js"></script>
 <script th:inline="javascript">
 
@@ -129,8 +127,6 @@
         $($image).cropper({
             aspectRatio: 1.618,
             preview: ".img-preview",
-            maxWidth: 300,
-            maxHeight: 180,
             done: function (data) {
                 // 输出结果
             }

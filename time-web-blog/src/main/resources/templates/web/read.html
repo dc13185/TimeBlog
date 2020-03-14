@@ -53,13 +53,15 @@
                             </li>
                             <div class="copyright mt20">
                                 <p class="f-toe fc-black">
-                                    非特殊说明，本文版权归 燕十三 所有，转载请注明出处.
+                                    非特殊说明，本文版权归Time.Blog所有，转载请注明出处.
                                 </p>
                                 <p class="f-toe">
-                                    文章分类：
-                                    <a href="javascript:void(0)" class="r-title">使用码云和VS托管本地代 撒大声地阿萨德asd 码</a>
+                                    文章分类： <span th:text="${firstArticleType.typeName}"></span>/<span th:text="${secondaryArticleType.typeName}"></span>
                                 </p>
-                                <p class="f-toe">本文网址：<a href="#">https://www.yanshisan.cn/Blog/Read/7</a></p>
+                                <p class="f-toe">
+                                    文章标签：
+                                    <span class="layui-badge article-label"   th:if="${article.labelList}" th:each="label,labelStat : ${article.labelList}" th:text="${label.labelName}"></span>
+                                </p>
                             </div>
                         </section>
                     </article>
@@ -103,7 +105,6 @@
                                     <a href="javascript:;" class="btn-reply" th:data-parentid="${comment.commentId}"  th:data-replyid="${sonComment.commentId}" th:data-targetname="${sonComment.commentNickname}"><i class="fa fa-commenting-o"></i></a>
                                 </p>
                             </div>
-
                         </li>
                         </ul>
 
@@ -215,8 +216,6 @@
     <script th:inline="javascript">
     $(function(){
         NProgress.done();
-/*        let backgroundUrl  =  [[${blogWebConfig.indexBackground}]];
-        $(".header").css("background-image","url("+backgroundUrl+")");*/
         //转换开始,第一个参数是上面的div的id
         editormd.markdownToHTML("mdContent", {
             htmlDecode: "style,script,iframe", //可以过滤标签解码

@@ -257,7 +257,6 @@ public class ArticleController {
             List<Integer> presenceLabels = Lists.newArrayList();
             if (!CollectionUtils.isEmpty(articleToLabelList)){
                 presenceLabels = articleToLabelList.stream().map(Label::getLabelId).collect(Collectors.toList());
-                articleToLabelList = Lists.newArrayList();
             }
 
             for (String labelFlag : labelIds) {

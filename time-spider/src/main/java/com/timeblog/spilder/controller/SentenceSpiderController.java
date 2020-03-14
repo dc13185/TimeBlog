@@ -83,7 +83,7 @@ public class SentenceSpiderController {
                  }
                 Element  sentenceContentElement =  element.getElementsByClass("xlistju").first();
                 String content = sentenceContentElement.text();
-                if (content.length() > 400){
+                if (content.length() > 350){
                     continue;
                 }
                 Sentence sentence = Sentence.builder().content(content).author(author).works(authorWork).createDate(new Date()).build();

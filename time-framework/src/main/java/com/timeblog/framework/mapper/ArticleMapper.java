@@ -26,6 +26,15 @@ public interface ArticleMapper {
     Article queryById(Integer articleId);
 
     /**
+     * 通过ID查询单条数据和对应标签
+     *
+     * @param articleId 主键
+     * @return 实例对象
+     */
+    Article queryArticleAndLabelsById(Integer articleId);
+
+
+    /**
      * 查询指定行数据
      *
      * @param offset 查询起始位置

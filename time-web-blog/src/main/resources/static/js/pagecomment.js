@@ -85,7 +85,7 @@
                     fillingComment(comment);
                     layer.closeAll();
                     layer.msg('评论成功！', {icon: 1,time:1000,offset:'280px'});
-                    layui.layedit.setContent(editIndex,"");
+                    $("#LAY_layedit_1").contents().find("body").html("");
                 }
             }
         });
@@ -99,8 +99,8 @@
         $("#reply-id").val(replyId);
         if(layui.layedit.getContent(editIndex).indexOf(targetName) !== -1) return;
         let text = "<div style='color:red;display: inline' contenteditable='false' class='reply-name'>@"+targetName+"</div><div style='display: inline' class='reply-text'>&nbsp;</div>";
-        layui.layedit.setContent(editIndex,text);
         $(window).scrollTop($("#LAY_layedit_1").offset().top);
+        $("#LAY_layedit_1").contents().find("body").html(text);
     })
 
 

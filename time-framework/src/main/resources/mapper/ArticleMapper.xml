@@ -51,9 +51,34 @@
     <!--查询单个-->
     <select id="queryById" resultMap="TimeArticleMap">
         select
-          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,update_time ,create_time,article_type_id
+          article_id, article_title, article_contextHtml, article_contextMd, cover_image, isComment, isOriginal, isTop, status ,update_time ,create_time,article_type_id,article_introduction
         from timeblog.time_article
         where article_id = #{articleId}
+    </select>
+
+
+    <!--查询单个-->
+    <select id="queryArticleAndLabelsById" resultMap="TimeArticleLabelMap">
+             SELECT
+         t.article_id,
+         t.article_title,
+         t.article_contextHtml,
+         t.article_contextMd,
+         t.cover_image,
+         t.isComment,
+         t.isOriginal,
+         t.isTop,
+         t.STATUS ,
+         t.update_time ,
+         t.create_time,
+         t.article_type_id,
+         t.article_introduction,
+         tl.label_id,
+         tl.label_name
+        FROM time_article t
+        LEFT JOIN time_article_label tal ON t.article_id = tal.article_id
+        LEFT JOIN time_label tl ON tal.label_id = tl.label_id
+        WHERE t.article_id = #{articleId}
     </select>
 
     <!--查询指定行数据-->
@@ -152,6 +177,9 @@
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime},
+            </if>
+            <if test="articleIntroduction != null">
+                article_introduction = #{articleIntroduction}
             </if>
         </set>
         where article_id = #{articleId}
