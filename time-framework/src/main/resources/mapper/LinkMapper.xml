@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.timeblog.framework.mapper.LinkMapper">
+
+    <resultMap type="com.timeblog.business.domain.Link" id="TimeLinkMap">
+        <result property="linkId" column="link_id" jdbcType="INTEGER"/>
+        <result property="linkName" column="link_name" jdbcType="VARCHAR"/>
+        <result property="linkImage" column="link_image" jdbcType="VARCHAR"/>
+        <result property="linkHerf" column="link_herf" jdbcType="VARCHAR"/>
+        <result property="linkDescription" column="link_description" jdbcType="VARCHAR"/>
+        <result property="linkStatus" column="link_status" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+
+
+    <select id="queryAll" resultMap="TimeLinkMap">
+        select
+        *
+        from timeblog.time_link
+        where link_status!=0
+    </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAlls" resultMap="TimeLinkMap">
+        select
+        *
+        from timeblog.time_link
+        <if test="retrieve != null and retrieve != '' ">
+            where  link_name = like CONCAT('%',#{retrieve},'%')
+        </if>
+        order by link_status
+    </select>
+
+    <insert id="insert" keyProperty="linkId" useGeneratedKeys="true">
+        insert into timeblog.time_link(link_name,link_image,link_herf,link_description,link_status)
+        values (#{linkName},#{linkImage},#{linkHerf},#{linkDescription},#{linkStatus})
+    </insert>
+
+    <!-- 修改审核状态   -->
+    <update id="updateStatus" >
+        update timeblog.time_link
+        set link_status=#{linkStatus}
+        where link_id=#{linkId}
+    </update>
+
+    <!-- 通过主键查询   -->
+    <select id="queryById" resultMap="TimeLinkMap">
+        select * from timeblog.time_link where link_id=#{linkId}
+    </select>
+
+
+    <!--    批量删除-->
+    <delete id="deleteLinkByIds">
+        delete from timeblog.time_link where link_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,214 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include :: header"></head>
+<link th:href="@{/css/plugins/switchery/switchery.css}" rel="stylesheet"/>
+<link th:href="@{/css/plugins/cropper/cropper.min.css}" rel="stylesheet"/>
+<link th:href="@{/css/plugins/chosen/chosen.css}" rel="stylesheet"/>
+<link th:href="@{/css/style.css}" rel="stylesheet"/>
+<style>
+    .image-crop{
+        height: 60% !important;
+    }
+    .cropper-container{
+        top: 0px !important;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins" id="context">
+        <div class="ibox-title">
+            <h5>新增友链</h5>
+        </div>
+        <div class="ibox-content" >
+            <div class="form-group">
+                <label>友链名称</label>
+                <input name="check_attr" type="text"  id="linkName"  placeholder="请输入友链名称"  class="form-control check_attr">
+            </div>
+
+            <div class="form-group">
+                <label>友链链接地址</label>
+                <input name="check_attr" type="text"  id="linkHerf"  placeholder="请输入友链地址"  class="form-control check_attr">
+            </div>
+            <div class="form-group">
+                <label>友链描述</label>
+                <textarea name="check_attr" type="text" style="height: 75px;resize:none;"  id="linkDescription"  placeholder="请输入友链描述"  class="form-control check_attr"></textarea>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-md-5">
+                        <h4>上传头像:</h4>
+                        <div class="img-preview img-preview-sm"></div>
+                        <h4>说明：</h4>
+                        <p>
+                            你可以不上传图片封面，默认会显示空白
+                        </p>
+                        <div class="btn-group">
+                            <label title="上传图片" for="inputImage" class="btn btn-primary">
+                                <input type="file" accept="image/*" name="file" id="inputImage" class="hide"> 上传新图片
+                            </label>
+                        </div>
+                        <div class="btn-group btn-tools">
+                            <button class="btn btn-white" id="zoomIn" type="button">放大</button>
+                            <button class="btn btn-white" id="zoomOut" type="button">缩小</button>
+                            <button class="btn btn-white" id="rotateLeft" type="button">左旋转</button>
+                            <button class="btn btn-white" id="rotateRight" type="button">右旋转</button>
+                            <button class="btn btn-warning" id="setDrag" type="button">裁剪</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="image-crop">
+                            <img id="link-img" th:src="@{/img/img-blank.png}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input id="linkStatus" value="0" type="hidden"/>
+        </div>
+
+        <div class="ibox-content" >
+            <div class="">
+                <button type="button" class="btn btn-warning cancelBtn">取消</button>
+                <button type="button" class="btn btn-success saveSubmit">添加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<head th:include="include :: footer"></head>
+<script th:src="@{/js/plugins/switchery/switchery.js}"></script>
+<script th:src="@{/js/plugins/cropper/cropper.min.js}"></script>
+<script th:src="@{/js/plugins/chosen/chosen.jquery.js}"></script>
+<script th:inline="javascript">
+
+    $(document).ready(function () {
+
+
+
+
+
+        //图片上传控件
+        let $image = $(".image-crop > img")
+        $($image).cropper({
+            aspectRatio: 1.618,
+            preview: ".img-preview",
+            maxWidth: 300,
+            maxHeight: 180,
+            done: function (data) {
+                // 输出结果
+            }
+        });
+
+        var $inputImage = $("#inputImage");
+        if (window.FileReader) {
+            $inputImage.change(function () {
+                var fileReader = new FileReader(),
+                    files = this.files,
+                    file;
+
+                if (!files.length) {
+                    return;
+                }
+
+                file = files[0];
+                if (/^image\/\w+$/.test(file.type)) {
+                    $(".image-crop").show();
+                    $(".btn-tools").show();
+                    fileReader.readAsDataURL(file);
+                    fileReader.onload = function () {
+                        $inputImage.val("");
+                        $image.cropper("reset", true).cropper("replace", this.result);
+                    };
+                } else {
+                    toastr.warning("请选择图片文件");
+                }
+            });
+        } else {
+            $inputImage.addClass("hide");
+        }
+
+
+        $("#zoomIn").click(function () {
+            $image.cropper("zoom", 0.1);
+        });
+
+        $("#zoomOut").click(function () {
+            $image.cropper("zoom", -0.1);
+        });
+
+        $("#rotateLeft").click(function () {
+            $image.cropper("rotate", 45);
+        });
+
+        $("#rotateRight").click(function () {
+            $image.cropper("rotate", -45);
+        });
+
+        $("#setDrag").click(function () {
+            $image.cropper("setDragMode", "crop");
+        });
+
+        $(".image-crop").hide();
+        $(".btn-tools").hide();
+
+
+
+    });
+
+
+
+    $(".saveSubmit").on("click", function() {
+        saveLink();
+    });
+
+
+    $(".cancelBtn").on("click", function() {
+        window.location.href = ctx+"web/link/toLink";
+    });
+
+
+
+
+    //添加友链
+    function saveLink(){
+
+        let linkName = $("#linkName").val();
+        let linkHerf = $("#linkHerf").val();
+        let linkStatus = $("#linkStatus").val();
+        let linkDescription = $("#linkDescription").val();
+        let fileDate = $("#link-img")[0].currentSrc;
+        if (fileDate.indexOf("img-blank") == -1){
+            let data = $("#link-img").cropper('getCroppedCanvas', { width:300, height:180 });
+            fileDate = data.toDataURL('base64'); // 转换为base64
+        }
+
+        if (linkName==null||linkHerf==null){
+            return window.alert("友链名称和链接都不能为空!!")
+        }
+
+        let jsonContent ={"linkName":linkName,"linkHerf":linkHerf,"linkDescription":linkDescription,"linkImage":fileDate,"linkStatus":linkStatus}
+        let url = ctx+"web/link/insertLink";
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: JSON.stringify(jsonContent),
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            },
+            success: function (msg) {
+                if(msg.code == 200){
+                    window.location.href = ctx+"web/link/toLink";
+                }
+            }
+        });
+
+
+
+
+    }
+
+</script>
+</body>
+</html>
