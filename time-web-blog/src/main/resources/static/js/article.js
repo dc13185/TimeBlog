@@ -61,7 +61,7 @@ function initArticleData(pageNumber,pageSize) {
                     }
 
                     //图片
-                    if(article.coverImage.indexOf("img-blank") == -1){
+                    if(article.coverImage == null || article.coverImage.indexOf("img-blank") == -1){
                         articleModel.find(".article-img").attr("src",article.coverImage);
                     }else{
                         articleModel.find(".article-img").remove();
@@ -76,6 +76,7 @@ function initArticleData(pageNumber,pageSize) {
                     articleModel.find(".likeCount").text(likeCount);
                     $("#bloglist").append(articleModel);
                     $("#pager").show();
+
                 }
             }
         }
