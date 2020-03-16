@@ -17,29 +17,7 @@
 <body>
     <div class="header">
     </div>
-    <header class="gird-header">
-        <div class="header-fixed">
-            <div class="header-inner">
-                <a href="javascript:void(0)" class="header-logo" id="logo">Mr.Yss</a>
-                <nav class="nav" id="nav">
-                    <ul>
-                        <li><a href="index.html">首页</a></li>
-                        <li><a href="article.html">博客</a></li>
-                        <li><a href="message.html">留言</a></li>
-                        <li><a href="link.html">友链</a></li>
-                    </ul>
-                </nav>
-                <a href="/User/QQLogin" class="blog-user">
-                    <i class="fa fa-qq"></i>
-                </a>
-                <a class="phone-menu">
-                    <i></i>
-                    <i></i>
-                    <i></i>
-                </a>
-            </div>
-        </div>
-    </header>
+    <div th:replace="/web/hader :: header"></div>
     <div class="doc-container" id="doc-container">
         <div class="about-banner" id="container">
 		    <header class="l-top hasAnim arrow-holder">
@@ -56,7 +34,6 @@
 		    </header>
 		    <div class="about-title">
 		        <h1>友情链接</h1>
-		        <p>剑气纵横三万里,一剑光寒十九洲.</p>
 		    </div>
 		</div>
 		<div class="container-fixed">
@@ -75,9 +52,9 @@
 		                <p>
 		                    交换友链可在留言板留言.请将本站加入友链<br>
 		                    名称：燕十三<br>
-		                    网址：https://www.yanshisan.cn<br>
-		                    图标：https://www.yanshisan.cn/logo.png<br>
-		                    描述：燕十三·一个人的江湖
+		                    网址：https://www.dccode.cn<br>
+		                    图标：https://www.dccode.cn/logo.png<br>
+		                    描述：timeBlog,多学习多做事多思考
 		                </p>
 		                <p>
 		                    申请提交后若无其它原因将在24小时内审核,如超过时间还未通过,请私信我.(各种额外因素)
@@ -98,31 +75,12 @@
 		    </div>
 		</div>
     </div>
-    <footer class="grid-footer">
-        <div class="footer-fixed">
-            <div class="copyright">
-                <div class="info">
-                    <div class="contact">
-                        <a href="javascript:void(0)" class="github" target="_blank"><i class="fa fa-github"></i></a>
-                        <a href="https://wpa.qq.com/msgrd?v=3&uin=930054439&site=qq&menu=yes" class="qq" target="_blank" title="930054439"><i class="fa fa-qq"></i></a>
-                        <a href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=gbiysbG0tbWyuMHw8K-i7uw" class="email" target="_blank" title="930054439@qq.com"><i class="fa fa-envelope"></i></a>
-                        <a href="javascript:void(0)" class="weixin"><i class="fa fa-weixin"></i></a>
-                    </div>
-                    <p class="mt05">
-                        Copyright &copy; 2018-2018 燕十三 All Rights Reserved V.1.0.0 蜀ICP备18008600号
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-
-
-
-        <script th:src="@{/js/yss/gloable.js}"></script>
+    <div th:replace="/web/hader :: float"></div>
+	<script src="https://www.layuicdn.com/layui/layui.js"></script>
+    <script th:src="@{/js/yss/gloable.js}"></script>
     <script th:src="@{/js/plugins/nprogress.js}"></script>
     <script th:inline="javascript">NProgress.start();</script>
-    <script th:src="@{/js/jquery.min.js}"></script>
+	<script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
  	<script th:src="@{/js/plugins/blogbenoitboucart.min.js}"></script>
     <script th:src="@{/layui/layui.js}" ></script>
     <script th:src="@{/js/wow.min.js}"></script>

@@ -149,5 +149,14 @@ public class CommentController {
                            .addObject("comments",comments);
     }
 
+    public static void demo2(String str){
+        str = str + "abc";
+    }
+
+    public static void main(String[] args) {
+        String s1 = "abcd";
+        System.out.println(s1);
+    }
+
 
 }

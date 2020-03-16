@@ -41,8 +41,6 @@ public class WebLinkController {
     @Value("${imageFile.url}")
     private String imageUrl;
 
-    @Autowired
-    private RedisUtils redisUtils;
 
     @Resource
     private LinkMapper linkMapper;
@@ -51,7 +49,7 @@ public class WebLinkController {
     public ModelAndView toWebLink() {
         List<Link> linkList=linkMapper.queryAll();
         ModelAndView modelAndView = new ModelAndView("web/link");
-        modelAndView.addObject("linkList",linkList);
+        modelAndView.addObject("linkList",linkList).addObject("blogWebConfig",SystemConstant.BLOGWEBCONFIG);
         return modelAndView;
     }
 
