@@ -1,0 +1,166 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>记录备忘录</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link th:href="@{/css/plugins/fullcalendar/fullcalendar.css}" rel="stylesheet">
+    <link th:href="@{/css/plugins/fullcalendar/fullcalendar.print.css}" rel="stylesheet">
+    <link th:href="@{/css/plugins/iCheck/custom.css}" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/animate.css/3.7.2/animate.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="row animated fadeInDown">
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Draggable Events</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="calendar.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="calendar.html#">选项1</a>
+                                </li>
+                                <li><a href="calendar.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div id='external-events'>
+                            <p>可拖动的活动</p>
+                            <div class='external-event navy-bg' id="ceshi">确定活动目标</div>
+                            <div class='external-event navy-bg'>各部门职责及分工</div>
+                            <div class='external-event navy-bg'>案例分享</div>
+                            <div class='external-event navy-bg'>xxx</div>
+                            <p class="m-t">
+                                <input type='checkbox' id='drop-remove' class="i-checks" checked />
+                                <label for='drop-remove'>移动后删除</label>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <h2>FullCalendar</h2> 这是一个jQuery插件，它提供了全尺寸，可拖动，使用Ajax的操作方式，并且可以使用自己的feed格式，如谷歌日历。
+                        <p>
+                            <a href="http://arshaw.com/fullcalendar/" target="_blank">FullCalendar开发文档</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>FullCalendar示例 </h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="calendar.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="calendar.html#">选项1</a>
+                                </li>
+                                <li><a href="calendar.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!-- 自定义js -->
+    <script src="js/content.js?v=1.0.0"></script>
+    <script th:src="@{/js/jquery-ui.custom.min.js}"></script>
+
+    <!-- iCheck -->
+    <script th:src="@{/js/plugins/iCheck/icheck.min.js}"></script>
+
+    <!-- Full Calendar -->
+    <script th:src="@{/js/plugins/fullcalendar/fullcalendar.min.js}"></script>
+
+    <script>
+        $(document).ready(function () {
+
+       /*     $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });*/
+
+            $('#external-events div.external-event').each(function () {
+                var eventObject = {
+                    title: $.trim($(this).text()) // use the element's text as the event title
+                };
+                $(this).data('eventObject', eventObject);
+                $(this).draggable({
+                    zIndex: 999,
+                    revert: true, // will cause the event to go back to its
+                    revertDuration: 0 //  original position after the drag
+                });
+
+            });
+
+            var date = new Date();
+            var d = date.getDate();
+            var m = date.getMonth();
+            var y = date.getFullYear();
+
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                editable: true,
+                droppable: true,
+                unselectAuto: false,
+                drop: function (date, allDay) {
+                    var originalEventObject = $(this).data('eventObject');
+                    var copiedEventObject = $.extend({}, originalEventObject);
+                    copiedEventObject.start = date;
+                    copiedEventObject.allDay = allDay;
+                    $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+                },
+                dayClick: function(date, allDay, jsEvent, view) {
+                    var selDate = $.fullCalendar.formatDate(date, 'yyyy-MM-dd');//格式化日期
+                    alert(date);
+                },
+                eventClick: function(date, allDay, jsEvent, view) {
+                    debugger;
+                    alert(date);
+                },
+                events:function(start,end,callback){
+
+
+                }
+            });
+
+
+        });
+    </script>
+</body>
+</html>
