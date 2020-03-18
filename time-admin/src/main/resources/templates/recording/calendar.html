@@ -3,9 +3,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>记录备忘录</title>
-    <link rel="shortcut icon" href="favicon.ico">
-    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <head th:include="include :: header"></head>
     <link th:href="@{/css/plugins/fullcalendar/fullcalendar.css}" rel="stylesheet">
     <link th:href="@{/css/plugins/fullcalendar/fullcalendar.print.css}" rel="stylesheet">
     <link th:href="@{/css/plugins/iCheck/custom.css}" rel="stylesheet">
@@ -40,10 +38,8 @@
                     <div class="ibox-content">
                         <div id='external-events'>
                             <p>可拖动的活动</p>
-                            <div class='external-event navy-bg' id="ceshi">确定活动目标</div>
-                            <div class='external-event navy-bg'>各部门职责及分工</div>
-                            <div class='external-event navy-bg'>案例分享</div>
-                            <div class='external-event navy-bg'>xxx</div>
+                            <div class='external-event navy-bg' target_id="1">撸代码</div>
+                            <div class='external-event navy-bg' target_id="2">锻炼</div>
                             <p class="m-t">
                                 <input type='checkbox' id='drop-remove' class="i-checks" checked />
                                 <label for='drop-remove'>移动后删除</label>
@@ -91,29 +87,23 @@
     </div>
 
     <!-- 全局js -->
-    <script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <head th:include="include :: footer"></head>
     <!-- 自定义js -->
     <script src="js/content.js?v=1.0.0"></script>
     <script th:src="@{/js/jquery-ui.custom.min.js}"></script>
-
     <!-- iCheck -->
     <script th:src="@{/js/plugins/iCheck/icheck.min.js}"></script>
-
     <!-- Full Calendar -->
     <script th:src="@{/js/plugins/fullcalendar/fullcalendar.min.js}"></script>
 
     <script>
         $(document).ready(function () {
 
-       /*     $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });*/
-
             $('#external-events div.external-event').each(function () {
                 var eventObject = {
-                    title: $.trim($(this).text()) // use the element's text as the event title
+                    title: $.trim($(this).text()),
+                    _id: $.trim($(this).attr("target_id"))
+                    // use the element's text as the event title
                 };
                 $(this).data('eventObject', eventObject);
                 $(this).draggable({
@@ -137,24 +127,76 @@
                 },
                 editable: true,
                 droppable: true,
-                unselectAuto: false,
+                selectable: true,
                 drop: function (date, allDay) {
                     var originalEventObject = $(this).data('eventObject');
                     var copiedEventObject = $.extend({}, originalEventObject);
                     copiedEventObject.start = date;
                     copiedEventObject.allDay = allDay;
                     $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+                    debugger;
+                    let eventType = $(this).attr("target_id");
+                    let dataContent = {"recordStartTime":date,"eventType":eventType};
+
+                    $.ajax({
+                        url: ctx+"record/insertRecordByTime",
+                        type: 'post',
+                        data:JSON.stringify(dataContent),
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                        },
+                        success: function (msg) {
+                            if(msg.code == 200){
+
+                            }
+                        }
+                    });
+
+
                 },
                 dayClick: function(date, allDay, jsEvent, view) {
                     var selDate = $.fullCalendar.formatDate(date, 'yyyy-MM-dd');//格式化日期
                     alert(date);
                 },
                 eventClick: function(date, allDay, jsEvent, view) {
-                    debugger;
-                    alert(date);
+                    $('#calendar').fullCalendar('removeEvents',date._id);
                 },
                 events:function(start,end,callback){
-
+                    let url = {"startDate":start,"endDate":end};
+                    $.ajax({
+                        url: ctx+"record/queryRecordByTime",
+                        type: 'post',
+                        data:JSON.stringify(url),
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                        },
+                        success: function (msg) {
+                            if(msg.code == 200){
+                                let data = msg.rows;
+                                let events = [];
+                                //alert("进入到events内部")
+                                $.each(data,function (key,value) {
+                                    let startDate = new Date(value.recordStartTime);
+                                    let endDate = new Date(value.recordEndTime);
+                                    events.push({
+                                        title: value.recordTitle,
+                                        start: startDate,
+                                        end: endDate,
+                                        allDay: true,
+                                        id: value.recordId,
+                                        editable:false,
+                                    });
+                                });
+                                callback(events);
+                            }
+                        }
+                    });
 
                 }
             });

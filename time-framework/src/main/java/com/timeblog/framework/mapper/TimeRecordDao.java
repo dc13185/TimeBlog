@@ -2,6 +2,8 @@ package com.timeblog.framework.mapper;
 
 import com.timeblog.business.domain.TimeRecord;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +30,17 @@ public interface TimeRecordDao {
      * @return 对象列表
      */
     List<TimeRecord> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
+
+
+    /**
+     * 查询指定行数据
+     *
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 对象列表
+     */
+    List<TimeRecord> queryAllByDate(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
 
 
     /**
