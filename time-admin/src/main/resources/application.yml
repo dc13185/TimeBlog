@@ -31,6 +31,16 @@ spring:
         max-wait: -1
         #空闲连接
         max-idle: 8
+  mail:
+    host: smtp.qq.com
+    username: 1318533144@qq.com
+    password: wsuqgdjhjtdpggji
+    default-encoding: UTF-8
+    protocol: smtp
+    port: 587
+
+
+
 
 # 日志配置
 logging:

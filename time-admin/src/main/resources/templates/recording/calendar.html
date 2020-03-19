@@ -9,6 +9,18 @@
     <link th:href="@{/css/plugins/iCheck/custom.css}" rel="stylesheet">
     <link href="https://cdn.bootcss.com/animate.css/3.7.2/animate.min.css" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
+    <style>
+        .box-complete {
+            background-color: #23c3c5;
+            border-color: #23c3c5;
+        }
+
+        .box-todo {
+            background-color: #e4cd3c;
+            border-color: #e4cd3c;
+        }
+
+    </style>
 </head>
 <body class="gray-bg">
     <div class="wrapper wrapper-content">
@@ -16,43 +28,14 @@
             <div class="col-sm-3">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>Draggable Events</h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="calendar.html#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="calendar.html#">选项1</a>
-                                </li>
-                                <li><a href="calendar.html#">选项2</a>
-                                </li>
-                            </ul>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
+                        <h5>事件选项</h5>
                     </div>
                     <div class="ibox-content">
                         <div id='external-events'>
-                            <p>可拖动的活动</p>
+                            <p>记录事件</p>
                             <div class='external-event navy-bg' target_id="1">撸代码</div>
-                            <div class='external-event navy-bg' target_id="2">锻炼</div>
-                            <p class="m-t">
-                                <input type='checkbox' id='drop-remove' class="i-checks" checked />
-                                <label for='drop-remove'>移动后删除</label>
-                            </p>
+                            <div class='external-event navy-bg box-complete' target_id="2">锻炼</div>
                         </div>
-                    </div>
-                </div>
-                <div class="ibox float-e-margins">
-                    <div class="ibox-content">
-                        <h2>FullCalendar</h2> 这是一个jQuery插件，它提供了全尺寸，可拖动，使用Ajax的操作方式，并且可以使用自己的feed格式，如谷歌日历。
-                        <p>
-                            <a href="http://arshaw.com/fullcalendar/" target="_blank">FullCalendar开发文档</a>
-                        </p>
                     </div>
                 </div>
             </div>
@@ -60,23 +43,6 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <h5>FullCalendar示例 </h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="calendar.html#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="calendar.html#">选项1</a>
-                                </li>
-                                <li><a href="calendar.html#">选项2</a>
-                                </li>
-                            </ul>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
                     </div>
                     <div class="ibox-content">
                         <div id="calendar"></div>
@@ -86,18 +52,59 @@
         </div>
     </div>
 
+    <div class="modal inmodal" id="recordModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                    </button>
+                    <h4 class="modal-title">新增代办事件</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <input type="hidden" id="cron" name="cron" >
+                        <input type="hidden" id="startDate" name="startDate" >
+                        <input type="hidden" id="endDate" name="endDate" >
+                        <div class="form-group">
+                            <label>事件开始日期</label>
+                            <input type="text"  id="record_start_date" name="record_date" placeholder="事件日期" class="form-control"  readonly  unselectable="on">
+                        </div>
+                        <div class="form-group endTimeBox" >
+                            <label>事件结束日期(不选默认当天)</label>
+                            <input type="text"  id="record_end_date" name="record_end_date" placeholder="事件日期" class="form-control"  >
+                        </div>
+
+                        <div class="form-group">
+                            <label>事件名称</label>
+                            <input type="text"  id="record_title" name="record_title" placeholder="请填写事件名称" class="form-control check_attr">
+                        </div>
+                        <div class="form-group">
+                            <label>事件描述</label>
+                            <input type="text" id="record_describe" name="record_describe" placeholder="请填写事件描述" class="form-control check_attr">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary saveSubmit">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- 全局js -->
     <head th:include="include :: footer"></head>
     <!-- 自定义js -->
-    <script src="js/content.js?v=1.0.0"></script>
     <script th:src="@{/js/jquery-ui.custom.min.js}"></script>
     <!-- iCheck -->
     <script th:src="@{/js/plugins/iCheck/icheck.min.js}"></script>
     <!-- Full Calendar -->
     <script th:src="@{/js/plugins/fullcalendar/fullcalendar.min.js}"></script>
-
+    <script src="https://www.layuicdn.com/layDate/laydate.js"></script>
     <script>
         $(document).ready(function () {
+
 
             $('#external-events div.external-event').each(function () {
                 var eventObject = {
@@ -133,11 +140,13 @@
                     var copiedEventObject = $.extend({}, originalEventObject);
                     copiedEventObject.start = date;
                     copiedEventObject.allDay = allDay;
-                    $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-                    debugger;
+                    copiedEventObject.className = "box-complete";
                     let eventType = $(this).attr("target_id");
-                    let dataContent = {"recordStartTime":date,"eventType":eventType};
-
+                    if (eventType == 2){
+                        copiedEventObject.className = "box-complete";
+                    }
+                    $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+                    let dataContent = {"recordStartTime":date,"recordEndTime":date,"eventType":eventType,"recordTitle":copiedEventObject.title,"status":1};
                     $.ajax({
                         url: ctx+"record/insertRecordByTime",
                         type: 'post',
@@ -147,19 +156,24 @@
                         dataType: 'json',
                         beforeSend: function (xhr) {
                             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                        },
-                        success: function (msg) {
-                            if(msg.code == 200){
-
-                            }
                         }
                     });
-
-
                 },
                 dayClick: function(date, allDay, jsEvent, view) {
-                    var selDate = $.fullCalendar.formatDate(date, 'yyyy-MM-dd');//格式化日期
-                    alert(date);
+                    if (new Date() > date){ return;}
+                    let selDate = $.fullCalendar.formatDate(date, 'yyyy-MM-dd HH:mm');//格式化日期
+                    let cron = $.fullCalendar.formatDate(date, '00 mm HH dd MM ? yyyy');//格式化日期
+                    //重新渲染
+                    $("#record_end_date").remove();
+                    $(".endTimeBox").append("<input type=\"text\"  id=\"record_end_date\" name=\"record_end_date\" placeholder=\"事件日期\" class=\"form-control\"  >");
+                    laydate.render({
+                        elem: '#record_end_date',
+                        min: selDate,
+                    });
+
+                    $("#record_start_date").val(selDate);
+                    $("#cron").val(cron);
+                    $("#recordModal").modal();
                 },
                 eventClick: function(date, allDay, jsEvent, view) {
                     $('#calendar').fullCalendar('removeEvents',date._id);
@@ -184,6 +198,13 @@
                                 $.each(data,function (key,value) {
                                     let startDate = new Date(value.recordStartTime);
                                     let endDate = new Date(value.recordEndTime);
+                                    let className = "";
+                                    if (value.eventType == 2){
+                                        className = "box-complete";
+                                    }else if(value.eventType == -1){
+                                        className = "box-todo";
+                                    }
+
                                     events.push({
                                         title: value.recordTitle,
                                         start: startDate,
@@ -191,6 +212,7 @@
                                         allDay: true,
                                         id: value.recordId,
                                         editable:false,
+                                        className: className
                                     });
                                 });
                                 callback(events);
@@ -200,9 +222,51 @@
 
                 }
             });
-
-
         });
+
+
+        $(".saveSubmit").click(function () {
+            let flag =  check(recordModal);
+            if (!flag){
+                return;
+            }
+            let record_start_date = $("#record_start_date").val();
+            let record_title = $("#record_title").val();
+            let record_describe = $("#record_describe").val();
+            let record_end_date = $("#record_end_date").val();
+            let endDate;
+            //插入到日历中
+            debugger;
+            let startDate =  new Date(record_start_date);
+            if (record_end_date != ""){
+                endDate = new Date(record_end_date);
+            }else{
+                endDate = new Date(new Date(new Date().toLocaleDateString()).getTime()+24*60*60*1000-1);
+            }
+            let copiedEventObject = {};
+            copiedEventObject.title = record_title;
+            copiedEventObject.start = startDate;
+            copiedEventObject.end = endDate;
+            copiedEventObject.allDay = true;
+            copiedEventObject.className = "box-todo";
+            $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+            $("#recordModal").modal('hide');
+            //往后台传输数据
+            let dataContent = {"recordStartTime":startDate,"recordEndTime":endDate,"eventType":-1,"recordTitle":record_title,"recordContext":record_describe,"status":-1};
+
+            $.ajax({
+                url: ctx+"record/insertRecordByTime",
+                type: 'post',
+                data:JSON.stringify(dataContent),
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                }
+            });
+
+        })
     </script>
 </body>
 </html>

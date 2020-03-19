@@ -79,9 +79,19 @@ public class SchedulingRunnable implements Runnable  {
                     that.params == null;
         }
 
-        return beanName.equals(that.beanName) &&
-                methodName.equals(that.methodName) &&
-                params.equals(that.params);
+        boolean flag = beanName.equals(that.beanName) &&
+                methodName.equals(that.methodName);
+
+        boolean paramFlag = true;
+        for (int i = 0; i < params.length; i++) {
+            Object param = params[i];
+            Object targetParam = that.params[i];
+            if(!param.equals(targetParam)){
+                paramFlag = false;
+            }
+        }
+
+        return flag && paramFlag;
     }
 
     @Override
@@ -89,7 +99,8 @@ public class SchedulingRunnable implements Runnable  {
         if (params == null) {
             return Objects.hash(beanName, methodName);
         }
-
-        return Objects.hash(beanName, methodName, params);
+        int beanHash = Objects.hash(beanName, methodName);
+        int paramsHash = Objects.hash(params);
+        return beanHash + paramsHash;
     }
 }

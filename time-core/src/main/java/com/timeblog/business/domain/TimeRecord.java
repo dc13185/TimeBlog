@@ -1,5 +1,6 @@
 package com.timeblog.business.domain;
 
+import com.google.common.base.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +30,7 @@ public class TimeRecord implements Serializable {
     private Date recordStartTime;
     /**结束*/
     private Date recordEndTime;
-    /**状态*/
+    /**状态    1:已完成  -1：待完成 */
     private Integer status;
 
 
@@ -37,6 +38,24 @@ public class TimeRecord implements Serializable {
     private Integer eventType;
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TimeRecord that = (TimeRecord) o;
+        return Objects.equal(recordId, that.recordId) &&
+                Objects.equal(recordTitle, that.recordTitle) &&
+                Objects.equal(recordContext, that.recordContext) &&
+                Objects.equal(recordStartTime, that.recordStartTime) &&
+                Objects.equal(recordEndTime, that.recordEndTime) &&
+                Objects.equal(status, that.status) &&
+                Objects.equal(eventType, that.eventType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(recordId, recordTitle, recordContext, recordStartTime, recordEndTime, status, eventType);
+    }
 
     private enum eventEnum{
         RELEASE_BLOG(0,"发布文章"),WRITE_CODE(1,"撸代码"),MOTION(2,"运动");
@@ -65,6 +84,9 @@ public class TimeRecord implements Serializable {
             this.eventTitle = eventTitle;
         }
     }
+
+
+
 
 
 }

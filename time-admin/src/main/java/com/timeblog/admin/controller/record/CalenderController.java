@@ -4,14 +4,16 @@ import com.timeblog.business.base.Result;
 import com.timeblog.business.domain.TimeRecord;
 import com.timeblog.business.domain.dto.QueryRecordDto;
 import com.timeblog.framework.mapper.TimeRecordDao;
+import com.timeblog.framework.system.utils.CronUtils;
+import com.timeblog.framework.system.utils.MailUtil;
+import com.timeblog.framework.task.SchedulingRunnable;
+import com.timeblog.framework.task.config.CronTaskRegistrar;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +31,13 @@ public class CalenderController {
     @Resource
     private TimeRecordDao timeRecordDao;
 
+    @Autowired
+    CronTaskRegistrar cronTaskRegistrar;
+
+    @Autowired
+    MailUtil mailUtil;
+
+
     @RequestMapping("/toRecord")
     public String toRecord(){
         return "recording/calendar";
@@ -41,6 +50,8 @@ public class CalenderController {
         //开始时间，结束时间
         List<TimeRecord> timeRecords = timeRecordDao.queryAllByDate(queryRecordDto.getStartDate(),queryRecordDto.getEndDate());
         return Result.success(timeRecords);
+
+
     }
 
 
@@ -49,10 +60,28 @@ public class CalenderController {
     @RequestMapping("/insertRecordByTime")
     @ResponseBody
     public Result insertRecordByTime(@RequestBody TimeRecord timeRecord){
+        //小于-1 的为代办事件，定时邮件通知
+        if (-1 >= timeRecord.getEventType()){
+            String cron = CronUtils.getCron(timeRecord.getRecordStartTime());
+            System.out.println(cron);
+            SchedulingRunnable task = new SchedulingRunnable("mailUtil", "sendMailForMeByRecord", timeRecord);
+            TimeRecord timeRecord1 = timeRecord.toBuilder().build();
+            System.out.println(timeRecord.equals(timeRecord1));
 
-        timeRecord.setRecordEndTime(new Date());
+            //加入任务 ss mm HH dd MM ?
+            cronTaskRegistrar.addCronTask(task, cron);
+
+
+
+            SchedulingRunnable task2 = new SchedulingRunnable("mailUtil", "sendMailForMeByRecord", timeRecord1);
+            System.out.println(task.hashCode());
+            System.out.println(task2.hashCode());
+            System.out.println(task.equals(task2));
+
+
+            cronTaskRegistrar.removeCronTask(task2);
+        }
         timeRecordDao.insert(timeRecord);
-        //开始时间，结束时间
         return Result.success();
     }
 
