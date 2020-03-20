@@ -54,7 +54,10 @@ public class TimeRecord implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(recordId, recordTitle, recordContext, recordStartTime, recordEndTime, status, eventType);
+        int objectCodes = Objects.hashCode(recordId, recordTitle, recordContext, status, eventType);
+        int startHashCode = dateHashCode(this.recordStartTime);
+        int recordEndTime = dateHashCode(this.recordEndTime);
+        return objectCodes + startHashCode + recordEndTime;
     }
 
     private enum eventEnum{
@@ -85,6 +88,13 @@ public class TimeRecord implements Serializable {
         }
     }
 
+
+
+    private int dateHashCode(Date date){
+        int dateTime = (int)recordStartTime.getTime();
+        int  dateHashCode =  (int) dateTime ^ (int) (dateTime >> 32);
+        return dateHashCode;
+    }
 
 
 

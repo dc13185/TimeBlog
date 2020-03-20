@@ -70,8 +70,16 @@ public class MailUtil {
         mailSender.send(mimeMessage);
 
         //定时调度完，从队列中删除
+        removeMailScheduled(record);
+    }
+
+
+    public  void removeMailScheduled(TimeRecord record){
+        //定时调度完，从队列中删除
         SchedulingRunnable task = new SchedulingRunnable("mailUtil", "sendMailForMeByRecord", record);
         cronTaskRegistrar.removeCronTask(task);
-
     }
+
+
+
 }

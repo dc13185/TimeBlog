@@ -29,9 +29,9 @@ public class CronUtils {
         ZoneId zoneId = ZoneId.systemDefault();
         LocalDateTime localDateTime = instant.atZone(zoneId).toLocalDateTime();
         int hour = localDateTime.getHour();
-        //如果是0点 追加10个小时
+        //如果是0点 追加8个小时
         if (hour == 0){
-            localDateTime = localDateTime.plusHours(10);
+            localDateTime = localDateTime.plusHours(8);
         }
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ss mm HH dd MM ?");
         return dateTimeFormatter.format(localDateTime);

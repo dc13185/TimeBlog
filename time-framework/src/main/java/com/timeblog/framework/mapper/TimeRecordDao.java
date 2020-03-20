@@ -51,6 +51,17 @@ public interface TimeRecordDao {
      */
     List<TimeRecord> queryAll(TimeRecord timeRecord);
 
+
+    /**
+     * 查询未完成时间
+     *
+     * @param nowDate 当前时间
+     * @return 对象列表
+     */
+    List<TimeRecord> queryTodoRecord(Date nowDate);
+
+
+
     /**
      * 新增数据
      *

@@ -14,12 +14,14 @@
             background-color: #23c3c5;
             border-color: #23c3c5;
         }
-
+        .record-content{
+            position: absolute;
+            left: 45%;
+        }
         .box-todo {
             background-color: #e4cd3c;
             border-color: #e4cd3c;
         }
-
     </style>
 </head>
 <body class="gray-bg">
@@ -52,6 +54,7 @@
         </div>
     </div>
 
+    <!--新增事件-->
     <div class="modal inmodal" id="recordModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content animated bounceInRight">
@@ -93,6 +96,30 @@
     </div>
 
 
+    <!--相关时间修改-->
+    <div class="modal inmodal" id="updateRecordModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                    </button>
+                    <h4 class="modal-title record-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <span class="record-content">  </span>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary success-btn">完成</button>
+                    <button type="button" class="btn btn-danger delete-btn">删除</button>
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- 全局js -->
     <head th:include="include :: footer"></head>
     <!-- 自定义js -->
@@ -104,21 +131,17 @@
     <script src="https://www.layuicdn.com/layDate/laydate.js"></script>
     <script>
         $(document).ready(function () {
-
-
             $('#external-events div.external-event').each(function () {
                 var eventObject = {
                     title: $.trim($(this).text()),
                     _id: $.trim($(this).attr("target_id"))
-                    // use the element's text as the event title
                 };
                 $(this).data('eventObject', eventObject);
                 $(this).draggable({
                     zIndex: 999,
-                    revert: true, // will cause the event to go back to its
-                    revertDuration: 0 //  original position after the drag
+                    revert: true,
+                    revertDuration: 0
                 });
-
             });
 
             var date = new Date();
@@ -176,7 +199,19 @@
                     $("#recordModal").modal();
                 },
                 eventClick: function(date, allDay, jsEvent, view) {
-                    $('#calendar').fullCalendar('removeEvents',date._id);
+                    debugger;
+                    $(".success-btn").hide();
+                    $.UPDATEDATA = date;
+                    $(".record-title").text(date.title);
+                    if (date.context != null){
+                        $(".record-content").text(date.context);
+                    }else{
+                        $(".record-content").text(date.title);
+                    }
+                    if (date.status == -1){
+                        $(".success-btn").show();
+                    }
+                    $("#updateRecordModal").modal();
                 },
                 events:function(start,end,callback){
                     let url = {"startDate":start,"endDate":end};
@@ -201,12 +236,14 @@
                                     let className = "";
                                     if (value.eventType == 2){
                                         className = "box-complete";
-                                    }else if(value.eventType == -1){
+                                    }
+                                    if (value.status == -1){
                                         className = "box-todo";
                                     }
-
                                     events.push({
                                         title: value.recordTitle,
+                                        context: value.recordContext,
+                                        status: value.status,
                                         start: startDate,
                                         end: endDate,
                                         allDay: true,
@@ -224,7 +261,7 @@
             });
         });
 
-
+        //插入待办项
         $(".saveSubmit").click(function () {
             let flag =  check(recordModal);
             if (!flag){
@@ -241,19 +278,19 @@
             if (record_end_date != ""){
                 endDate = new Date(record_end_date);
             }else{
-                endDate = new Date(new Date(new Date().toLocaleDateString()).getTime()+24*60*60*1000-1);
+                endDate = startDate;
             }
             let copiedEventObject = {};
             copiedEventObject.title = record_title;
             copiedEventObject.start = startDate;
             copiedEventObject.end = endDate;
+            copiedEventObject.status = -1;
             copiedEventObject.allDay = true;
             copiedEventObject.className = "box-todo";
             $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
             $("#recordModal").modal('hide');
             //往后台传输数据
             let dataContent = {"recordStartTime":startDate,"recordEndTime":endDate,"eventType":-1,"recordTitle":record_title,"recordContext":record_describe,"status":-1};
-
             $.ajax({
                 url: ctx+"record/insertRecordByTime",
                 type: 'post',
@@ -267,6 +304,46 @@
             });
 
         })
+
+        //删除待办项
+        $(".delete-btn").click(function () {
+            $('#calendar').fullCalendar('removeEvents',$.UPDATEDATA._id);
+            $("#updateRecordModal").modal('hide');
+            let dataContent = {"recordId":$.UPDATEDATA._id,"status":$.UPDATEDATA.status};
+            $.ajax({
+                url: ctx+"record/deleteRecordById",
+                type: 'post',
+                data:JSON.stringify(dataContent),
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                }
+            });
+        })
+
+        //完成待办事件
+        $(".success-btn").click(function () {
+            debugger;
+            $("#updateRecordModal").modal('hide');
+            let dataContent = {"recordId":$.UPDATEDATA._id,"status":$.UPDATEDATA.status};
+            $.ajax({
+                url: ctx+"record/completeRecordById",
+                type: 'post',
+                data:JSON.stringify(dataContent),
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                }
+            });
+            let  copiedEventObject = $.UPDATEDATA;
+            copiedEventObject.className = "";
+            $('#calendar').fullCalendar('updateEvent', copiedEventObject);
+        })
+
     </script>
 </body>
 </html>

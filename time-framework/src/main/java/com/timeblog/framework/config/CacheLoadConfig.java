@@ -3,9 +3,11 @@ package com.timeblog.framework.config;
 import com.timeblog.business.domain.ArticleType;
 import com.timeblog.business.domain.BlogWebConfig;
 import com.timeblog.business.domain.Sentence;
+import com.timeblog.business.domain.TimeRecord;
 import com.timeblog.framework.mapper.*;
 import com.timeblog.framework.system.constant.SpiderConstant;
 import com.timeblog.framework.system.constant.SystemConstant;
+import com.timeblog.framework.system.utils.CronUtils;
 import com.timeblog.framework.system.utils.RedisUtils;
 import com.timeblog.framework.task.ScheduledTask;
 import com.timeblog.framework.task.SchedulingRunnable;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,7 +48,12 @@ public class CacheLoadConfig {
     private TimeTaskDao timeTaskDao;
 
     @Resource
+    private TimeRecordDao timeRecordDao;
+
+    @Resource
     private CronTaskRegistrar cronTaskRegistrar;
+
+
 
 
     @PostConstruct
@@ -67,5 +75,16 @@ public class CacheLoadConfig {
             //加入任务
             cronTaskRegistrar.addCronTask(task, t.getTaskCron());
         });
+
+        //查询未完成时间 加入调度任务
+        List<TimeRecord> recordList =  timeRecordDao.queryTodoRecord(new Date());
+        recordList.forEach(timeRecord -> {
+            String cron = CronUtils.getCron(timeRecord.getRecordStartTime());
+            SchedulingRunnable task = new SchedulingRunnable("mailUtil" ,"sendMailForMeByRecord", timeRecord);
+            //加入任务
+            cronTaskRegistrar.addCronTask(task, cron);
+        } );
+
+
     }
 }

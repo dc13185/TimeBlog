@@ -100,7 +100,10 @@ public class SchedulingRunnable implements Runnable  {
             return Objects.hash(beanName, methodName);
         }
         int beanHash = Objects.hash(beanName, methodName);
-        int paramsHash = Objects.hash(params);
+        int paramsHash = 0;
+        for (Object param : params) {
+            paramsHash += param.hashCode();
+        }
         return beanHash + paramsHash;
     }
 }
