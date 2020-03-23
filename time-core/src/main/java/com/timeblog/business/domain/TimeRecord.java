@@ -60,8 +60,8 @@ public class TimeRecord implements Serializable {
         return objectCodes + startHashCode + recordEndTime;
     }
 
-    private enum eventEnum{
-        RELEASE_BLOG(0,"发布文章"),WRITE_CODE(1,"撸代码"),MOTION(2,"运动");
+    public enum eventEnum{
+        RELEASE_BLOG(0,"发布文章"),WRITE_CODE(1,"撸代码"),MOTION(2,"运动"),OTHER(-1,"其他事项");
         private Integer eventType;
 
         private String eventTitle;
@@ -87,6 +87,8 @@ public class TimeRecord implements Serializable {
             this.eventTitle = eventTitle;
         }
     }
+
+
 
 
 

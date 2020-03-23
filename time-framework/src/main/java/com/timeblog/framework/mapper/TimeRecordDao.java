@@ -1,6 +1,7 @@
 package com.timeblog.framework.mapper;
 
 import com.timeblog.business.domain.TimeRecord;
+import com.timeblog.business.domain.dto.StatisticsDto;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -85,5 +86,14 @@ public interface TimeRecordDao {
      * @return 影响行数
      */
     int deleteById(Integer recordId);
+
+
+    /**
+     * 统计统计情况 （每个事件连续天数）
+     *
+     * @param
+     * @return
+     */
+    List<StatisticsDto> statisticsData(Integer eventType);
 
 }

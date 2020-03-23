@@ -1,7 +1,12 @@
 package com.timeblog.framework.system.constant;
 
 import com.timeblog.business.domain.BlogWebConfig;
+import com.timeblog.business.domain.TimeRecord;
+import com.timeblog.business.domain.vo.StatisticsVo;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -76,8 +81,17 @@ public class SystemConstant {
      */
     public static final String WEB_BLOG_ARTICLE_LIKE_COUNT = "webBlogArticleLikeCount";
 
+    /**
+     *  博客系统设置
+     */
+    public static  BlogWebConfig BLOGWEBCONFIG;
 
-    public static BlogWebConfig BLOGWEBCONFIG;
+
+    /**
+     *  相关统计数据
+     */
+    public static  final List<StatisticsVo> STATISTICS_VO_LIST = new ArrayList<>();
+
 
     //todo  更换主题设计   一个Key对应一个主题
 

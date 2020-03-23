@@ -93,4 +93,41 @@
         delete from timeblog.time_record where record_id = #{recordId}
     </delete>
 
+
+
+
+    <select id="statisticsData" resultType="com.timeblog.business.domain.dto.StatisticsDto">
+        SELECT uid AS eventType, MAX(days) days, MIN(login_day) startDate,MAX(login_day) endDate
+        FROM (SELECT uid,
+        @cont_day :=
+        (CASE
+        WHEN (@last_uid = uid AND DATEDIFF(login_dt, @last_dt)=1) THEN
+        (@cont_day + 1)
+        WHEN (@last_uid = uid AND DATEDIFF(login_dt, @last_dt)&lt;1) THEN
+        (@cont_day + 0)
+        ELSE
+        1
+        END) AS days,
+        (@cont_ix := (@cont_ix + IF(@cont_day = 1, 1, 0))) AS cont_ix,
+        @last_uid := uid,
+        @last_dt := login_dt login_day
+        FROM (SELECT event_type AS uid, DATE(record_start_time) AS login_dt
+        FROM time_record
+        <where>
+            <if test="event_type != null">
+                and event_type = #{eventType}
+            </if>
+        </where>
+        ORDER BY event_type, record_start_time) AS t,
+        (SELECT @last_uid := '',
+        @last_dt  := '',
+        @cont_ix  := 0,
+        @cont_day := 0) AS t1) AS t2
+        GROUP BY uid, cont_ix;
+
+    </select>
+
+
+
+
 </mapper>

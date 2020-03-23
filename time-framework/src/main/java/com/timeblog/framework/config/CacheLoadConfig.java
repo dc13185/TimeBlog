@@ -4,6 +4,8 @@ import com.timeblog.business.domain.ArticleType;
 import com.timeblog.business.domain.BlogWebConfig;
 import com.timeblog.business.domain.Sentence;
 import com.timeblog.business.domain.TimeRecord;
+import com.timeblog.business.domain.dto.StatisticsDto;
+import com.timeblog.business.domain.vo.StatisticsVo;
 import com.timeblog.framework.mapper.*;
 import com.timeblog.framework.system.constant.SpiderConstant;
 import com.timeblog.framework.system.constant.SystemConstant;
@@ -19,8 +21,10 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Dong.Chao
@@ -76,7 +80,7 @@ public class CacheLoadConfig {
             cronTaskRegistrar.addCronTask(task, t.getTaskCron());
         });
 
-        //查询未完成时间 加入调度任务
+        //查询未完成事件 加入调度任务
         List<TimeRecord> recordList =  timeRecordDao.queryTodoRecord(new Date());
         recordList.forEach(timeRecord -> {
             String cron = CronUtils.getCron(timeRecord.getRecordStartTime());
@@ -86,5 +90,41 @@ public class CacheLoadConfig {
         } );
 
 
+        //相关统计
+        List<StatisticsDto> statisticsDtoList =  timeRecordDao.statisticsData(null);
+        //加载数据
+        for (TimeRecord.eventEnum value : TimeRecord.eventEnum.values()) {
+            loadStatisticsData(statisticsDtoList,value.getEventType(),value.getEventTitle());
+        }
+
+
+        System.out.println(1);
+    }
+
+
+    /**
+     * @author: dongchao
+     * @create: 2020/3/22-0:27
+     * @description: 加载数据到缓存
+     * @param:
+     * @return:
+     */
+    private  void loadStatisticsData(List<StatisticsDto> statisticsDtoList ,  int eventType,String eventName){
+
+        List<StatisticsDto> eventStatistics = statisticsDtoList.stream().filter(sd-> sd.getEventType().equals(String.valueOf(eventType))).collect(Collectors.toList());
+        if (eventStatistics.size() > 0){
+            //求出总天数
+            Integer sumDays =  eventStatistics.stream().mapToInt(StatisticsDto::getDays).sum();
+            //最大连续天数
+            StatisticsDto maxStatisticsDto = eventStatistics.stream().max(Comparator.comparingInt(StatisticsDto::getDays)).get();
+            //相关数据加载到缓存
+            StatisticsVo statisticsVo = StatisticsVo.builder().totalNumber(sumDays)
+                    .maxConsecutiveNumber(maxStatisticsDto.getDays())
+                    .maxEndDate(maxStatisticsDto.getEndDate())
+                    .maxStartDate(maxStatisticsDto.getStartDate())
+                    .eventTypeName(eventName).build();
+            SystemConstant.STATISTICS_VO_LIST.add(statisticsVo);
+
+        }
     }
 }

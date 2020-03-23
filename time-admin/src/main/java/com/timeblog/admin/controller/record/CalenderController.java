@@ -4,6 +4,7 @@ import com.timeblog.business.base.Result;
 import com.timeblog.business.domain.TimeRecord;
 import com.timeblog.business.domain.dto.QueryRecordDto;
 import com.timeblog.framework.mapper.TimeRecordDao;
+import com.timeblog.framework.system.constant.SystemConstant;
 import com.timeblog.framework.system.utils.CronUtils;
 import com.timeblog.framework.system.utils.DateUtils;
 import com.timeblog.framework.system.utils.MailUtil;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
 import javax.annotation.Resource;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -44,8 +47,9 @@ public class CalenderController {
 
 
     @RequestMapping("/toRecord")
-    public String toRecord(){
-        return "recording/calendar";
+    public ModelAndView toRecord(){
+        ModelAndView modelAndView = new ModelAndView("recording/calendar").addObject("statistics", SystemConstant.STATISTICS_VO_LIST);
+        return modelAndView;
     }
 
 

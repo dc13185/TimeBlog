@@ -22,6 +22,21 @@
             background-color: #e4cd3c;
             border-color: #e4cd3c;
         }
+        .statistics-box{
+            text-indent: 10px;
+        }
+        .event-name{
+            color: #09a283;
+        }
+        .total-num{
+            color: #e21414;
+        }
+        .date{
+            color: #18acd0;
+        }
+        .row-num{
+            color: #03a9f4;
+        }
     </style>
 </head>
 <body class="gray-bg">
@@ -40,11 +55,21 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <h2>统计</h2>
+                        <div th:each="statistic, statisticStart:${statistics}" class="statistics-box">
+                                <span th:text="${statistic.eventTypeName}" class="event-name"></span>总共<span th:text="${statistic.totalNumber}" class="total-num"></span>天，
+                                其中在<span class="date"  th:text="${#dates.format(statistic.maxStartDate,'yyyy/MM/dd')}"></span>至<span  class="date"  th:text="${#dates.format(statistic.maxEndDate,'yyyy/MM/dd')}"></span>连续撸代码<span class="row-num" th:text="${statistic.maxConsecutiveNumber}"></span>天。
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-9">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>FullCalendar示例 </h5>
+                        <h5>日历记录 </h5>
                     </div>
                     <div class="ibox-content">
                         <div id="calendar"></div>
@@ -163,7 +188,6 @@
                     var copiedEventObject = $.extend({}, originalEventObject);
                     copiedEventObject.start = date;
                     copiedEventObject.allDay = allDay;
-                    copiedEventObject.className = "box-complete";
                     let eventType = $(this).attr("target_id");
                     if (eventType == 2){
                         copiedEventObject.className = "box-complete";
@@ -199,7 +223,6 @@
                     $("#recordModal").modal();
                 },
                 eventClick: function(date, allDay, jsEvent, view) {
-                    debugger;
                     $(".success-btn").hide();
                     $.UPDATEDATA = date;
                     $(".record-title").text(date.title);

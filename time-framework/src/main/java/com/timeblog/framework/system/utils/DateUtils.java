@@ -1,9 +1,6 @@
 package com.timeblog.framework.system.utils;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -29,6 +26,20 @@ public class DateUtils {
         return localDateTime;
     }
 
+
+    /**
+     * Date转换为LocalDateTime
+     * @param date
+     */
+    public static LocalDate date2LocalDate(Date date){
+        //An instantaneous point on the time-line.(时间线上的一个瞬时点。)
+        Instant instant = date.toInstant();
+        //A time-zone ID, such as {@code Europe/Paris}.(时区)
+        ZoneId zoneId = ZoneId.systemDefault();
+        LocalDate localDateTime = instant.atZone(zoneId).toLocalDate();
+        return localDateTime;
+    }
+
     /**
      * LocalDateTime转换为Date
      * @param localDateTime
@@ -39,5 +50,6 @@ public class DateUtils {
         Date date = Date.from(zdt.toInstant());
         return date;
     }
+
 
 }
