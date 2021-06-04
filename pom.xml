@@ -31,7 +31,7 @@
         <commons-logging.version>1.2</commons-logging.version>
         <redis.version>1.4.1.RELEASE</redis.version>
         <fastjson.version>1.2.62</fastjson.version>
-        <httpclient.version>4.5.11</httpclient.version>
+        <httpclient.version>4.5.13</httpclient.version>
         <collections.version>3.2.2</collections.version>
         <springboot.version>2.1.5.RELEASE</springboot.version>
     </properties>
